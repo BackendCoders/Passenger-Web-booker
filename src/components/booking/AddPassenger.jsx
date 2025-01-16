@@ -26,13 +26,18 @@ const AddPassenger = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Validate required fields
-    if (!formData.passengerName || !formData.description || !formData.address || !formData.postcode) {
+    if (
+      !formData.passengerName ||
+      !formData.description ||
+      !formData.address ||
+      !formData.postcode
+    ) {
       toast.error("Please fill in all required fields");
       return;
     }
-  
+
     // Prepare the payload
     const requestBody = {
       id: 0, // Static value for new passengers
@@ -44,28 +49,31 @@ const AddPassenger = () => {
       phone: formData.phone || "", // Optional field
       email: formData.email || "", // Optional field
     };
-  
+
     console.log("Sending Request Body:", requestBody);
-  
+
     try {
       setLoading(true);
-  
-      const response = await fetch("https://dev.ace-api.1soft.co.uk/api/WeBooking/AddNewPassenger", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer your-auth-token-here`, // Replace with actual token
-        },
-        body: JSON.stringify(requestBody),
-      });
-  
+
+      const response = await fetch(
+        "https://dev.ace-api.1soft.co.uk/api/WeBooking/AddNewPassenger",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer your-auth-token-here`, // Replace with actual token
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
       const result = await response.json();
       console.log("API Response:", result);
-  
+
       if (!response.ok) {
         throw new Error(result.message || "Failed to create passenger");
       }
-  
+
       toast.success("Passenger created successfully!");
       navigate("/passengerlist");
     } catch (error) {
@@ -75,11 +83,11 @@ const AddPassenger = () => {
       setLoading(false);
     }
   };
-  
+
   return (
     <div>
       <Header />
-      <div className="min-h-screen bg-gray-50 p-4">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 p-4">
         {/* Button Section */}
         <div className="flex justify-center gap-4 mb-8">
           <button
@@ -90,7 +98,7 @@ const AddPassenger = () => {
           </button>
           <button
             onClick={() => navigate("/add-passenger")}
-            className="px-5 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition"
+            className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
           >
             Add Passenger
           </button>
@@ -121,7 +129,7 @@ const AddPassenger = () => {
                   placeholder="Enter passenger name"
                   value={formData.passengerName}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-red-500"
                   required
                 />
               </div>
@@ -141,7 +149,7 @@ const AddPassenger = () => {
                   placeholder="Enter description"
                   value={formData.description}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-red-500"
                   required
                 />
               </div>
@@ -162,7 +170,7 @@ const AddPassenger = () => {
                     placeholder="Enter address"
                     value={formData.address}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-red-500"
                     required
                   />
                 </div>
@@ -181,7 +189,7 @@ const AddPassenger = () => {
                     placeholder="Enter postcode"
                     value={formData.postcode}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-red-500"
                     required
                   />
                 </div>
@@ -202,7 +210,7 @@ const AddPassenger = () => {
                     placeholder="Enter phone number"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-red-500"
                   />
                 </div>
 
@@ -219,7 +227,7 @@ const AddPassenger = () => {
                     placeholder="Enter email address"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-red-500"
                   />
                 </div>
               </div>
@@ -235,7 +243,7 @@ const AddPassenger = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800"
+                  className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                   disabled={loading} // Disable button while loading
                 >
                   {loading ? "Submitting..." : "Create Passenger"}

@@ -1,6 +1,6 @@
 /** @format */
 import { useLocation, useNavigate } from 'react-router-dom'; // Import useLocation
-import carlogo from '../../assets/acelogo.png'; // Replace with the correct path to your logo image
+import carlogo from '../../assets/logo.png'; // Replace with the correct path to your logo image
 import { FaAngleDown } from 'react-icons/fa';
 import { useState } from 'react';
 
@@ -29,7 +29,7 @@ const Header = () => {
 		routeHeadings[location.pathname] || 'ACE TAXIS - ACCOUNT WEB BOOKING';
 
 	return (
-		<header className='bg-white p-4 flex flex-col sm:flex-row items-center justify-between'>
+		<header className='p-4 flex flex-col sm:flex-row items-center justify-between' style={{ backgroundColor: '#cd1a21' }}>
 			{/* Left Section: Logo */}
 			<div className='flex items-center space-x-3'>
 				<img
@@ -41,8 +41,8 @@ const Header = () => {
 
 			{/* Center Section: Title */}
 			<div className='flex-grow text-center'>
-				<h1 className='text-lg sm:text-2xl font-extrabold text-black-700'>
-					ACE TAXIS - ACCOUNT WEB BOOKING {currentHeading}{' '}
+				<h1 className='text-lg sm:text-2xl font-extrabold text-white font-mono'>
+					 ACCOUNT WEB BOOKING - {currentHeading}{' '}
 					{/* Dynamic Heading */}
 				</h1>
 			</div>
@@ -53,8 +53,8 @@ const Header = () => {
 					className=' space-x-1 cursor-pointer'
 					onClick={() => setDropdownOpen(!dropdownOpen)} // Toggle dropdown
 				>
-					<p className='font-medium'>9015 - Harbour Vale Acc</p>
-					<p className='text-gray-500 flex items-center'>
+					<p className='font-medium text-white'>9015 - Harbour Vale Acc</p>
+					<p className='text-white flex items-center'>
 						Logged in as:{' '}
 						<span className='font-semibold ml-1'>Peter Farrell</span>
 						<FaAngleDown className='ml-1' />

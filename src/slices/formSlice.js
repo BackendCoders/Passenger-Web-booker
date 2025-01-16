@@ -4,18 +4,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Import service functions for API calls
-import {
-  getAllPassengers,
-  addnewpassengercreateForm,
-  deletePassenger,
-} from "../service/operations/formApi";
+import { getAllPassengers, deletePassenger } from "../service/operations/formApi";
 
 /**
- * Async Thunk: Fetch all passengers from the API.
+ * Async Thunk: Fetch all passengers from the API with caching and pagination.
  */
 export const fetchPassengers = createAsyncThunk(
   "forms/fetchPassengers",
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
+    const { forms } = getState();
+    if (forms.passengers.length > 0) {
+      // Return cached passengers if already fetched
+      console.log("Using cached passengers");
+      return forms.passengers;
+    }
+
     try {
       const token = "static-token"; // Replace with your actual token
       const accountNo = 9999; // Static account number
@@ -25,30 +28,6 @@ export const fetchPassengers = createAsyncThunk(
       console.error("Fetch Passengers Error:", error);
       return rejectWithValue(
         error.response?.data?.error || "Failed to fetch passengers"
-      );
-    }
-  }
-);
-
-/**
- * Async Thunk: Add a new passenger to the system.
- */
-export const addPassenger = createAsyncThunk(
-  "forms/addPassenger",
-  async ({ token, data }, { rejectWithValue }) => {
-    try {
-      const response = await addnewpassengercreateForm(token, data); // API call
-
-      if (!response || typeof response !== "object") {
-        throw new Error("Invalid API response");
-      }
-
-      console.log("Add Passenger API Response:", response);
-      return response; // Return API response
-    } catch (error) {
-      console.error("Add Passenger Error:", error.message);
-      return rejectWithValue(
-        error.response?.data?.error || "Failed to add passenger"
       );
     }
   }
@@ -120,22 +99,6 @@ const formSlice = createSlice({
         state.passengers = action.payload;
       })
       .addCase(fetchPassengers.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      // Add Passenger
-      .addCase(addPassenger.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-        state.success = null;
-      })
-      .addCase(addPassenger.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = "Passenger added successfully!";
-        state.passengers.push(action.payload);
-      })
-      .addCase(addPassenger.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import carlogo from "../../assets/acelogo.png"; // Ensure this path is correct
+import carlogo from "../../assets/logo.png"; // Ensure this path is correct
 
 const LoginForm = () => {
 	const [formData, setFormData] = useState({
@@ -33,7 +33,7 @@ const LoginForm = () => {
 	};
 
 	return (
-		<div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-white-500 to-white-800 px-4">
+		<div className="flex justify-center items-center min-h-screen from-red-50 to-red-100 from-white-500 to-white-800 px-4">
 			<div className="w-full max-w-md bg-white shadow-md rounded-lg overflow-hidden">
 				<div className="p-6">
 					{/* Logo Section */}
@@ -45,7 +45,7 @@ const LoginForm = () => {
 						/>
 					</div>
 
-					<h2 className="text-2xl font-bold text-center text-blue-700 mb-4">
+					<h2 className="text-2xl font-bold text-center text-red-700 mb-4">
 						ACE TAXIS - ACCOUNT LOGIN
 					</h2>
 
@@ -61,7 +61,7 @@ const LoginForm = () => {
 								type="text"
 								name="accountNumber"
 								placeholder="Enter your account number"
-								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-red-500"
 								value={formData.accountNumber}
 								onChange={handleChange}
 								required
@@ -79,7 +79,7 @@ const LoginForm = () => {
 								type="text"
 								name="username"
 								placeholder="Enter your username"
-								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-red-500"
 								value={formData.username}
 								onChange={handleChange}
 								required
@@ -97,7 +97,7 @@ const LoginForm = () => {
 								type="password"
 								name="password"
 								placeholder="Enter your password"
-								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-red-500"
 								value={formData.password}
 								onChange={handleChange}
 								required
@@ -106,7 +106,7 @@ const LoginForm = () => {
 
 						<button
 							type="submit"
-							className="w-full bg-blue-700 text-white py-3 rounded-lg font-bold hover:bg-blue-800 transition duration-300"
+							className="w-full bg-red-700 text-white py-3 rounded-lg font-bold hover:bg-red-800 transition duration-300"
 						>
 							Login
 						</button>

@@ -24,13 +24,13 @@ const BookingDashboard = () => {
         <div>
             {/* Header Section */}
             <Header />
-            <div className="min-h-screen bg-white flex flex-col justify-center items-center p-4">
+            <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 flex flex-col justify-center items-center p-4">
                 {/* Buttons Section */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-4xl">
                     {/* Create New Booking Button */}
                     <button
                         onClick={handleCreateBooking}
-                        className="group bg-blue-700 text-white rounded-lg shadow-lg py-8 px-4 sm:px-6 text-center hover:bg-blue-800 transition duration-300 flex flex-col items-center"
+                        className="group bg-red-600 text-white rounded-lg shadow-lg py-8 px-4 sm:px-6 text-center hover:bg-red-700 transition duration-300 flex flex-col items-center"
                     >
                         <img
                             src={newbooking}
@@ -43,7 +43,7 @@ const BookingDashboard = () => {
                     {/* Add New Passenger Button */}
                     <button
                         onClick={handleAddPassenger}
-                        className="group bg-blue-700 text-white rounded-lg shadow-lg py-8 px-4 sm:px-6 text-center hover:bg-blue-800 transition duration-300 flex flex-col items-center"
+                        className="group bg-red-600 text-white rounded-lg shadow-lg py-8 px-4 sm:px-6 text-center hover:bg-red-700 transition duration-300 flex flex-col items-center"
                     >
                         <img
                             src={addpassenger}
@@ -56,7 +56,7 @@ const BookingDashboard = () => {
                     {/* Existing Passengers Button */}
                     <button
                         onClick={handleExistingPassengers}
-                        className="group bg-blue-700 text-white rounded-lg shadow-lg py-8 px-4 sm:px-6 text-center hover:bg-blue-800 transition duration-300 flex flex-col items-center"
+                        className="group bg-red-600 text-white rounded-lg shadow-lg py-8 px-4 sm:px-6 text-center hover:bg-red-700 transition duration-300 flex flex-col items-center"
                     >
                         <img
                             src={existingpassenger}
