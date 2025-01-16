@@ -1,6 +1,7 @@
 /** @format */
 
 import { useNavigate } from 'react-router-dom';
+import Header from '../Common/header';
 
 function Confirmation() {
 	// Static data for booking details, vehicle, and user
@@ -63,6 +64,9 @@ function Confirmation() {
 	};
 
 	return (
+		<div>
+			<Header />
+
 		<div className='flex items-center justify-center min-h-screen bg-gradient-to-br p-4'>
 			<div
 				className='bg-white bg-opacity-95 p-6 sm:p-8 rounded-xl shadow-xl w-full max-w-4xl space-y-6 overflow-y-auto'
@@ -175,6 +179,7 @@ function Confirmation() {
 					</button>
 				</div>
 			</div>
+		</div>
 		</div>
 	);
 }

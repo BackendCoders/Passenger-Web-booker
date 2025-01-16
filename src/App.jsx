@@ -2,7 +2,6 @@
 
 import { Route, Routes } from 'react-router-dom';
 import CreateBookingForm from './components/booking/CreateBookingForm';
-import BookingDetails from './components/booking/BookingDetails';
 import Confirmation from './components/booking/Confirmation';
 import Login from './components/Authentication/Login';
 import AddPassenger from './components/booking/AddPassenger';
@@ -45,10 +44,6 @@ function App() {
 				<Route
 					path='/createbookingform'
 					element={<CreateBookingForm />}
-				/>
-				<Route
-					path='/booking-details'
-					element={<BookingDetails />}
 				/>
 				<Route
 					path='/confirmation'
