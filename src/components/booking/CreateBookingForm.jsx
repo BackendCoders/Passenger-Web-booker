@@ -11,7 +11,6 @@ import {
 import { LuArrowDownUp } from 'react-icons/lu';
 import { FiPhoneCall } from 'react-icons/fi';
 import Header from '../Common/header';
-import { IoIosArrowBack } from 'react-icons/io';
 
 function CreateBookingForm() {
 	const dispatch = useDispatch();
@@ -386,7 +385,7 @@ function CreateBookingForm() {
 								onChange={(e) => setPassengers(e.target.value)}
 								className='w-full px-4 py-3 bg-white border rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
 							>
-								{Array.from({ length: 8 }, (_, i) => i + 1).map((num) => (
+								{Array.from({ length: 5 }, (_, i) => i + 1).map((num) => (
 									<option
 										key={num}
 										value={num}
