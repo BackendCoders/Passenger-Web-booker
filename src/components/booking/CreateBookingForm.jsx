@@ -21,6 +21,7 @@ function CreateBookingForm() {
 	const formData = useSelector((state) => state.forms.form);
 
 	const [currentDateTime, setCurrentDateTime] = useState('');
+	const [returnDateTime, setReturnDateTime] = useState(''); // New state for return time
 
 	useEffect(() => {
 		// Function to get the current date and time in the required format
@@ -38,6 +39,7 @@ function CreateBookingForm() {
 
 		// Set the current date and time
 		setCurrentDateTime(getCurrentDateTime());
+		setReturnDateTime(getCurrentDateTime());
 	}, []);
 
 	// States for pickup and destination details
@@ -64,7 +66,7 @@ function CreateBookingForm() {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [phone, setPhone] = useState('');
-	const [returnDateTime, setReturnDateTime] = useState(''); // New state for return time
+	
 
 	// States for address suggestions
 	const [pickupSuggestions, setPickupSuggestions] = useState([]);
