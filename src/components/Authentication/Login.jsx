@@ -33,7 +33,7 @@ const LoginForm = () => {
 	};
 
 	return (
-		<div className="flex justify-center items-center min-h-screen from-red-50 to-red-100 from-white-500 to-white-800 px-4">
+		<div className="flex justify-center items-center min-h-screen bg-gradient-to-br  from-red-50 to-red-100 from-white-500 to-white-800 px-4">
 			<div className="w-full max-w-md bg-white shadow-md rounded-lg overflow-hidden">
 				<div className="p-6">
 					{/* Logo Section */}
