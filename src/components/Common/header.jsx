@@ -22,6 +22,7 @@ const Header = () => {
 		'/passengerlist': 'PASSENGER LIST',
 		'/existingPassengers': 'EXISTING PASSENGERS',
 		'/createbookingform': 'CREATE BOOKING FORM',
+		'/confirmation': 'CONFIRMATION',
 	};
 
 	// Determine heading based on current route

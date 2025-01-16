@@ -180,7 +180,7 @@ function CreateBookingForm() {
 		dispatch(updateFormData(bookingDetails));
 
 		// Navigate to the next step
-		navigate('/select-vehicle');
+		navigate('/confirmation');
 	};
 
 	// Navigate back to the dashboard
