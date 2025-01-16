@@ -1,55 +1,113 @@
-import { apiConnector } from '../apiConnector';
-import { bookingformEndpoints } from '../api';
-import { AUTH_TOKEN } from '../authConfig'; // Import the token
+/** @format */
 
-const { GET_ALL_FORMS, CREATE_FORM } = bookingformEndpoints;
+// Import necessary modules
+import toast from 'react-hot-toast'; // For user notifications
+import { apiConnector } from '../apiConnector'; // Custom API wrapper for requests
+import { newpassengerformEndpoints } from '../api'; // API endpoint
 
-export const createForm = async (data) => {
-	try {
-		const payload = {
-			request: {
-				details: data.details,
-				email: data.email,
-				durationText: Number(data.durationText)
-					? String(data.durationText)
-					: '0',
-				// durationMinutes: data.durationText ? +data.durationText : 0,
-				durationMinutes: data.durationMinutes || 10,
-				isAllDay: data.isAllDay,
-				passengerName: data.passengerName,
-				passengers: data.passengers,
-				paymentStatus: data.paymentStatus || 0,
-				scope: data.scope,
-				phoneNumber: data.phoneNumber,
-				pickupAddress: data.pickupAddress,
-				pickupDateTime: data.pickupDateTime,
-				pickupPostCode: data.pickupPostCode,
-				destinationAddress: data.destinationAddress,
-				destinationPostCode: data.destinationPostCode,
-				recurrenceRule: data.recurrenceRule || null,
-				recurrenceID: data.recurrenceID || null,
-				price: data.price,
-				priceAccount: data.priceAccount || 0,
-				chargeFromBase: data.chargeFromBase || false,
-				userId: data.userId || null,
-				returnDateTime: data.returnDateTime || null,
-				// vias: filterVias(data),
-				accountNumber: data.accountNumber || 2222,
-				bookedByName: data.bookedByName || '',
-				bookingId: data.bookingId || null,
-				updatedByName: data.updatedByName || '',
-				isASAP: data.isASAP || false,
-			},
-		};
+// Destructure endpoints from bookingformEndpoints for cleaner usage
+const {
+  GET_ALL_PASSENGERS,
+  ADDNEWPASSENGER_CREATE_FORM,
+  DELETE_PASSENGERS,
+} = newpassengerformEndpoints;
 
-		const response = await apiConnector('POST', CREATE_FORM, payload, {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${AUTH_TOKEN}`, // Use centralized token
-		});
+/**
+ * Fetch all passengers based on account number.
+ * 
+ * @param {string} token - User's authentication token.
+ * @param {string} accountNo - The account number to fetch passengers.
+ * @returns {Array|Object} List of passengers or an empty array on failure.
+ */
+export const getAllPassengers = async (token, accountNo) => {
+  try {
+    // Making a GET request with authorization headers
+    const response = await apiConnector(
+      'GET',
+      GET_ALL_PASSENGERS(accountNo),
+      null,
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
 
-		return response.data; // Return the response data
-	} catch (error) {
-		console.error('Error submitting form:', error);
-		throw error; // Rethrow the error for handling in the calling component
-	}
+    console.log('Get All Passengers API Response:', response);
+    return response.data; // Return data if API call is successful
+  } catch (error) {
+    console.error('Get All Passengers API Error:', error);
+    toast.error(error.response?.data?.error || 'An error occurred'); // Notify the user
+    return []; // Return an empty array on failure
+  }
 };
+
+/**
+ * Delete a passenger by ID.
+ * 
+ * @param {string} token - User's authentication token.
+ * @param {number} id - The passenger ID to delete.
+ * @returns {Object|null} Response data or null on failure.
+ */
+export const deletePassenger = async (token, id) => {
+  try {
+    // Making a DELETE request with authorization headers
+    const response = await apiConnector('DELETE', DELETE_PASSENGERS(id), null, {
+      Authorization: `Bearer ${token}`,
+    });
+
+    console.log('Delete Passenger API Response:', response);
+    toast.success('Passenger deleted successfully'); // Notify user on success
+    return response.data; // Return the response data
+  } catch (error) {
+    console.error('Delete Passenger API Error:', error);
+    toast.error(error.response?.data?.error || 'An error occurred'); // Notify user on error
+    return null; // Return null on failure
+  }
+};
+
+/**
+ * Add a new passenger and create a passenger form.
+ * 
+ * @param {string} token - User's authentication token.
+ * @param {Object} data - The passenger data to send to the API.
+ * @returns {Object|null} Response data or null on failure.
+ */
+export const addnewpassengercreateForm = async (token, data) => {
+  try {
+    // Ensure data is in correct format (e.g., FormData)
+    if (!(data instanceof FormData)) {
+      throw new Error('Invalid data format. Expected FormData.');
+    }
+
+    // Make the POST request
+    const response = await apiConnector(
+      'POST',
+      ADDNEWPASSENGER_CREATE_FORM,
+      data,
+      {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data', // Required for file uploads
+      }
+    );
+
+    console.log('Add New Passenger API Response:', response);
+
+    if (!response || !response.data) {
+      throw new Error('Unexpected API response');
+    }
+
+    toast.success('Passenger added successfully');
+    return response.data;
+  } catch (error) {
+    console.error('Add New Passenger API Error:', error);
+
+    // Improved error message fallback
+    toast.error(
+      error.response?.data?.error ||
+      error.message || 
+      'An unexpected error occurred'
+    );
+
+    return null;
+  }
+};
+

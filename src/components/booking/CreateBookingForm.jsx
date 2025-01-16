@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { updateFormData } from '../../slices/formSlice'; // Redux action to update form data
 import {
 	getAddressSuggestions,
 	getAddressDetails,

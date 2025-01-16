@@ -7,10 +7,12 @@ export const endpoints = {
 	FORGET_PASSWORD_API: `${BASE_URL}/auth/forgetPassword`,
 };
 
-export const bookingformEndpoints = {
-	GET_ALL_FORMS: `${BASE_URL}/api/Bookings/Create`, // Fetch all forms
-	GET_FORM_BY_ID: (id) => `${BASE_URL}/api/Bookings/FindById/${id}`, // Get form by ID
-	CREATE_FORM: `${BASE_URL}/api/Bookings/Create`, // Create a new form
-	UPDATE_FORM: (id) => `${BASE_URL}/api/Bookings/Update/${id}`, // Update form by ID
-	DELETE_FORM: (id) => `${BASE_URL}/api/Bookings/Cancel/${id}`, // Delete form by ID
+export const newpassengerformEndpoints = {
+	GET_ALL_PASSENGERS: (accountNo) => `${BASE_URL}/WeBooking/GetPassengers?accountNo=${accountNo}`, // Fetch all forms
+	ADDNEWPASSENGER_CREATE_FORM: `${BASE_URL}/WeBooking/AddNewPassenger`, // Add New passenger form
+	DELETE_PASSENGERS: (id) => `${BASE_URL}/WeBooking/DeletePassenger?passengerId=${id}`, // Delete form by ID
 };
+
+export const webbookingfromEndpoints = {
+	CREATEWEBBOOKING_CREATE_FORM: `${BASE_URL}/WeBooking/CreateWebBooking`, // CREATEWEB BOOKING From 
+}
