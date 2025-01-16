@@ -60,10 +60,6 @@ function CreateBookingForm() {
 	);
 
 	const [passengers, setPassengers] = useState(1);
-	const [allDay, setAllDay] = useState(false);
-	const [hours, setHours] = useState(0);
-	const [minutes, setMinutes] = useState(0);
-	const [driverPrice, setDriverPrice] = useState(0);
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [phone, setPhone] = useState('');
@@ -72,15 +68,10 @@ function CreateBookingForm() {
 	const [pickupSuggestions, setPickupSuggestions] = useState([]);
 	const [destinationSuggestions, setDestinationSuggestions] = useState([]);
 
-	const [isChecked, setIsChecked] = useState(false);
 	const [isReturn, setIsReturn] = useState(false);
 
 	const handleReturnToggle = () => {
 		setIsReturn(!isReturn);
-	};
-
-	const handleToggle = () => {
-		setIsChecked(!isChecked);
 	};
 
 	// Fetch address suggestions as the user types
@@ -134,10 +125,6 @@ function CreateBookingForm() {
 			destinationPostCode,
 			pickupDateTime: `${pickupDate} ${pickupTime}`,
 			passengers,
-			allDay,
-			hours,
-			minutes,
-			driverPrice,
 			name,
 			email,
 			phone,
@@ -151,254 +138,234 @@ function CreateBookingForm() {
 	};
 
 	const backhistory = () => {
-		navigate('/bookinghistory');
+		navigate('/dashboard');
 	};
 
 	return (
 		<div>
 			<Header />
-		
-		<div className='flex justify-center bg-[#F3F4F6] px-4 sm:py-10 sm:px-4'>
-			<div className='bg-white bg-opacity-90 p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-4xl overflow-y-auto h-[85vh] '>
-				<button
-					onClick={backhistory}
-					className='bg-gradient-to-r from-blue-500 to-blue-400 text-white py-1 px-3 rounded-lg hover:from-blue-600 hover:to-blue-500 transition-all duration-300 shadow-md'
-				>
-					Back
-				</button>
 
-				{/* Date and ASAP */}
-				<div className='flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6'>
-					<div className='flex items-center gap-1 sm:gap-2 w-full sm:w-auto'>
-						<input
-							type='datetime-local'
-							value={currentDateTime}
-							onChange={(e) => setCurrentDateTime(e.target.value)}
-							className='w-full sm:w-auto p-1 sm:p-2 bg-white border rounded-md sm:rounded-lg text-sm focus:ring-2 focus:ring-blue-500'
-						/>
-						<label className='flex items-center gap-1 sm:gap-2 text-gray-700 cursor-pointer text-xs sm:text-sm'>
-							<div
-								className={`relative w-8 h-5 sm:w-10 sm:h-6 rounded-full ${
-									isChecked ? 'bg-blue-500' : 'bg-gray-300'
-								}`}
-								onClick={handleToggle}
-							>
-								<div
-									className={`absolute w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-md top-[2px] sm:top-1 left-[2px] transform transition-transform duration-300 ${
-										isChecked
-											? 'translate-x-4 sm:translate-x-4'
-											: 'translate-x-0'
-									}`}
-								></div>
-							</div>
-							<span>ASAP</span>
-						</label>
-					</div>
-					<div className='flex items-center gap-2 sm:gap-4 w-full sm:w-auto'>
-						<button className='w-full sm:w-auto bg-blue-600 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm'>
-							Repeat Booking
-						</button>
-						<label className='flex items-center gap-1 sm:gap-2 text-gray-700 cursor-pointer text-xs sm:text-sm'>
-							<div
-								className={`relative w-8 h-5 sm:w-10 sm:h-6 rounded-full ${
-									isReturn ? 'bg-blue-500' : 'bg-gray-300'
-								}`}
-								onClick={handleReturnToggle}
-							>
-								<div
-									className={`absolute w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-md top-[2px] sm:top-1 left-[2px] transform transition-transform duration-300 ${
-										isReturn
-											? 'translate-x-4 sm:translate-x-4'
-											: 'translate-x-0'
-									}`}
-								></div>
-							</div>
-							<span>Return</span>
-						</label>
-					</div>
-				</div>
-
-				{/* Pickup Address and Post Code */}
-				<div className='grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
-					{/* Pickup Address */}
-					<div>
-						<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-							Pickup Address <span className='text-blue-500'>*</span>
-						</label>
-						<div className='relative'>
-							<input
-								type='text'
-								placeholder='Pickup Address'
-								value={pickupAddress}
-								onChange={(e) => {
-									setPickupAddress(e.target.value);
-									fetchSuggestions(e.target.value, true);
-								}}
-								className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
-							/>
-							{/* Suggestions Dropdown */}
-							{pickupSuggestions.length > 0 && (
-								<ul className='absolute z-10 bg-white border border-gray-300 rounded shadow-lg max-h-40 overflow-y-auto w-full mt-1'>
-									{pickupSuggestions.map((suggestion) => (
-										<li
-											key={suggestion.id}
-											onClick={() => handleSelectAddress(suggestion.id, true)}
-											className='px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs sm:text-sm'
-										>
-											{suggestion.label}
-										</li>
-									))}
-								</ul>
-							)}
-						</div>
-					</div>
-
-					{/* Post Code */}
-					<div>
-						<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-							Post Code
-						</label>
-						<input
-							type='text'
-							placeholder='Post Code'
-							value={pickupPostCode}
-							onChange={(e) => setPickupPostCode(e.target.value)}
-							className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
-						/>
-					</div>
-				</div>
-
-				<div className='text-center'>
+			<div className='flex justify-center bg-[#F3F4F6] px-4 sm:py-10 sm:px-4'>
+				<div className='bg-white bg-opacity-90 p-4 sm:p-8 rounded-xl shadow-lg w-full max-w-4xl overflow-y-auto h-[65vh] '>
 					<button
-						onClick={handleSwitch}
-						className='p-2 text-sky-600'
+						onClick={backhistory}
+						className='bg-gradient-to-r from-blue-500 to-blue-400 text-white py-1 px-3 m-4 rounded-lg hover:from-blue-600 hover:to-blue-500 transition-all duration-300 shadow-md'
 					>
-						<LuArrowDownUp />
+						Back
 					</button>
-				</div>
 
-				{/* Destination Address */}
-				<div className='grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
-					{/* Destination Address */}
-					<div>
-						<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-							Destination Address <span className='text-blue-500'>*</span>
-						</label>
-						<div className='relative'>
+					{/* Date and ASAP */}
+					<div className='flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6'>
+						<div className='flex items-center gap-1 sm:gap-2 w-full sm:w-auto'>
 							<input
-								type='text'
-								placeholder='Destination Address'
-								value={destinationAddress}
-								onChange={(e) => {
-									setDestinationAddress(e.target.value);
-									fetchSuggestions(e.target.value, false);
-								}}
-								className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
+								type='datetime-local'
+								value={currentDateTime}
+								onChange={(e) => setCurrentDateTime(e.target.value)}
+								className='w-full sm:w-auto p-1 sm:p-2 bg-white border rounded-md sm:rounded-lg text-sm focus:ring-2 focus:ring-blue-500'
 							/>
-							{/* Suggestions Dropdown */}
-							{destinationSuggestions.length > 0 && (
-								<ul className='absolute z-10 bg-white border border-gray-300 rounded shadow-lg max-h-40 overflow-y-auto w-full mt-1'>
-									{destinationSuggestions.map((suggestion) => (
-										<li
-											key={suggestion.id}
-											onClick={() => handleSelectAddress(suggestion.id, false)}
-											className='px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs sm:text-sm'
-										>
-											{suggestion.label}
-										</li>
-									))}
-								</ul>
-							)}
+						</div>
+						<div className='flex items-center gap-2 sm:gap-4 w-full sm:w-auto'>
+							<button className='w-full sm:w-auto bg-blue-600 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm'>
+								Repeat Booking
+							</button>
+							<label className='flex items-center gap-1 sm:gap-2 text-gray-700 cursor-pointer text-xs sm:text-sm'>
+								<div
+									className={`relative w-8 h-5 sm:w-10 sm:h-6 rounded-full ${
+										isReturn ? 'bg-blue-500' : 'bg-gray-300'
+									}`}
+									onClick={handleReturnToggle}
+								>
+									<div
+										className={`absolute w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-md top-[2px] sm:top-1 left-[2px] transform transition-transform duration-300 ${
+											isReturn
+												? 'translate-x-4 sm:translate-x-4'
+												: 'translate-x-0'
+										}`}
+									></div>
+								</div>
+								<span>Return</span>
+							</label>
 						</div>
 					</div>
 
-					{/* Destination Post Code */}
-					<div>
-						<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-							Post Code
-						</label>
-						<input
-							type='text'
-							placeholder='Post Code'
-							value={destinationPostCode}
-							onChange={(e) => setDestinationPostCode(e.target.value)}
-							className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
-						/>
-					</div>
-				</div>
+					{/* Pickup Address and Post Code */}
+					<div className='grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
+						{/* Pickup Address */}
+						<div>
+							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+								Pickup Address <span className='text-blue-500'>*</span>
+							</label>
+							<div className='relative'>
+								<input
+									type='text'
+									placeholder='Pickup Address'
+									value={pickupAddress}
+									onChange={(e) => {
+										setPickupAddress(e.target.value);
+										fetchSuggestions(e.target.value, true);
+									}}
+									className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
+								/>
+								{/* Suggestions Dropdown */}
+								{pickupSuggestions.length > 0 && (
+									<ul className='absolute z-10 bg-white border border-gray-300 rounded shadow-lg max-h-40 overflow-y-auto w-full mt-1'>
+										{pickupSuggestions.map((suggestion) => (
+											<li
+												key={suggestion.id}
+												onClick={() => handleSelectAddress(suggestion.id, true)}
+												className='px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs sm:text-sm'
+											>
+												{suggestion.label}
+											</li>
+										))}
+									</ul>
+								)}
+							</div>
+						</div>
 
-				{/* Name, Email, and Phone */}
-				<div className='grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
-					{/* Name Input */}
-					<div>
-						<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-							Name <span className='text-blue-500'>*</span>
-						</label>
-						<input
-							type='text'
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							placeholder='Name'
-							className='w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
-						/>
-					</div>
-
-					{/* Email Input */}
-					<div>
-						<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-							Email
-						</label>
-						<input
-							type='email'
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							placeholder='Email'
-							className='w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
-						/>
-					</div>
-
-					{/* Phone Input */}
-					<div className='col-span-1 sm:col-span-2'>
-						<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-							Phone
-						</label>
-						<div className='flex items-center gap-2 sm:gap-4'>
+						{/* Post Code */}
+						<div>
+							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+								Post Code
+							</label>
 							<input
 								type='text'
-								value={phone}
-								onChange={(e) => setPhone(e.target.value)}
-								placeholder='Phone'
+								placeholder='Post Code'
+								value={pickupPostCode}
+								onChange={(e) => setPickupPostCode(e.target.value)}
+								className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
+							/>
+						</div>
+					</div>
+
+					<div className='text-center'>
+						<button
+							onClick={handleSwitch}
+							className='p-2 text-sky-600'
+						>
+							<LuArrowDownUp />
+						</button>
+					</div>
+
+					{/* Destination Address */}
+					<div className='grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
+						{/* Destination Address */}
+						<div>
+							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+								Destination Address <span className='text-blue-500'>*</span>
+							</label>
+							<div className='relative'>
+								<input
+									type='text'
+									placeholder='Destination Address'
+									value={destinationAddress}
+									onChange={(e) => {
+										setDestinationAddress(e.target.value);
+										fetchSuggestions(e.target.value, false);
+									}}
+									className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
+								/>
+								{/* Suggestions Dropdown */}
+								{destinationSuggestions.length > 0 && (
+									<ul className='absolute z-10 bg-white border border-gray-300 rounded shadow-lg max-h-40 overflow-y-auto w-full mt-1'>
+										{destinationSuggestions.map((suggestion) => (
+											<li
+												key={suggestion.id}
+												onClick={() =>
+													handleSelectAddress(suggestion.id, false)
+												}
+												className='px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs sm:text-sm'
+											>
+												{suggestion.label}
+											</li>
+										))}
+									</ul>
+								)}
+							</div>
+						</div>
+
+						{/* Destination Post Code */}
+						<div>
+							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+								Post Code
+							</label>
+							<input
+								type='text'
+								placeholder='Post Code'
+								value={destinationPostCode}
+								onChange={(e) => setDestinationPostCode(e.target.value)}
+								className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
+							/>
+						</div>
+					</div>
+
+					{/* Name, Email, and Phone */}
+					<div className='grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
+						{/* Name Input */}
+						<div>
+							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+								Name <span className='text-blue-500'>*</span>
+							</label>
+							<input
+								type='text'
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								placeholder='Name'
 								className='w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
 							/>
-							<button className='px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-md sm:rounded-lg hover:bg-blue-700 transition duration-300 text-xs sm:text-sm'>
-								<FiPhoneCall />
+						</div>
+
+						{/* Email Input */}
+						<div>
+							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+								Email
+							</label>
+							<input
+								type='email'
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								placeholder='Email'
+								className='w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
+							/>
+						</div>
+
+						{/* Phone Input */}
+						<div className='col-span-1 sm:col-span-2'>
+							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+								Phone
+							</label>
+							<div className='flex items-center gap-2 sm:gap-4'>
+								<input
+									type='text'
+									value={phone}
+									onChange={(e) => setPhone(e.target.value)}
+									placeholder='Phone'
+									className='w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
+								/>
+								<button className='px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-md sm:rounded-lg hover:bg-blue-700 transition duration-300 text-xs sm:text-sm'>
+									<FiPhoneCall />
+								</button>
+							</div>
+						</div>
+					</div>
+
+					{/* Buttons */}
+					<div className=' flex flex-col sm:flex-row gap-2 sm:gap-4'>
+						{/* Cancel and Create Buttons */}
+						<div className='flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto'>
+							<button className='w-full sm:w-auto bg-black text-white px-3 sm:px-4 py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:bg-gray-800 transition duration-300'>
+								Cancel
+							</button>
+							<button
+								onClick={handleSubmit}
+								className='w-full sm:w-auto bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:bg-blue-700 transition duration-300'
+							>
+								Create
 							</button>
 						</div>
 					</div>
 				</div>
-
-				{/* Buttons */}
-				<div className='flex flex-col sm:flex-row justify-between gap-2 sm:gap-4'>
-					{/* Cancel On Arrival Button */}
-					<button className='w-full sm:w-auto bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:bg-blue-700 transition duration-300'>
-						Cancel On Arrival
-					</button>
-
-					{/* Cancel and Create Buttons */}
-					<div className='flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto'>
-						<button className='w-full sm:w-auto bg-black text-white px-3 sm:px-4 py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:bg-gray-800 transition duration-300'>
-							Cancel
-						</button>
-						<button
-							onClick={handleSubmit}
-							className='w-full sm:w-auto bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:bg-blue-700 transition duration-300'
-						>
-							Create
-						</button>
-					</div>
-				</div>
 			</div>
-		</div>
 		</div>
 	);
 }

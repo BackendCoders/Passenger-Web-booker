@@ -24,7 +24,7 @@ const AddPassenger = () => {
         <div className="flex justify-center gap-4 mb-8">
           {/* Back Button */}
           <button
-            onClick={() => navigate(-1)} // Go back to the previous page
+            onClick={() => navigate("/dashboard")} // Go back to the previous page
             className="px-5 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition"
           >
             Back

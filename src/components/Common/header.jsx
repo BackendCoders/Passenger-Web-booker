@@ -1,7 +1,23 @@
 /** @format */
+import { useLocation } from "react-router-dom"; // Import useLocation
 import carlogo from "../../assets/acelogo.png"; // Replace with the correct path to your logo image
 
 const Header = () => {
+  const location = useLocation();
+
+  // Define headings for different routes
+  const routeHeadings = {
+    "/": "ACE TAXIS - ACCOUNT WEB BOOKING",
+    "/dashboard": "DASHBOARD",
+    "/AddPassenger": "ADD PASSENGER",
+    "/passengerlist": "PASSENGER LIST",
+    "/existingPassengers": "EXISTING PASSENGERS",
+    "/createbookingform": "CREATE BOOKING FORM",
+  };
+
+  // Determine heading based on current route
+  const currentHeading = routeHeadings[location.pathname] || "ACE TAXIS - ACCOUNT WEB BOOKING";
+
   return (
     <header className="bg-white p-4 flex flex-col sm:flex-row items-center justify-between">
       {/* Left Section: Logo */}
@@ -15,8 +31,8 @@ const Header = () => {
 
       {/* Center Section: Title */}
       <div className="flex-grow text-center">
-        <h1 className="text-lg sm:text-2xl font-extrabold text-blue-700">
-          ACE TAXIS - ACCOUNT WEB BOOKING
+        <h1 className="text-lg sm:text-2xl font-extrabold text-black-700">
+        ACE TAXIS - ACCOUNT WEB BOOKING {currentHeading} {/* Dynamic Heading */}
         </h1>
       </div>
 

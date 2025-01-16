@@ -1,6 +1,9 @@
 /** @format */
 import { useNavigate } from "react-router-dom";
 import Header from "../Common/header";
+import addpassenger from '../../assets/addpassenger.svg';
+import existingpassenger from '../../assets/existingpassenger.svg';
+import newbooking from '../../assets/newbooking.svg';
 
 const BookingDashboard = () => {
     const navigate = useNavigate();
@@ -21,26 +24,46 @@ const BookingDashboard = () => {
         <div>
             {/* Header Section */}
             <Header />
-            <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
+            <div className="min-h-screen bg-white flex flex-col justify-center items-center p-4">
                 {/* Buttons Section */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-4xl">
+                    {/* Create New Booking Button */}
                     <button
                         onClick={handleCreateBooking}
-                        className="bg-blue-700 text-white rounded-lg shadow-lg py-8 sm:py-16 px-4 sm:px-6 text-center font-semibold text-base sm:text-2xl hover:bg-blue-800 transition duration-300"
+                        className="group bg-blue-700 text-white rounded-lg shadow-lg py-8 px-4 sm:px-6 text-center hover:bg-blue-800 transition duration-300 flex flex-col items-center"
                     >
-                        CREATE NEW BOOKING
+                        <img
+                            src={newbooking}
+                            alt="New Booking"
+                            className="w-16 h-16 sm:w-24 sm:h-24 mb-4 group-hover:scale-110 group-hover:filter group-hover:brightness-0 transition-transform duration-300"
+                        />
+                        <span className="font-semibold text-sm sm:text-lg">CREATE NEW BOOKING</span>
                     </button>
+
+                    {/* Add New Passenger Button */}
                     <button
                         onClick={handleAddPassenger}
-                        className="bg-blue-700 text-white rounded-lg shadow-lg py-8 sm:py-16 px-4 sm:px-6 text-center font-semibold text-base sm:text-2xl hover:bg-blue-800 transition duration-300"
+                        className="group bg-blue-700 text-white rounded-lg shadow-lg py-8 px-4 sm:px-6 text-center hover:bg-blue-800 transition duration-300 flex flex-col items-center"
                     >
-                        ADD NEW PASSENGER
+                        <img
+                            src={addpassenger}
+                            alt="Add Passenger"
+                            className="w-16 h-16 sm:w-24 sm:h-24 mb-4 group-hover:scale-110 group-hover:filter group-hover:brightness-0 transition-transform duration-300"
+                        />
+                        <span className="font-semibold text-sm sm:text-lg">ADD NEW PASSENGER</span>
                     </button>
+
+                    {/* Existing Passengers Button */}
                     <button
                         onClick={handleExistingPassengers}
-                        className="bg-blue-700 text-white rounded-lg shadow-lg py-8 sm:py-16 px-4 sm:px-6 text-center font-semibold text-base sm:text-2xl hover:bg-blue-800 transition duration-300"
+                        className="group bg-blue-700 text-white rounded-lg shadow-lg py-8 px-4 sm:px-6 text-center hover:bg-blue-800 transition duration-300 flex flex-col items-center"
                     >
-                        EXISTING PASSENGERS
+                        <img
+                            src={existingpassenger}
+                            alt="Existing Passengers"
+                            className="w-16 h-16 sm:w-24 sm:h-24 mb-4 group-hover:scale-110 group-hover:filter group-hover:brightness-0 transition-transform duration-300"
+                        />
+                        <span className="font-semibold text-sm sm:text-lg">EXISTING PASSENGERS</span>
                     </button>
                 </div>
             </div>
