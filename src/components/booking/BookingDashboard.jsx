@@ -35,7 +35,7 @@ const BookingDashboard = () => {
                         <img
                             src={newbooking}
                             alt="New Booking"
-                            className="w-16 h-16 sm:w-24 sm:h-24 mb-4 group-hover:scale-110 group-hover:filter group-hover:brightness-0 transition-transform duration-300"
+                            className="w-16 h-16 sm:w-24 sm:h-24 mb-4 group-hover:scale-110 group-hover:filter  transition-transform duration-300"
                         />
                         <span className="font-semibold text-sm sm:text-lg">CREATE NEW BOOKING</span>
                     </button>
@@ -48,7 +48,7 @@ const BookingDashboard = () => {
                         <img
                             src={addpassenger}
                             alt="Add Passenger"
-                            className="w-16 h-16 sm:w-24 sm:h-24 mb-4 group-hover:scale-110 group-hover:filter group-hover:brightness-0 transition-transform duration-300"
+                            className="w-16 h-16 sm:w-24 sm:h-24 mb-4 group-hover:scale-110 group-hover:filter  transition-transform duration-300"
                         />
                         <span className="font-semibold text-sm sm:text-lg">ADD NEW PASSENGER</span>
                     </button>
@@ -61,7 +61,7 @@ const BookingDashboard = () => {
                         <img
                             src={existingpassenger}
                             alt="Existing Passengers"
-                            className="w-16 h-16 sm:w-24 sm:h-24 mb-4 group-hover:scale-110 group-hover:filter group-hover:brightness-0 transition-transform duration-300"
+                            className="w-16 h-16 sm:w-24 sm:h-24 mb-4 group-hover:scale-110 group-hover:filter transition-transform duration-300"
                         />
                         <span className="font-semibold text-sm sm:text-lg">EXISTING PASSENGERS</span>
                     </button>

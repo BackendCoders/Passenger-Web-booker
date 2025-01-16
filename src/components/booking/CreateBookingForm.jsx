@@ -26,6 +26,7 @@ function CreateBookingForm() {
 
 	// Fetch existing data from Redux (if any) to prefill the form
 	const formData = useSelector((state) => state.forms.form);
+	
 
 	// States for date and time management
 	const [currentDateTime, setCurrentDateTime] = useState(''); // Current datetime state
@@ -53,23 +54,24 @@ function CreateBookingForm() {
 
 	// States for pickup and destination details
 	const [pickupAddress, setPickupAddress] = useState(
-		formData.pickupAddress || '' // Prefill from Redux or set as empty
-	);
+		formData?.pickupAddress || "" // Use optional chaining and a default value
+	  );
+	  
 	const [pickupPostCode, setPickupPostCode] = useState(''); // Pickup postcode state
 	const [destinationAddress, setDestinationAddress] = useState(
-		formData.destinationAddress || '' // Prefill from Redux or set as empty
+		formData?.destinationAddress || '' // Prefill from Redux or set as empty
 	);
 	const [destinationPostCode, setDestinationPostCode] = useState(''); // Destination postcode state
-	const [pickupDate, setPickupDate] = useState(
-		formData.pickupDateTime // Prefill pickup date from Redux or default to current date
-			? formData.pickupDateTime.split(' ')[0] // Extract date
-			: new Date().toISOString().slice(0, 10) // Default to current date in YYYY-MM-DD format
-	);
-	const [pickupTime, setPickupTime] = useState(
-		formData.pickupDateTime // Prefill pickup time from Redux or default to current time
-			? formData.pickupDateTime.split(' ')[1] // Extract time
-			: new Date().toLocaleTimeString('en-US', { hour12: false }).slice(0, 5) // Default to current time in HH:MM format
-	);
+	// const [pickupDate, setPickupDate] = useState(
+	// 	formData.pickupDateTime // Prefill pickup date from Redux or default to current date
+	// 		? formData.pickupDateTime.split(' ')[0] // Extract date
+	// 		: new Date().toISOString().slice(0, 10) // Default to current date in YYYY-MM-DD format
+	// );
+	// const [pickupTime, setPickupTime] = useState(
+	// 	formData.pickupDateTime // Prefill pickup time from Redux or default to current time
+	// 		? formData.pickupDateTime.split(' ')[1] // Extract time
+	// 		: new Date().toLocaleTimeString('en-US', { hour12: false }).slice(0, 5) // Default to current time in HH:MM format
+	// );
 
 	// States for other form details
 	const [passengers, setPassengers] = useState(1); // Number of passengers state
