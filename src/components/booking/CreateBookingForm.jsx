@@ -11,6 +11,7 @@ import {
 import { LuArrowDownUp } from 'react-icons/lu';
 import { FiPhoneCall } from 'react-icons/fi';
 import Header from '../Common/header';
+import { IoIosArrowBack } from 'react-icons/io';
 
 function CreateBookingForm() {
 	const dispatch = useDispatch();
@@ -63,6 +64,7 @@ function CreateBookingForm() {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [phone, setPhone] = useState('');
+	const [returnDateTime, setReturnDateTime] = useState(''); // New state for return time
 
 	// States for address suggestions
 	const [pickupSuggestions, setPickupSuggestions] = useState([]);
@@ -146,7 +148,7 @@ function CreateBookingForm() {
 			<Header />
 
 			<div className='flex justify-center bg-[#F3F4F6] px-4 sm:py-10 sm:px-4'>
-				<div className='bg-white bg-opacity-90 p-4 sm:p-8 rounded-xl shadow-lg w-full max-w-4xl overflow-y-auto h-[65vh] '>
+				<div className='bg-white bg-opacity-90 p-4 sm:p-8 rounded-xl shadow-lg w-full max-w-4xl overflow-y-auto h-[75vh] '>
 					<button
 						onClick={backhistory}
 						className='bg-gradient-to-r from-blue-500 to-blue-400 text-white py-1 px-3 m-4 rounded-lg hover:from-blue-600 hover:to-blue-500 transition-all duration-300 shadow-md'
@@ -156,13 +158,21 @@ function CreateBookingForm() {
 
 					{/* Date and ASAP */}
 					<div className='flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6'>
-						<div className='flex items-center gap-1 sm:gap-2 w-full sm:w-auto'>
+						<div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-4'>
 							<input
 								type='datetime-local'
 								value={currentDateTime}
 								onChange={(e) => setCurrentDateTime(e.target.value)}
-								className='w-full sm:w-auto p-1 sm:p-2 bg-white border rounded-md sm:rounded-lg text-sm focus:ring-2 focus:ring-blue-500'
+								className='w-full sm:w-auto p-2 bg-white border rounded-md sm:rounded-lg text-sm focus:ring-2 focus:ring-blue-500'
 							/>
+							{isReturn && (
+								<input
+									type='datetime-local'
+									value={returnDateTime}
+									onChange={(e) => setReturnDateTime(e.target.value)}
+									className='w-full sm:w-auto p-2 bg-white border rounded-md sm:rounded-lg text-sm focus:ring-2 focus:ring-blue-500'
+								/>
+							)}
 						</div>
 						<div className='flex items-center gap-2 sm:gap-4 w-full sm:w-auto'>
 							<button className='w-full sm:w-auto bg-blue-600 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm'>
@@ -299,6 +309,22 @@ function CreateBookingForm() {
 						</div>
 					</div>
 
+					{/* Booking Details */}
+					<div className='col-span-1 sm:col-span-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
+						<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+							Booking Details
+						</label>
+						<div className='flex items-center gap-2 sm:gap-4'>
+							<input
+								type='text'
+								value={phone}
+								onChange={(e) => setPhone(e.target.value)}
+								placeholder='Booking Details'
+								className='w-full px-3 sm:px-4 py-2 sm:py-5 bg-white border rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
+							/>
+						</div>
+					</div>
+
 					{/* Name, Email, and Phone */}
 					<div className='grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
 						{/* Name Input */}
@@ -330,7 +356,7 @@ function CreateBookingForm() {
 						</div>
 
 						{/* Phone Input */}
-						<div className='col-span-1 sm:col-span-2'>
+						<div>
 							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
 								Phone
 							</label>
@@ -346,6 +372,27 @@ function CreateBookingForm() {
 									<FiPhoneCall />
 								</button>
 							</div>
+						</div>
+
+						{/* Passengers Dropdown */}
+						<div>
+							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+								Passengers
+							</label>
+							<select
+								value={passengers}
+								onChange={(e) => setPassengers(e.target.value)}
+								className='w-full px-4 py-3 bg-white border rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
+							>
+								{Array.from({ length: 8 }, (_, i) => i + 1).map((num) => (
+									<option
+										key={num}
+										value={num}
+									>
+										{num} Passenger{num > 1 ? 's' : ''}
+									</option>
+								))}
+							</select>
 						</div>
 					</div>
 
