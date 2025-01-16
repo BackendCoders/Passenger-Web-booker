@@ -1,92 +1,133 @@
 /** @format */
 
+// Importing necessary hooks and libraries
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { updateFormData } from '../../slices/formSlice';
+import { updateFormData } from '../../slices/formSlice'; // Redux action to update form data
 import {
 	getAddressSuggestions,
 	getAddressDetails,
-} from '../../utils/addressAPI'; // Importing functions
-import { LuArrowDownUp } from 'react-icons/lu';
-import { FiPhoneCall } from 'react-icons/fi';
-import Header from '../Common/header';
+} from '../../utils/addressAPI'; // Utility functions for address handling
+import { LuArrowDownUp } from 'react-icons/lu'; // Importing switch icon
+import { FiPhoneCall } from 'react-icons/fi'; // Importing phone icon
+import Header from '../Common/header'; // Header component
 
+// Mock data for existing passengers (Replace with actual API or Redux data)
+const existingPassengers = [
+	{ id: 1, name: 'John Doe', address: '123 Main St', postcode: '12345' },
+	{ id: 2, name: 'Jane Smith', address: '456 Elm St', postcode: '67890' },
+	{ id: 3, name: 'Sam Wilson', address: '789 Oak St', postcode: '11223' },
+];
+
+// Main functional component for creating a booking form
 function CreateBookingForm() {
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
+	const dispatch = useDispatch(); // Redux dispatch function
+	const navigate = useNavigate(); // React Router function for navigation
 
 	// Fetch existing data from Redux (if any) to prefill the form
 	const formData = useSelector((state) => state.forms.form);
 
-	const [currentDateTime, setCurrentDateTime] = useState('');
-	const [returnDateTime, setReturnDateTime] = useState(''); // New state for return time
+	// States for date and time management
+	const [currentDateTime, setCurrentDateTime] = useState(''); // Current datetime state
+	const [returnDateTime, setReturnDateTime] = useState(''); // Return datetime state
 
+	// useEffect to initialize current and return date/time
 	useEffect(() => {
 		// Function to get the current date and time in the required format
 		const getCurrentDateTime = () => {
 			const now = new Date();
 			const year = now.getFullYear();
-			const month = String(now.getMonth() + 1).padStart(2, '0'); // Add leading zero
-			const day = String(now.getDate()).padStart(2, '0'); // Add leading zero
-			const hours = String(now.getHours()).padStart(2, '0'); // Add leading zero
-			const minutes = String(now.getMinutes()).padStart(2, '0'); // Add leading zero
+			const month = String(now.getMonth() + 1).padStart(2, '0'); // Add leading zero to month
+			const day = String(now.getDate()).padStart(2, '0'); // Add leading zero to date
+			const hours = String(now.getHours()).padStart(2, '0'); // Add leading zero to hours
+			const minutes = String(now.getMinutes()).padStart(2, '0'); // Add leading zero to minutes
 
 			// Format: YYYY-MM-DDTHH:MM
 			return `${year}-${month}-${day}T${hours}:${minutes}`;
 		};
 
-		// Set the current date and time
+		// Set the current and return date/time states
 		setCurrentDateTime(getCurrentDateTime());
 		setReturnDateTime(getCurrentDateTime());
 	}, []);
 
 	// States for pickup and destination details
 	const [pickupAddress, setPickupAddress] = useState(
-		formData.pickupAddress || ''
+		formData.pickupAddress || '' // Prefill from Redux or set as empty
 	);
-	const [pickupPostCode, setPickupPostCode] = useState('');
+	const [pickupPostCode, setPickupPostCode] = useState(''); // Pickup postcode state
 	const [destinationAddress, setDestinationAddress] = useState(
-		formData.destinationAddress || ''
+		formData.destinationAddress || '' // Prefill from Redux or set as empty
 	);
-	const [destinationPostCode, setDestinationPostCode] = useState('');
+	const [destinationPostCode, setDestinationPostCode] = useState(''); // Destination postcode state
 	const [pickupDate, setPickupDate] = useState(
-		formData.pickupDateTime
-			? formData.pickupDateTime.split(' ')[0]
-			: new Date().toISOString().slice(0, 10)
+		formData.pickupDateTime // Prefill pickup date from Redux or default to current date
+			? formData.pickupDateTime.split(' ')[0] // Extract date
+			: new Date().toISOString().slice(0, 10) // Default to current date in YYYY-MM-DD format
 	);
 	const [pickupTime, setPickupTime] = useState(
-		formData.pickupDateTime
-			? formData.pickupDateTime.split(' ')[1]
-			: new Date().toLocaleTimeString('en-US', { hour12: false }).slice(0, 5)
+		formData.pickupDateTime // Prefill pickup time from Redux or default to current time
+			? formData.pickupDateTime.split(' ')[1] // Extract time
+			: new Date().toLocaleTimeString('en-US', { hour12: false }).slice(0, 5) // Default to current time in HH:MM format
 	);
 
-	const [passengers, setPassengers] = useState(1);
-	const [name, setName] = useState('');
-	const [email, setEmail] = useState('');
-	const [phone, setPhone] = useState('');
-	
+	// States for other form details
+	const [passengers, setPassengers] = useState(1); // Number of passengers state
+	const [name, setName] = useState(''); // Name state
+	const [email, setEmail] = useState(''); // Email state
+	const [phone, setPhone] = useState(''); // Phone number state
 
 	// States for address suggestions
-	const [pickupSuggestions, setPickupSuggestions] = useState([]);
-	const [destinationSuggestions, setDestinationSuggestions] = useState([]);
+	const [pickupSuggestions, setPickupSuggestions] = useState([]); // Suggestions for pickup address
+	const [destinationSuggestions, setDestinationSuggestions] = useState([]); // Suggestions for destination address
 
-	const [isReturn, setIsReturn] = useState(false);
+	// State for return trip toggle
+	const [isReturn, setIsReturn] = useState(false); // Whether return trip is enabled
 
+	const [viewMode, setViewMode] = useState('address'); // "address" or "existing"
+	const [destiMode, setDestiMode] = useState('address');
+
+	// Function to handle selecting an existing passenger
+	const handleExistingPassengerSelect = (passengerId) => {
+		const selectedPassenger = existingPassengers.find(
+			(passenger) => passenger.id === passengerId
+		);
+		if (selectedPassenger) {
+			// Automatically fill form fields with passenger's data
+			setPickupAddress(selectedPassenger.address);
+			setPickupPostCode(selectedPassenger.postcode);
+
+			// Automatically switch to "Address" mode
+			setViewMode('address');
+		}
+		if (selectedPassenger) {
+			// Automatically fill form fields with passenger's data
+			setDestinationAddress(selectedPassenger.address);
+			setDestinationPostCode(selectedPassenger.postcode);
+
+			// Automatically switch to "Address" mode
+			setDestiMode('address');
+		}
+	};
+
+	// Function to toggle return trip
 	const handleReturnToggle = () => {
-		setIsReturn(!isReturn);
+		setIsReturn(!isReturn); // Toggle the return trip state
 	};
 
 	// Fetch address suggestions as the user types
 	const fetchSuggestions = async (value, isPickup = true) => {
 		if (value.length > 2) {
-			const suggestions = await getAddressSuggestions(value);
+			// Only fetch suggestions for input longer than 2 characters
+			const suggestions = await getAddressSuggestions(value); // Fetch suggestions
 			if (isPickup) {
-				setPickupSuggestions(suggestions);
+				setPickupSuggestions(suggestions); // Update pickup suggestions
 			} else {
-				setDestinationSuggestions(suggestions);
+				setDestinationSuggestions(suggestions); // Update destination suggestions
 			}
 		} else {
+			// Clear suggestions if input is too short
 			if (isPickup) setPickupSuggestions([]);
 			else setDestinationSuggestions([]);
 		}
@@ -94,39 +135,41 @@ function CreateBookingForm() {
 
 	// Handle address selection from suggestions
 	const handleSelectAddress = async (id, isPickup = true) => {
-		const details = await getAddressDetails(id);
+		const details = await getAddressDetails(id); // Fetch address details by ID
 		if (isPickup) {
-			setPickupAddress(details.address);
-			setPickupPostCode(details.postcode);
-			setPickupSuggestions([]);
+			setPickupAddress(details.address); // Update pickup address
+			setPickupPostCode(details.postcode); // Update pickup postcode
+			setPickupSuggestions([]); // Clear pickup suggestions
 		} else {
-			setDestinationAddress(details.address);
-			setDestinationPostCode(details.postcode);
-			setDestinationSuggestions([]);
+			setDestinationAddress(details.address); // Update destination address
+			setDestinationPostCode(details.postcode); // Update destination postcode
+			setDestinationSuggestions([]); // Clear destination suggestions
 		}
 	};
 
 	// Switch pickup and destination details
 	const handleSwitch = () => {
-		setPickupAddress(destinationAddress);
+		setPickupAddress(destinationAddress); // Switch addresses
 		setDestinationAddress(pickupAddress);
-		setPickupPostCode(destinationPostCode);
+		setPickupPostCode(destinationPostCode); // Switch postcodes
 		setDestinationPostCode(pickupPostCode);
 	};
 
 	// Handle form submission
 	const handleSubmit = () => {
 		if (!pickupAddress || !pickupDate || !pickupTime) {
+			// Validate required fields
 			alert('Please fill in all required fields.');
 			return;
 		}
 
+		// Prepare booking details
 		const bookingDetails = {
 			pickupAddress,
 			pickupPostCode,
 			destinationAddress,
 			destinationPostCode,
-			pickupDateTime: `${pickupDate} ${pickupTime}`,
+			pickupDateTime: `${pickupDate} ${pickupTime}`, // Combine date and time
 			passengers,
 			name,
 			email,
@@ -140,6 +183,7 @@ function CreateBookingForm() {
 		navigate('/select-vehicle');
 	};
 
+	// Navigate back to the dashboard
 	const backhistory = () => {
 		navigate('/dashboard');
 	};
@@ -149,10 +193,10 @@ function CreateBookingForm() {
 			<Header />
 
 			<div className='flex justify-center bg-[#F3F4F6] px-4 sm:py-10 sm:px-4'>
-				<div className='bg-white bg-opacity-90 p-4 sm:p-8 rounded-xl shadow-lg w-full max-w-4xl overflow-y-auto h-[75vh] '>
+				<div className='bg-white bg-opacity-90 p-4 sm:p-8 rounded-xl shadow-lg w-full max-w-4xl overflow-y-auto h-[85vh] '>
 					<button
 						onClick={backhistory}
-						className='bg-gradient-to-r from-blue-500 to-blue-400 text-white py-1 px-3 m-4 rounded-lg hover:from-blue-600 hover:to-blue-500 transition-all duration-300 shadow-md'
+						className='bg-gradient-to-r from-blue-500 to-blue-400 text-white py-1 px-5 mb-4 rounded-lg hover:from-blue-600 hover:to-blue-500 transition-all duration-300 shadow-md'
 					>
 						Back
 					</button>
@@ -199,55 +243,107 @@ function CreateBookingForm() {
 						</div>
 					</div>
 
+					{/* Buttons for Address and Existing Passenger */}
+					<div className='flex gap-4 mb-4'>
+						<button
+							onClick={() => setViewMode('address')}
+							className={`px-4 py-2 rounded ${
+								viewMode === 'address'
+									? 'bg-blue-500 text-white'
+									: 'bg-gray-200 text-gray-700'
+							}`}
+						>
+							Address
+						</button>
+						<button
+							onClick={() => setViewMode('existing')}
+							className={`px-4 py-2 rounded ${
+								viewMode === 'existing'
+									? 'bg-blue-500 text-white'
+									: 'bg-gray-200 text-gray-700'
+							}`}
+						>
+							Existing Passenger
+						</button>
+					</div>
+
 					{/* Pickup Address and Post Code */}
-					<div className='grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
-						{/* Pickup Address */}
-						<div>
-							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-								Pickup Address <span className='text-blue-500'>*</span>
-							</label>
-							<div className='relative'>
+					{viewMode === 'address' && (
+						<div className='grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
+							{/* Pickup Address */}
+							<div>
+								<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+									Pickup Address <span className='text-blue-500'>*</span>
+								</label>
+								<div className='relative'>
+									<input
+										type='text'
+										placeholder='Pickup Address'
+										value={pickupAddress}
+										onChange={(e) => {
+											setPickupAddress(e.target.value);
+											fetchSuggestions(e.target.value, true);
+										}}
+										className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
+									/>
+									{/* Suggestions Dropdown */}
+									{pickupSuggestions.length > 0 && (
+										<ul className='absolute z-10 bg-white border border-gray-300 rounded shadow-lg max-h-40 overflow-y-auto w-full mt-1'>
+											{pickupSuggestions.map((suggestion) => (
+												<li
+													key={suggestion.id}
+													onClick={() =>
+														handleSelectAddress(suggestion.id, true)
+													}
+													className='px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs sm:text-sm'
+												>
+													{suggestion.label}
+												</li>
+											))}
+										</ul>
+									)}
+								</div>
+							</div>
+
+							{/* Post Code */}
+							<div>
+								<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+									Post Code
+								</label>
 								<input
 									type='text'
-									placeholder='Pickup Address'
-									value={pickupAddress}
-									onChange={(e) => {
-										setPickupAddress(e.target.value);
-										fetchSuggestions(e.target.value, true);
-									}}
+									placeholder='Post Code'
+									value={pickupPostCode}
+									onChange={(e) => setPickupPostCode(e.target.value)}
 									className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
 								/>
-								{/* Suggestions Dropdown */}
-								{pickupSuggestions.length > 0 && (
-									<ul className='absolute z-10 bg-white border border-gray-300 rounded shadow-lg max-h-40 overflow-y-auto w-full mt-1'>
-										{pickupSuggestions.map((suggestion) => (
-											<li
-												key={suggestion.id}
-												onClick={() => handleSelectAddress(suggestion.id, true)}
-												className='px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs sm:text-sm'
-											>
-												{suggestion.label}
-											</li>
-										))}
-									</ul>
-								)}
 							</div>
 						</div>
-
-						{/* Post Code */}
-						<div>
+					)}
+					{/* Existing Passenger Dropdown */}
+					{viewMode === 'existing' && (
+						<div className='mb-4'>
 							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-								Post Code
+								Select Existing Passenger
 							</label>
-							<input
-								type='text'
-								placeholder='Post Code'
-								value={pickupPostCode}
-								onChange={(e) => setPickupPostCode(e.target.value)}
+							<select
+								onChange={(e) =>
+									handleExistingPassengerSelect(Number(e.target.value))
+								}
 								className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
-							/>
+							>
+								<option value=''>-- Select Passenger --</option>
+								{existingPassengers.map((passenger) => (
+									<option
+										key={passenger.id}
+										value={passenger.id}
+									>
+										{passenger.name} - {passenger.address}
+									</option>
+								))}
+							</select>
 						</div>
-					</div>
+					)}
 
 					<div className='text-center'>
 						<button
@@ -258,57 +354,107 @@ function CreateBookingForm() {
 						</button>
 					</div>
 
+					{/* Buttons for Address and Existing Passenger */}
+					<div className='flex gap-4 mb-4'>
+						<button
+							onClick={() => setDestiMode('address')}
+							className={`px-4 py-2 rounded ${
+								destiMode === 'address'
+									? 'bg-blue-500 text-white'
+									: 'bg-gray-200 text-gray-700'
+							}`}
+						>
+							Address
+						</button>
+						<button
+							onClick={() => setDestiMode('existing')}
+							className={`px-4 py-2 rounded ${
+								destiMode === 'existing'
+									? 'bg-blue-500 text-white'
+									: 'bg-gray-200 text-gray-700'
+							}`}
+						>
+							Existing Passenger
+						</button>
+					</div>
+
 					{/* Destination Address */}
-					<div className='grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
-						{/* Destination Address */}
-						<div>
-							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-								Destination Address <span className='text-blue-500'>*</span>
-							</label>
-							<div className='relative'>
+					{destiMode === 'address' && (
+						<div className='grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
+							{/* Destination Address */}
+							<div>
+								<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+									Destination Address <span className='text-blue-500'>*</span>
+								</label>
+								<div className='relative'>
+									<input
+										type='text'
+										placeholder='Destination Address'
+										value={destinationAddress}
+										onChange={(e) => {
+											setDestinationAddress(e.target.value);
+											fetchSuggestions(e.target.value, false);
+										}}
+										className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
+									/>
+									{/* Suggestions Dropdown */}
+									{destinationSuggestions.length > 0 && (
+										<ul className='absolute z-10 bg-white border border-gray-300 rounded shadow-lg max-h-40 overflow-y-auto w-full mt-1'>
+											{destinationSuggestions.map((suggestion) => (
+												<li
+													key={suggestion.id}
+													onClick={() =>
+														handleSelectAddress(suggestion.id, false)
+													}
+													className='px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs sm:text-sm'
+												>
+													{suggestion.label}
+												</li>
+											))}
+										</ul>
+									)}
+								</div>
+							</div>
+
+							{/* Destination Post Code */}
+							<div>
+								<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
+									Post Code
+								</label>
 								<input
 									type='text'
-									placeholder='Destination Address'
-									value={destinationAddress}
-									onChange={(e) => {
-										setDestinationAddress(e.target.value);
-										fetchSuggestions(e.target.value, false);
-									}}
+									placeholder='Post Code'
+									value={destinationPostCode}
+									onChange={(e) => setDestinationPostCode(e.target.value)}
 									className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
 								/>
-								{/* Suggestions Dropdown */}
-								{destinationSuggestions.length > 0 && (
-									<ul className='absolute z-10 bg-white border border-gray-300 rounded shadow-lg max-h-40 overflow-y-auto w-full mt-1'>
-										{destinationSuggestions.map((suggestion) => (
-											<li
-												key={suggestion.id}
-												onClick={() =>
-													handleSelectAddress(suggestion.id, false)
-												}
-												className='px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs sm:text-sm'
-											>
-												{suggestion.label}
-											</li>
-										))}
-									</ul>
-								)}
 							</div>
 						</div>
-
-						{/* Destination Post Code */}
-						<div>
+					)}
+					{/* Existing Passenger Dropdown */}
+					{destiMode === 'existing' && (
+						<div className='mb-4'>
 							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-								Post Code
+								Select Existing Passenger
 							</label>
-							<input
-								type='text'
-								placeholder='Post Code'
-								value={destinationPostCode}
-								onChange={(e) => setDestinationPostCode(e.target.value)}
+							<select
+								onChange={(e) =>
+									handleExistingPassengerSelect(Number(e.target.value))
+								}
 								className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
-							/>
+							>
+								<option value=''>-- Select Passenger --</option>
+								{existingPassengers.map((passenger) => (
+									<option
+										key={passenger.id}
+										value={passenger.id}
+									>
+										{passenger.name} - {passenger.address}
+									</option>
+								))}
+							</select>
 						</div>
-					</div>
+					)}
 
 					{/* Booking Details */}
 					<div className='col-span-1 sm:col-span-2 gap-2 sm:gap-4 mb-2 sm:mb-4'>
