@@ -89,7 +89,7 @@ function CreateBookingForm() {
 	const [name, setName] = useState(''); // Name state
 	const [email, setEmail] = useState(''); // Email state
 	const [phone, setPhone] = useState(''); // Phone number state
-	const [bookingdetails, setBookingdetails] = useState(''); // bookingdetails 
+	const [bookingdetails, setBookingdetails] = useState(''); // bookingdetails
 
 	// States for address suggestions
 	const [pickupSuggestions, setPickupSuggestions] = useState([]); // Suggestions for pickup address
@@ -208,8 +208,8 @@ function CreateBookingForm() {
 		<div>
 			<Header />
 
-			<div className='flex justify-center px-4 py-4 sm:py-4 sm:px-4 bg-white overflow-y-auto h-[95vh]'>
-				<div className='bg-white bg-opacity-90 p-4 shadow-md sm:p-8 rounded-xl w-full max-w-4xl  h-[110vh]'>
+			<div className='flex justify-center px-4 py-4 sm:py-5 sm:px-4 bg-white overflow-y-auto h-[95vh]'>
+				<div className='bg-white bg-opacity-90 p-4 shadow-xl sm:p-8 rounded-xl w-full max-w-4xl  h-[85vh]'>
 					<button
 						onClick={backhistory}
 						className='bg-[#b91c1c] text-white py-1 px-5 mb-4 rounded-lg hover:from-[#b91c1c] hover:to-red-500 transition-all duration-300 shadow-md flex items-center'
@@ -225,14 +225,14 @@ function CreateBookingForm() {
 								type='datetime-local'
 								value={currentDateTime}
 								onChange={(e) => setCurrentDateTime(e.target.value)}
-								className='w-full sm:w-auto p-2 bg-white border border-red-500 rounded-md sm:rounded-lg text-sm focus:ring-2 focus:ring-red-500'
+								className='w-full sm:w-auto p-2 bg-white border border-gray rounded-md sm:rounded-lg text-sm focus:ring-2 focus:ring-black'
 							/>
 							{isReturn && (
 								<input
 									type='datetime-local'
 									value={returnDateTime}
 									onChange={(e) => setReturnDateTime(e.target.value)}
-									className='w-full sm:w-auto p-2 bg-white border border-red-500 rounded-md sm:rounded-lg text-sm focus:ring-2 focus:ring-red-500'
+									className='w-full sm:w-auto p-2 bg-white border border-gray rounded-md sm:rounded-lg text-sm focus:ring-2 focus:ring-black'
 								/>
 							)}
 						</div>
@@ -568,14 +568,13 @@ function CreateBookingForm() {
 					{/* Buttons */}
 					<div className='flex flex-col sm:flex-row gap-2 sm:gap-4'>
 						{/* Cancel and Create Buttons */}
-						<div className='flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto'>
-							
+						<div className='flex flex-col sm:flex-row gap-2 sm:gap-4 w-full justify-end'>
 							<button className='w-full sm:w-auto bg-[#f3f4f6] text-black px-3 sm:px-4 py-2 rounded-md sm:rounded-lg text-xs sm:text-sm transition duration-300'>
 								Cancel
 							</button>
 							<button
 								onClick={handleSubmit}
-								className='w-full sm:w-auto bg-black text-white px-3 sm:px-4 py-2 rounded-md sm:rounded-lg text-xs sm:text-sm  transition duration-300'
+								className='w-full sm:w-auto bg-black text-white px-3 sm:px-4 py-2 rounded-md sm:rounded-lg text-xs sm:text-sm transition duration-300'
 							>
 								Create
 							</button>
