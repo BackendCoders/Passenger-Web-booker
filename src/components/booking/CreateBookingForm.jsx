@@ -73,22 +73,23 @@ function CreateBookingForm() {
 		formData?.destinationAddress || '' // Prefill from Redux or set as empty
 	);
 	const [destinationPostCode, setDestinationPostCode] = useState(''); // Destination postcode state
-	// const [pickupDate, setPickupDate] = useState(
-	// 	formData.pickupDateTime // Prefill pickup date from Redux or default to current date
-	// 		? formData.pickupDateTime.split(' ')[0] // Extract date
-	// 		: new Date().toISOString().slice(0, 10) // Default to current date in YYYY-MM-DD format
-	// );
-	// const [pickupTime, setPickupTime] = useState(
-	// 	formData.pickupDateTime // Prefill pickup time from Redux or default to current time
-	// 		? formData.pickupDateTime.split(' ')[1] // Extract time
-	// 		: new Date().toLocaleTimeString('en-US', { hour12: false }).slice(0, 5) // Default to current time in HH:MM format
-	// );
+	const [pickupDate, setPickupDate] = useState(
+		formData?.pickupDateTime // Prefill pickup date from Redux or default to current date
+			? formData?.pickupDateTime.split(' ')[0] // Extract date
+			: new Date().toISOString().slice(0, 10) // Default to current date in YYYY-MM-DD format
+	);
+	const [pickupTime, setPickupTime] = useState(
+		formData?.pickupDateTime // Prefill pickup time from Redux or default to current time
+			? formData?.pickupDateTime.split(' ')[1] // Extract time
+			: new Date().toLocaleTimeString('en-US', { hour12: false }).slice(0, 5) // Default to current time in HH:MM format
+	);
 
 	// States for other form details
 	const [passengerscount, setPassengers] = useState(1); // Number of passengers state
 	const [name, setName] = useState(''); // Name state
 	const [email, setEmail] = useState(''); // Email state
 	const [phone, setPhone] = useState(''); // Phone number state
+	const [bookingdetails, setBookingdetails] = useState('');
 
 	// States for address suggestions
 	const [pickupSuggestions, setPickupSuggestions] = useState([]); // Suggestions for pickup address
@@ -101,25 +102,28 @@ function CreateBookingForm() {
 	const [destiMode, setDestiMode] = useState('address');
 
 	// Function to handle selecting an existing passenger
-	const handleExistingPassengerSelect = (passengerId) => {
+	// Function to handle selecting an existing passenger
+	const handleExistingPassengerSelect = (passengerId, mode) => {
 		const selectedPassenger = existingPassengers.find(
 			(passenger) => passenger.id === passengerId
 		);
-		if (selectedPassenger) {
-			// Automatically fill form fields with passenger's data
-			setPickupAddress(selectedPassenger.address);
-			setPickupPostCode(selectedPassenger.postcode);
 
-			// Automatically switch to "Address" mode
-			setViewMode('address');
-		}
 		if (selectedPassenger) {
-			// Automatically fill form fields with passenger's data
-			setDestinationAddress(selectedPassenger.address);
-			setDestinationPostCode(selectedPassenger.postcode);
+			if (mode === 'pickup') {
+				// Fill pickup address and postcode
+				setPickupAddress(selectedPassenger.address);
+				setPickupPostCode(selectedPassenger.postcode);
 
-			// Automatically switch to "Address" mode
-			setDestiMode('address');
+				// Automatically switch to "Address" mode
+				setViewMode('address');
+			} else if (mode === 'destination') {
+				// Fill destination address and postcode
+				setDestinationAddress(selectedPassenger.address);
+				setDestinationPostCode(selectedPassenger.postcode);
+
+				// Automatically switch to "Address" mode
+				setDestiMode('address');
+			}
 		}
 	};
 
@@ -340,8 +344,12 @@ function CreateBookingForm() {
 								Select Existing Passenger
 							</label>
 							<select
+								id='pickupPassenger'
 								onChange={(e) =>
-									handleExistingPassengerSelect(Number(e.target.value))
+									handleExistingPassengerSelect(
+										Number(e.target.value),
+										'pickup'
+									)
 								}
 								className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
 							>
@@ -451,8 +459,12 @@ function CreateBookingForm() {
 								Select Existing Passenger
 							</label>
 							<select
+								id='destinationPassenger'
 								onChange={(e) =>
-									handleExistingPassengerSelect(Number(e.target.value))
+									handleExistingPassengerSelect(
+										Number(e.target.value),
+										'destination'
+									)
 								}
 								className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
 							>
@@ -477,8 +489,8 @@ function CreateBookingForm() {
 						<div className='flex items-center gap-2 sm:gap-4'>
 							<input
 								type='text'
-								value={phone}
-								onChange={(e) => setPhone(e.target.value)}
+								value={bookingdetails}
+								onChange={(e) => setBookingdetails(e.target.value)}
 								placeholder='Booking Details'
 								className='w-full px-3 sm:px-4 py-2 sm:py-5 bg-white border rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
 							/>
