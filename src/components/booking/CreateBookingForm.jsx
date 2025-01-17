@@ -208,11 +208,11 @@ function CreateBookingForm() {
 		<div>
 			<Header />
 
-			<div className='flex justify-center px-4 py-4 sm:py-4 sm:px-4 bg-gradient-to-br from-red-50 to-red-100 overflow-y-auto h-[95vh]'>
-				<div className='bg-gradient-to-br from-red-50 to-red-100 bg-opacity-90 p-4 sm:p-8 rounded-xl w-full max-w-4xl  h-[110vh]'>
+			<div className='flex justify-center px-4 py-4 sm:py-4 sm:px-4 bg-white overflow-y-auto h-[95vh]'>
+				<div className='bg-white bg-opacity-90 p-4 shadow-md sm:p-8 rounded-xl w-full max-w-4xl  h-[110vh]'>
 					<button
 						onClick={backhistory}
-						className='bg-red-500 text-white py-1 px-5 mb-4 rounded-lg hover:from-red-600 hover:to-red-500 transition-all duration-300 shadow-md flex items-center'
+						className='bg-[#b91c1c] text-white py-1 px-5 mb-4 rounded-lg hover:from-[#b91c1c] hover:to-red-500 transition-all duration-300 shadow-md flex items-center'
 					>
 						<TiArrowBack className='mr-2' />
 						<span>Back</span>
@@ -237,7 +237,7 @@ function CreateBookingForm() {
 							)}
 						</div>
 						<div className='flex items-center gap-2 sm:gap-4 w-full sm:w-auto'>
-							<button className='w-full sm:w-auto bg-red-500 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:from-red-600 hover:to-red-500 transition-all duration-300'>
+							<button className='w-full sm:w-auto bg-[#b91c1c] text-white px-3 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:from-[#b91c1c] hover:to-red-500 transition-all duration-300'>
 								Repeat Booking
 							</button>
 							<label className='flex items-center gap-1 sm:gap-2 text-gray-700 cursor-pointer text-xs sm:text-sm'>
@@ -266,9 +266,9 @@ function CreateBookingForm() {
 							onClick={() => setViewMode('address')}
 							className={`px-4 py-2 rounded ${
 								viewMode === 'address'
-									? 'bg-red-500 text-white'
+									? 'bg-[#b91c1c] text-white'
 									: 'bg-gray-200 text-gray-700'
-							} hover:bg-red-600 transition-all duration-300`}
+							} hover:bg-[#b91c1c] transition-all duration-300`}
 						>
 							Address
 						</button>
@@ -276,9 +276,9 @@ function CreateBookingForm() {
 							onClick={() => setViewMode('existing')}
 							className={`px-4 py-2 rounded ${
 								viewMode === 'existing'
-									? 'bg-red-500 text-white'
+									? 'bg-[#b91c1c] text-white'
 									: 'bg-gray-200 text-gray-700'
-							} hover:bg-red-600 transition-all duration-300`}
+							} hover:bg-[#b91c1c] transition-all duration-300`}
 						>
 							Existing Passenger
 						</button>
@@ -381,9 +381,9 @@ function CreateBookingForm() {
 							onClick={() => setDestiMode('address')}
 							className={`px-4 py-2 rounded ${
 								destiMode === 'address'
-									? 'bg-red-500 text-white'
+									? 'bg-[#b91c1c] text-white'
 									: 'bg-gray-200 text-gray-700'
-							} hover:bg-red-600 transition-all duration-300`}
+							} hover:bg-[#b91c1c] transition-all duration-300`}
 						>
 							Address
 						</button>
@@ -391,9 +391,9 @@ function CreateBookingForm() {
 							onClick={() => setDestiMode('existing')}
 							className={`px-4 py-2 rounded ${
 								destiMode === 'existing'
-									? 'bg-red-500 text-white'
+									? 'bg-[#b91c1c] text-white'
 									: 'bg-gray-200 text-gray-700'
-							} hover:bg-red-600 transition-all duration-300`}
+							} hover:bg-[#b91c1c] transition-all duration-300`}
 						>
 							Existing Passenger
 						</button>
@@ -405,7 +405,7 @@ function CreateBookingForm() {
 							{/* Destination Address */}
 							<div>
 								<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-									Destination Address <span className='text-red-500'>*</span>
+									Destination Address <span className='text-[#b91c1c]'>*</span>
 								</label>
 								<div className='relative'>
 									<input
@@ -569,12 +569,13 @@ function CreateBookingForm() {
 					<div className='flex flex-col sm:flex-row gap-2 sm:gap-4'>
 						{/* Cancel and Create Buttons */}
 						<div className='flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto'>
-							<button className='w-full sm:w-auto bg-red-500 text-white px-3 sm:px-4 py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:bg-red-600 transition duration-300'>
+							
+							<button className='w-full sm:w-auto bg-[#f3f4f6] text-black px-3 sm:px-4 py-2 rounded-md sm:rounded-lg text-xs sm:text-sm transition duration-300'>
 								Cancel
 							</button>
 							<button
 								onClick={handleSubmit}
-								className='w-full sm:w-auto bg-red-600 text-white px-3 sm:px-4 py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:bg-red-700 transition duration-300'
+								className='w-full sm:w-auto bg-black text-white px-3 sm:px-4 py-2 rounded-md sm:rounded-lg text-xs sm:text-sm  transition duration-300'
 							>
 								Create
 							</button>
