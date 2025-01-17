@@ -27,7 +27,6 @@ function CreateBookingForm() {
 	// Fetch existing data from Redux (if any) to prefill the form
 	const formData = useSelector((state) => state.forms.form);
 
-
 	// States for date and time management
 	const [currentDateTime, setCurrentDateTime] = useState(''); // Current datetime state
 	const [returnDateTime, setReturnDateTime] = useState(''); // Return datetime state
@@ -54,7 +53,7 @@ function CreateBookingForm() {
 
 	// States for pickup and destination details
 	const [pickupAddress, setPickupAddress] = useState(
-		formData?.pickupAddress || "" // Use optional chaining and a default value
+		formData?.pickupAddress || '' // Use optional chaining and a default value
 	);
 
 	const [pickupPostCode, setPickupPostCode] = useState(''); // Pickup postcode state
@@ -193,15 +192,14 @@ function CreateBookingForm() {
 		<div>
 			<Header />
 
-			<div className='flex justify-center bg-[#F3F4F6] px-4 sm:py-10 sm:px-4 bg-gradient-to-br from-red-50 to-red-100 overflow-y-auto h-[85vh]'>
-				<div className='bg-white bg-opacity-90 p-4 sm:p-8 rounded-xl shadow-lg w-full max-w-4xl  h-[110vh]'>
+			<div className='flex justify-center px-4 sm:py-10 sm:px-4 bg-white overflow-y-auto h-[95vh]'>
+				<div className='bg-white bg-opacity-90 p-4 sm:p-8 rounded-xl w-full max-w-4xl  h-[110vh]'>
 					<button
 						onClick={backhistory}
-						className=" bg-red-500 text-white py-1 px-5 mb-4 rounded-lg hover:from-red-600 hover:to-red-500 transition-all duration-300 shadow-md"
+						className=' bg-red-500 text-white py-1 px-5 mb-4 rounded-lg hover:from-red-600 hover:to-red-500 transition-all duration-300 shadow-md'
 					>
 						Back
 					</button>
-
 
 					{/* Date and ASAP */}
 					<div className='flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6'>
@@ -227,13 +225,17 @@ function CreateBookingForm() {
 							</button>
 							<label className='flex items-center gap-1 sm:gap-2 text-gray-700 cursor-pointer text-xs sm:text-sm'>
 								<div
-									className={`relative w-8 h-5 sm:w-10 sm:h-6 rounded-full ${isReturn ? 'bg-red-500' : 'bg-gray-300'
-										}`}
+									className={`relative w-8 h-5 sm:w-10 sm:h-6 rounded-full ${
+										isReturn ? 'bg-red-500' : 'bg-gray-300'
+									}`}
 									onClick={handleReturnToggle}
 								>
 									<div
-										className={`absolute w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-md top-[2px] sm:top-1 left-[2px] transform transition-transform duration-300 ${isReturn ? 'translate-x-4 sm:translate-x-4' : 'translate-x-0'
-											}`}
+										className={`absolute w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-md top-[2px] sm:top-1 left-[2px] transform transition-transform duration-300 ${
+											isReturn
+												? 'translate-x-4 sm:translate-x-4'
+												: 'translate-x-0'
+										}`}
 									></div>
 								</div>
 								<span>Return</span>
@@ -241,29 +243,29 @@ function CreateBookingForm() {
 						</div>
 					</div>
 
-
 					{/* Buttons for Address and Existing Passenger */}
 					<div className='flex gap-4 mb-4'>
 						<button
 							onClick={() => setViewMode('address')}
-							className={`px-4 py-2 rounded ${viewMode === 'address'
+							className={`px-4 py-2 rounded ${
+								viewMode === 'address'
 									? 'bg-red-500 text-white'
 									: 'bg-gray-200 text-gray-700'
-								} hover:bg-red-600 transition-all duration-300`}
+							} hover:bg-red-600 transition-all duration-300`}
 						>
 							Address
 						</button>
 						<button
 							onClick={() => setViewMode('existing')}
-							className={`px-4 py-2 rounded ${viewMode === 'existing'
+							className={`px-4 py-2 rounded ${
+								viewMode === 'existing'
 									? 'bg-red-500 text-white'
 									: 'bg-gray-200 text-gray-700'
-								} hover:bg-red-600 transition-all duration-300`}
+							} hover:bg-red-600 transition-all duration-300`}
 						>
 							Existing Passenger
 						</button>
 					</div>
-
 
 					{/* Pickup Address and Post Code */}
 					{viewMode === 'address' && (
@@ -271,7 +273,7 @@ function CreateBookingForm() {
 							{/* Pickup Address */}
 							<div>
 								<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-									Pickup Address <span className='text-blue-500'>*</span>
+									Pickup Address <span className='text-red-500'>*</span>
 								</label>
 								<div className='relative'>
 									<input
@@ -356,24 +358,25 @@ function CreateBookingForm() {
 					<div className='flex gap-4 mb-4'>
 						<button
 							onClick={() => setDestiMode('address')}
-							className={`px-4 py-2 rounded ${destiMode === 'address'
+							className={`px-4 py-2 rounded ${
+								destiMode === 'address'
 									? 'bg-red-500 text-white'
 									: 'bg-gray-200 text-gray-700'
-								} hover:bg-red-600 transition-all duration-300`}
+							} hover:bg-red-600 transition-all duration-300`}
 						>
 							Address
 						</button>
 						<button
 							onClick={() => setDestiMode('existing')}
-							className={`px-4 py-2 rounded ${destiMode === 'existing'
+							className={`px-4 py-2 rounded ${
+								destiMode === 'existing'
 									? 'bg-red-500 text-white'
 									: 'bg-gray-200 text-gray-700'
-								} hover:bg-red-600 transition-all duration-300`}
+							} hover:bg-red-600 transition-all duration-300`}
 						>
 							Existing Passenger
 						</button>
 					</div>
-
 
 					{/* Destination Address */}
 					{destiMode === 'address' && (
@@ -381,7 +384,7 @@ function CreateBookingForm() {
 							{/* Destination Address */}
 							<div>
 								<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-									Destination Address <span className='text-blue-500'>*</span>
+									Destination Address <span className='text-red-500'>*</span>
 								</label>
 								<div className='relative'>
 									<input
@@ -474,7 +477,7 @@ function CreateBookingForm() {
 						{/* Name Input */}
 						<div>
 							<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
-								Name <span className='text-blue-500'>*</span>
+								Name <span className='text-red-500'>*</span>
 							</label>
 							<input
 								type='text'
@@ -552,7 +555,6 @@ function CreateBookingForm() {
 							</button>
 						</div>
 					</div>
-
 				</div>
 			</div>
 		</div>
