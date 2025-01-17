@@ -1,5 +1,4 @@
 import { apiConnector } from '../apiConnector'; // API connector utility
-import { toast } from 'react-hot-toast'; // Toast for user notifications
 import { newpassengerformEndpoints } from '../api'; // Endpoints
 
 const {
