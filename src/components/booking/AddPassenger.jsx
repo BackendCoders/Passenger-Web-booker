@@ -2,12 +2,20 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux"; // Redux hooks
+import { addPassenger } from "../../slices/formSlice"; // Redux thunk for adding a passenger
 import Header from "../Common/header";
 import toast from "react-hot-toast"; // Notification library
+import { TiArrowBack } from "react-icons/ti";
 
 const AddPassenger = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  // Redux states
+  const { loading } = useSelector((state) => state.forms); // Select loading state from Redux
+
+  // Local state for form inputs
   const [formData, setFormData] = useState({
     passengerName: "",
     description: "",
@@ -16,8 +24,6 @@ const AddPassenger = () => {
     phone: "",
     email: "",
   });
-
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -38,7 +44,7 @@ const AddPassenger = () => {
       return;
     }
 
-    // Prepare the payload
+    // Prepare payload
     const requestBody = {
       id: 0, // Static value for new passengers
       accNo: 9999, // Static account number
@@ -50,41 +56,26 @@ const AddPassenger = () => {
       email: formData.email || "", // Optional field
     };
 
-    console.log("Sending Request Body:", requestBody);
+    console.log("Sending Request Body via Redux Thunk:", requestBody);
 
     try {
-      setLoading(true);
-
-      const response = await fetch(
-        "https://dev.ace-api.1soft.co.uk/api/WeBooking/AddNewPassenger",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer your-auth-token-here`, // Replace with actual token
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
-
-      const result = await response.json();
-      console.log("API Response:", result);
-
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to create passenger");
-      }
+      // Dispatch Redux thunk
+      await dispatch(
+        addPassenger({
+          token: "your-auth-token-here", // Replace with actual token
+          data: requestBody,
+        })
+      ).unwrap(); // Wait for thunk to complete and throw errors if any
 
       toast.success("Passenger created successfully!");
-      navigate("/passengerlist");
+      navigate("/passengerlist"); // Redirect after success
     } catch (error) {
       console.error("Error creating passenger:", error);
-      toast.error(error.message || "An error occurred");
-    } finally {
-      setLoading(false);
+      toast.error(error || "An error occurred");
     }
   };
 
-  return (
+	return (
     <div>
       <Header />
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 p-4">
@@ -92,10 +83,12 @@ const AddPassenger = () => {
         <div className="flex justify-center gap-4 mb-8">
           <button
             onClick={() => navigate("/dashboard")}
-            className="px-5 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition"
+            className="px-5 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition flex items-center"
           >
-            Back
+            <TiArrowBack className="mr-2" />
+            <span>Back</span>
           </button>
+
           <button
             onClick={() => navigate("/add-passenger")}
             className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"

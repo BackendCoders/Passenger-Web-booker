@@ -11,6 +11,7 @@ import {
 import { LuArrowDownUp } from 'react-icons/lu'; // Importing switch icon
 import Header from '../Common/header'; // Header component
 import { updateForm } from '../../slices/formSlice'; // Redux action to update form data
+import { TiArrowBack } from 'react-icons/ti';
 
 // Mock data for existing passengers (Replace with actual API or Redux data)
 const existingPassengers = [
@@ -192,13 +193,14 @@ function CreateBookingForm() {
 		<div>
 			<Header />
 
-			<div className='flex justify-center px-4 sm:py-10 sm:px-4 bg-white overflow-y-auto h-[95vh]'>
-				<div className='bg-white bg-opacity-90 p-4 sm:p-8 rounded-xl w-full max-w-4xl  h-[110vh]'>
+			<div className='flex justify-center px-4 py-4 sm:py-4 sm:px-4 bg-gradient-to-br from-red-50 to-red-100 overflow-y-auto h-[95vh]'>
+				<div className='bg-gradient-to-br from-red-50 to-red-100 bg-opacity-90 p-4 sm:p-8 rounded-xl w-full max-w-4xl  h-[110vh]'>
 					<button
 						onClick={backhistory}
-						className=' bg-red-500 text-white py-1 px-5 mb-4 rounded-lg hover:from-red-600 hover:to-red-500 transition-all duration-300 shadow-md'
+						className='bg-red-500 text-white py-1 px-5 mb-4 rounded-lg hover:from-red-600 hover:to-red-500 transition-all duration-300 shadow-md flex items-center'
 					>
-						Back
+						<TiArrowBack className='mr-2' />
+						<span>Back</span>
 					</button>
 
 					{/* Date and ASAP */}

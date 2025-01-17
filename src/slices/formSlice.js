@@ -4,7 +4,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Import service functions for API calls
-import { getAllPassengers, deletePassenger } from "../service/operations/formApi";
+import {
+  getAllPassengers,
+  deletePassenger,
+  addNewPassenger, // Import add passenger API function
+} from "../service/operations/formApi";
 
 /**
  * Async Thunk: Fetch all passengers from the API with caching and pagination.
@@ -40,18 +44,34 @@ export const removePassenger = createAsyncThunk(
   "forms/removePassenger",
   async ({ token, id }, { rejectWithValue }) => {
     try {
-      const response = await deletePassenger(token, id); // API call
+      // API call
+      await deletePassenger(token, id);
 
-      if (!response || typeof response !== "object") {
-        throw new Error("Invalid API response");
-      }
-
-      console.log("Delete Passenger API Response:", response);
-      return id; // Return deleted passenger ID
+      // Return the deleted passenger ID
+      return id;
     } catch (error) {
       console.error("Delete Passenger Error:", error.message);
       return rejectWithValue(
         error.response?.data?.error || "Failed to delete passenger"
+      );
+    }
+  }
+);
+
+
+/**
+ * Async Thunk: Add a new passenger.
+ */
+export const addPassenger = createAsyncThunk(
+  "forms/addPassenger",
+  async ({ token, data }, { rejectWithValue }) => {
+    try {
+      const response = await addNewPassenger(token, data); // API call
+      return response; // Return added passenger data
+    } catch (error) {
+      console.error("Add Passenger Error:", error.message);
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to add passenger"
       );
     }
   }
@@ -117,6 +137,22 @@ const formSlice = createSlice({
         );
       })
       .addCase(removePassenger.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Add Passenger
+      .addCase(addPassenger.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = null;
+      })
+      .addCase(addPassenger.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = "Passenger added successfully!";
+        state.passengers.push(action.payload); // Add new passenger to the list
+      })
+      .addCase(addPassenger.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
