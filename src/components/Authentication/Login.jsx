@@ -33,8 +33,8 @@ const LoginForm = () => {
 	};
 
 	return (
-		<div className="flex justify-center items-center min-h-screen bg-gradient-to-br  from-red-50 to-red-100 from-white-500 to-white-800 px-4">
-			<div className="w-full max-w-md bg-white shadow-md rounded-lg overflow-hidden">
+		<div className="flex justify-center items-center min-h-screen bg-white from-white-500 to-white-800 px-4">
+			<div className="w-full max-w-md bg-white shadow-lg rounded-lg overflow-hidden">
 				<div className="p-6">
 					{/* Logo Section */}
 					<div className="flex justify-center mb-6">
@@ -61,7 +61,7 @@ const LoginForm = () => {
 								type="text"
 								name="accountNumber"
 								placeholder="Enter your account number"
-								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-red-500"
+								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring"
 								value={formData.accountNumber}
 								onChange={handleChange}
 								required
@@ -79,7 +79,7 @@ const LoginForm = () => {
 								type="text"
 								name="username"
 								placeholder="Enter your username"
-								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-red-500"
+								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring "
 								value={formData.username}
 								onChange={handleChange}
 								required
@@ -97,7 +97,7 @@ const LoginForm = () => {
 								type="password"
 								name="password"
 								placeholder="Enter your password"
-								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-red-500"
+								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring"
 								value={formData.password}
 								onChange={handleChange}
 								required

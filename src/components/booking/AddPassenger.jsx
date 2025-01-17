@@ -78,7 +78,7 @@ const AddPassenger = () => {
 	return (
     <div>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 p-4">
+      <div className="min-h-screen bg-white p-4">
         {/* Button Section */}
         <div className="flex justify-center gap-4 mb-8">
           <button
@@ -91,7 +91,7 @@ const AddPassenger = () => {
 
           <button
             onClick={() => navigate("/add-passenger")}
-            className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+            className="px-5 py-2 bg-[#b91c1c] text-white rounded-lg hover:bg-red-700 transition"
           >
             Add Passenger
           </button>
@@ -236,7 +236,7 @@ const AddPassenger = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  className="px-5 py-2 bg-black text-white rounded-lg"
                   disabled={loading} // Disable button while loading
                 >
                   {loading ? "Submitting..." : "Create Passenger"}

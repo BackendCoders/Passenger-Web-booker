@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import Header from '../Common/header';
 import { RiLogoutBoxLine } from "react-icons/ri";
@@ -17,14 +17,14 @@ function Confirmation() {
   return (
     <div>
       <Header />
-      <div className="flex flex-col pt-20 items-center  min-h-screen bg-gradient-to-br from-red-50 to-red-100 px-4">
+      <div className="flex flex-col pt-20 items-center  min-h-screen bg-white px-4">
         {/* Success Banner */}
         <div className="w-full max-w-lg bg-green-500 text-white text-xl font-bold text-center py-4 rounded-lg shadow-md">
           <p>🎉 Booking Request Created</p>
         </div>
 
         {/* Confirmation Message */}
-        <div className="w-full max-w-lg mt-8 bg-white shadow-lg rounded-lg p-6">
+        <div className="w-full max-w-lg mt-8 bg-white rounded-lg p-6">
           <p className="text-gray-700 text-center text-lg leading-relaxed">
             Your booking request has been successfully created. An operator will review your booking shortly, and you will receive an email confirmation.
           </p>

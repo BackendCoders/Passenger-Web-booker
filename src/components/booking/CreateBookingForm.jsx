@@ -221,7 +221,7 @@ function CreateBookingForm() {
 			<Header />
 
 			<div className='flex justify-center px-4 py-4 sm:py-5 sm:px-4 bg-white overflow-y-auto h-[95vh]'>
-				<div className='bg-white bg-opacity-90 p-4 shadow-xl sm:p-8 rounded-xl w-full max-w-4xl min-h-[1000px] max-h-[90vh] overflow-y-auto'>
+				<div className='bg-white bg-opacity-90 p-4 shadow-xl sm:p-8 rounded-xl w-full max-w-4xl min-h-[1100px] max-h-[90vh] overflow-y-auto'>
 					<button
 						onClick={backhistory}
 						className='bg-[#b91c1c] text-white py-1 px-2 sm:py-1 sm:px-5 mb-4 rounded-md sm:rounded-lg hover:from-[#b91c1c] hover:to-red-500 transition-all duration-300 shadow-md flex items-center text-sm sm:text-base'
