@@ -7,10 +7,10 @@ import { createActionPlan } from "../service/operations/webbookingApi"; // Impor
  */
 export const createActionPlanThunk = createAsyncThunk(
   "actionPlan/create",
-  async ({ token, webBookingData }, { rejectWithValue }) => {
+  async ({ formData }, { rejectWithValue }) => {
     try {
-      const response = await createActionPlan(token, webBookingData);
-      return response; // Return the response data
+      const response = await createActionPlan("your-token-here", formData); // Ensure the correct token is used
+      return response;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.error || error.message || "Failed to create action plan"
@@ -18,6 +18,7 @@ export const createActionPlanThunk = createAsyncThunk(
     }
   }
 );
+
 
 const actionPlanSlice = createSlice({
   name: "actionPlan",

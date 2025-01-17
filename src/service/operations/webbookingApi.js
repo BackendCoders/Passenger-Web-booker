@@ -12,7 +12,7 @@ export const createActionPlan = async (token, webBookingData) => {
       CREATEWEBBOOKING_CREATE_FORM,
       webBookingData,
       {
-        Authorization: `Bearer ${token.replace(/"/g, "")}`, // Sanitize the token
+        Authorization: `Bearer ${token}`, // Sanitize the token
       }
     );
 

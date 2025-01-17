@@ -13,6 +13,7 @@ import Header from '../Common/header'; // Header component
 import { updateForm } from '../../slices/formSlice'; // Redux action to update form data
 import { TiArrowBack } from 'react-icons/ti';
 import { fetchPassengers } from '../../slices/formSlice';
+import { createActionPlanThunk } from '../../slices/webbookingSlice'; // Redux action
 
 // Main functional component for creating a booking form
 function CreateBookingForm() {
@@ -47,21 +48,24 @@ function CreateBookingForm() {
 	useEffect(() => {
 		// Function to get the current date and time in the required format
 		const getCurrentDateTime = () => {
-			const now = new Date();
-			const year = now.getFullYear();
-			const month = String(now.getMonth() + 1).padStart(2, '0'); // Add leading zero to month
-			const day = String(now.getDate()).padStart(2, '0'); // Add leading zero to date
-			const hours = String(now.getHours()).padStart(2, '0'); // Add leading zero to hours
-			const minutes = String(now.getMinutes()).padStart(2, '0'); // Add leading zero to minutes
-
-			// Format: YYYY-MM-DDTHH:MM
-			return `${year}-${month}-${day}T${hours}:${minutes}`;
+		  const now = new Date();
+		  const year = now.getUTCFullYear();
+		  const month = String(now.getUTCMonth() + 1).padStart(2, '0'); // Add leading zero to month
+		  const day = String(now.getUTCDate()).padStart(2, '0'); // Add leading zero to day
+		  const hours = String(now.getUTCHours()).padStart(2, '0'); // Add leading zero to hours
+		  const minutes = String(now.getUTCMinutes()).padStart(2, '0'); // Add leading zero to minutes
+		  const seconds = String(now.getUTCSeconds()).padStart(2, '0'); // Add leading zero to seconds
+		  const milliseconds = String(now.getUTCMilliseconds()).padStart(3, '0'); // Add leading zero to milliseconds
+	  
+		  // Format: YYYY-MM-DDTHH:mm:ss.sss
+		  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
 		};
-
+	  
 		// Set the current and return date/time states
 		setCurrentDateTime(getCurrentDateTime());
 		setReturnDateTime(getCurrentDateTime());
-	}, []);
+	  }, []);
+	  
 
 	// States for pickup and destination details
 	const [pickupAddress, setPickupAddress] = useState(
@@ -86,10 +90,10 @@ function CreateBookingForm() {
 
 	// States for other form details
 	const [passengerscount, setPassengers] = useState(1); // Number of passengers state
-	const [name, setName] = useState(''); // Name state
+	const [passengerName, setName] = useState(''); // Name state
 	const [email, setEmail] = useState(''); // Email state
-	const [phone, setPhone] = useState(''); // Phone number state
-	const [bookingdetails, setBookingdetails] = useState(''); // bookingdetails
+	const [phoneNumber, setPhone] = useState(''); // Phone number state
+	const [details, setBookingdetails] = useState(''); // bookingdetails
 
 	// States for address suggestions
 	const [pickupSuggestions, setPickupSuggestions] = useState([]); // Suggestions for pickup address
@@ -150,14 +154,14 @@ function CreateBookingForm() {
 
 	// Handle address selection from suggestions
 	const handleSelectAddress = async (id, isPickup = true) => {
-		const details = await getAddressDetails(id); // Fetch address details by ID
+		const Selectdetails = await getAddressDetails(id); // Fetch address details by ID
 		if (isPickup) {
-			setPickupAddress(details.address); // Update pickup address
-			setPickupPostCode(details.postcode); // Update pickup postcode
+			setPickupAddress(Selectdetails.address); // Update pickup address
+			setPickupPostCode(Selectdetails.postcode); // Update pickup postcode
 			setPickupSuggestions([]); // Clear pickup suggestions
 		} else {
-			setDestinationAddress(details.address); // Update destination address
-			setDestinationPostCode(details.postcode); // Update destination postcode
+			setDestinationAddress(Selectdetails.address); // Update destination address
+			setDestinationPostCode(Selectdetails.postcode); // Update destination postcode
 			setDestinationSuggestions([]); // Clear destination suggestions
 		}
 	};
@@ -172,31 +176,39 @@ function CreateBookingForm() {
 
 	// Handle form submission
 	const handleSubmit = () => {
-		if (!pickupAddress || !pickupDate || !pickupTime) {
-			// Validate required fields
+		if (
+			!pickupAddress ||
+			!pickupPostCode ||
+			!destinationAddress ||
+			!passengerName ||
+			!phoneNumber
+		) {
 			alert('Please fill in all required fields.');
 			return;
 		}
 
-		// Prepare booking details
-		const bookingDetails = {
-			pickupAddress,
-			pickupPostCode,
-			destinationAddress,
-			destinationPostCode,
-			pickupDateTime: `${pickupDate} ${pickupTime}`, // Combine date and time
-			passengers,
-			bookingdetails,
-			name,
-			email,
-			phone,
+		const formData = {
+			accNo: 9999, // Static account number
+			pickupDateTime: currentDateTime, // Dynamic field
+			recurrenceRule: new Date(currentDateTime).toISOString(), // Static or fallback value
+			pickupAddress: pickupAddress.trim(), // Trim whitespace
+			pickupPostCode: pickupPostCode.trim(), // Trim whitespace
+			destinationAddress: destinationAddress.trim(), // Trim whitespace
+			destinationPostCode: destinationPostCode.trim(), // Trim whitespace
+			details: details || '', // Optional field with fallback
+			passengerName: passengerName.trim(), // Map passengerName to passenger
+			phoneNumber: phoneNumber?.trim() || '', // Optional field with fallback
+			email: email?.trim() || '', // Optional field with fallback
 		};
 
-		// Dispatch the form data to Redux
-		dispatch(updateForm(bookingDetails));
-
-		// Navigate to the next step
-		navigate('/confirmation');
+		dispatch(createActionPlanThunk({ formData }))
+			.unwrap()
+			.then(() => {
+				navigate('/confirmation');
+			})
+			.catch((error) => {
+				console.error('Error submitting form:', error);
+			});
 	};
 
 	// Navigate back to the dashboard
@@ -209,35 +221,38 @@ function CreateBookingForm() {
 			<Header />
 
 			<div className='flex justify-center px-4 py-4 sm:py-5 sm:px-4 bg-white overflow-y-auto h-[95vh]'>
-				<div className='bg-white bg-opacity-90 p-4 shadow-xl sm:p-8 rounded-xl w-full max-w-4xl  h-[85vh]'>
+				<div className='bg-white bg-opacity-90 p-4 shadow-xl sm:p-8 rounded-xl w-full max-w-4xl min-h-[1000px] max-h-[90vh] overflow-y-auto'>
 					<button
 						onClick={backhistory}
-						className='bg-[#b91c1c] text-white py-1 px-5 mb-4 rounded-lg hover:from-[#b91c1c] hover:to-red-500 transition-all duration-300 shadow-md flex items-center'
+						className='bg-[#b91c1c] text-white py-1 px-2 sm:py-1 sm:px-5 mb-4 rounded-md sm:rounded-lg hover:from-[#b91c1c] hover:to-red-500 transition-all duration-300 shadow-md flex items-center text-sm sm:text-base'
 					>
-						<TiArrowBack className='mr-2' />
+						<TiArrowBack className='mr-1 sm:mr-2 text-s sm:text-xl' />
 						<span>Back</span>
 					</button>
 
 					{/* Date and ASAP */}
-					<div className='flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6'>
-						<div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-4'>
+					<div className='flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-6 mb-6'>
+						{/* Date and Time Inputs */}
+						<div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto'>
 							<input
 								type='datetime-local'
 								value={currentDateTime}
 								onChange={(e) => setCurrentDateTime(e.target.value)}
-								className='w-full sm:w-auto p-2 bg-white border border-gray rounded-md sm:rounded-lg text-sm focus:ring-2 focus:ring-black'
+								className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
 							/>
 							{isReturn && (
 								<input
 									type='datetime-local'
 									value={returnDateTime}
 									onChange={(e) => setReturnDateTime(e.target.value)}
-									className='w-full sm:w-auto p-2 bg-white border border-gray rounded-md sm:rounded-lg text-sm focus:ring-2 focus:ring-black'
+									className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
 								/>
 							)}
 						</div>
-						<div className='flex items-center gap-2 sm:gap-4 w-full sm:w-auto'>
-							<button className='w-full sm:w-auto bg-[#b91c1c] text-white px-3 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:from-[#b91c1c] hover:to-red-500 transition-all duration-300'>
+
+						{/* Buttons and Toggle */}
+						<div className='flex flex-row sm:flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto'>
+							<button className='w-50 sm:w-auto bg-[#b91c1c] text-white px-2 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:from-[#b91c1c] hover:to-red-500 transition-all duration-300'>
 								Repeat Booking
 							</button>
 							<label className='flex items-center gap-1 sm:gap-2 text-gray-700 cursor-pointer text-xs sm:text-sm'>
@@ -248,9 +263,9 @@ function CreateBookingForm() {
 									onClick={handleReturnToggle}
 								>
 									<div
-										className={`absolute w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-md top-[2px] sm:top-1 left-[2px] transform transition-transform duration-300 ${
+										className={`absolute w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-md top-[1px] sm:top-[2px] left-[1px] transform transition-transform duration-300 ${
 											isReturn
-												? 'translate-x-4 sm:translate-x-4'
+												? 'translate-x-4 sm:translate-x-5'
 												: 'translate-x-0'
 										}`}
 									></div>
@@ -261,24 +276,24 @@ function CreateBookingForm() {
 					</div>
 
 					{/* Buttons for Address and Existing Passenger */}
-					<div className='flex gap-4 mb-4'>
+					<div className='flex gap-2 sm:gap-4 mb-4'>
 						<button
 							onClick={() => setViewMode('address')}
-							className={`px-4 py-2 rounded ${
+							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
 								viewMode === 'address'
 									? 'bg-[#b91c1c] text-white'
 									: 'bg-gray-200 text-gray-700'
-							} hover:bg-[#b91c1c] transition-all duration-300`}
+							} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
 						>
 							Address
 						</button>
 						<button
 							onClick={() => setViewMode('existing')}
-							className={`px-4 py-2 rounded ${
+							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
 								viewMode === 'existing'
 									? 'bg-[#b91c1c] text-white'
 									: 'bg-gray-200 text-gray-700'
-							} hover:bg-[#b91c1c] transition-all duration-300`}
+							} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
 						>
 							Existing Passenger
 						</button>
@@ -376,24 +391,24 @@ function CreateBookingForm() {
 					</div>
 
 					{/* Buttons for Address and Existing Passenger */}
-					<div className='flex gap-4 mb-4'>
+					<div className='flex gap-2 sm:gap-4 mb-4'>
 						<button
 							onClick={() => setDestiMode('address')}
-							className={`px-4 py-2 rounded ${
+							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
 								destiMode === 'address'
 									? 'bg-[#b91c1c] text-white'
 									: 'bg-gray-200 text-gray-700'
-							} hover:bg-[#b91c1c] transition-all duration-300`}
+							} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
 						>
 							Address
 						</button>
 						<button
 							onClick={() => setDestiMode('existing')}
-							className={`px-4 py-2 rounded ${
+							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
 								destiMode === 'existing'
 									? 'bg-[#b91c1c] text-white'
 									: 'bg-gray-200 text-gray-700'
-							} hover:bg-[#b91c1c] transition-all duration-300`}
+							} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
 						>
 							Existing Passenger
 						</button>
@@ -489,7 +504,7 @@ function CreateBookingForm() {
 						<div className='flex items-center gap-2 sm:gap-4'>
 							<input
 								type='text'
-								value={bookingdetails}
+								value={details}
 								onChange={(e) => setBookingdetails(e.target.value)}
 								placeholder='Booking Details'
 								className='w-full px-3 sm:px-4 py-2 sm:py-5 bg-white border rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
@@ -506,7 +521,7 @@ function CreateBookingForm() {
 							</label>
 							<input
 								type='text'
-								value={name}
+								value={passengerName}
 								onChange={(e) => setName(e.target.value)}
 								placeholder='Name'
 								className='w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
@@ -535,7 +550,7 @@ function CreateBookingForm() {
 							<div className='flex items-center gap-2 sm:gap-4'>
 								<input
 									type='text'
-									value={phone}
+									value={phoneNumber}
 									onChange={(e) => setPhone(e.target.value)}
 									placeholder='Phone'
 									className='w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
