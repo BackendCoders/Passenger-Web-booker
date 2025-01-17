@@ -12,21 +12,32 @@ import { LuArrowDownUp } from 'react-icons/lu'; // Importing switch icon
 import Header from '../Common/header'; // Header component
 import { updateForm } from '../../slices/formSlice'; // Redux action to update form data
 import { TiArrowBack } from 'react-icons/ti';
-
-// Mock data for existing passengers (Replace with actual API or Redux data)
-const existingPassengers = [
-	{ id: 1, name: 'John Doe', address: '123 Main St', postcode: '12345' },
-	{ id: 2, name: 'Jane Smith', address: '456 Elm St', postcode: '67890' },
-	{ id: 3, name: 'Sam Wilson', address: '789 Oak St', postcode: '11223' },
-];
+import { fetchPassengers } from '../../slices/formSlice';
 
 // Main functional component for creating a booking form
 function CreateBookingForm() {
 	const dispatch = useDispatch(); // Redux dispatch function
 	const navigate = useNavigate(); // React Router function for navigation
 
-	// Fetch existing data from Redux (if any) to prefill the form
-	const formData = useSelector((state) => state.forms.form);
+	// Use the passengers array from Redux store dynamically
+	const { formData, passengers = [] } = useSelector((state) => state.forms);
+
+	// Fetch passengers when the component mounts
+	useEffect(() => {
+		if (passengers.length === 0) {
+			dispatch(fetchPassengers());
+		}
+	}, [dispatch, passengers.length]);
+
+	console.log('passengers' + passengers);
+
+	// Map and transform passengers if needed
+	const existingPassengers = passengers.map((passenger) => ({
+		id: passenger.id,
+		name: passenger.passenger || 'N/A', // Assuming the name field is called 'passenger'
+		address: passenger.address || 'N/A',
+		postcode: passenger.postcode || 'N/A',
+	}));
 
 	// States for date and time management
 	const [currentDateTime, setCurrentDateTime] = useState(''); // Current datetime state
@@ -74,7 +85,7 @@ function CreateBookingForm() {
 	// );
 
 	// States for other form details
-	const [passengers, setPassengers] = useState(1); // Number of passengers state
+	const [passengerscount, setPassengers] = useState(1); // Number of passengers state
 	const [name, setName] = useState(''); // Name state
 	const [email, setEmail] = useState(''); // Email state
 	const [phone, setPhone] = useState(''); // Phone number state
@@ -526,7 +537,7 @@ function CreateBookingForm() {
 								Passengers
 							</label>
 							<select
-								value={passengers}
+								value={passengerscount}
 								onChange={(e) => setPassengers(e.target.value)}
 								className='w-full px-4 py-3 bg-white border rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm'
 							>

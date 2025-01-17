@@ -1,43 +1,66 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import webbookingApi from '../service/operations/webbookingApi';
+/** @format */
 
-// Async Thunk for API Call
-export const createWebBooking = createAsyncThunk(
-  'webbooking/createWebBooking',
-  async (formData, { rejectWithValue }) => {
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createActionPlan } from "../service/operations/webbookingApi"; // Import the API function
+
+/**
+ * Async Thunk: Create a new action plan
+ */
+export const createActionPlanThunk = createAsyncThunk(
+  "actionPlan/create",
+  async ({ token, webBookingData }, { rejectWithValue }) => {
     try {
-      const response = await webbookingApi.createWebBooking(formData);
-      return response; // Success response
+      // Call the API function
+      const response = await createActionPlan(token, webBookingData);
+      return response; // Return the response data
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Something went wrong'); // Handle error
+      // Reject with an error message
+      return rejectWithValue(
+        error.response?.data?.error || error.message || "Failed to create action plan"
+      );
     }
   }
 );
 
-// Slice Definition
-const webbookingSlice = createSlice({
-  name: 'webbooking',
+/**
+ * Slice: Manages the action plan creation state
+ */
+const actionPlanSlice = createSlice({
+  name: "actionPlan",
   initialState: {
-    data: null,
-    loading: false,
-    error: null,
+    loading: false, // Loading state for the POST request
+    success: null, // Success message
+    error: null, // Error message
   },
-  reducers: {},
+  reducers: {
+    resetStatus: (state) => {
+      state.success = null;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(createWebBooking.pending, (state) => {
+      // Pending State
+      .addCase(createActionPlanThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.success = null;
       })
-      .addCase(createWebBooking.fulfilled, (state, action) => {
+      // Fulfilled State
+      .addCase(createActionPlanThunk.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        state.success = "Action plan created successfully!";
+        state.error = null;
       })
-      .addCase(createWebBooking.rejected, (state, action) => {
+      // Rejected State
+      .addCase(createActionPlanThunk.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || "Failed to create action plan";
+        state.success = null;
       });
   },
 });
 
-export default webbookingSlice.reducer;
+// Export the reducer and actions
+export const { resetStatus } = actionPlanSlice.actions;
+export default actionPlanSlice.reducer;
