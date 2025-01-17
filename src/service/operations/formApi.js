@@ -12,13 +12,6 @@ const {
   DELETE_PASSENGERS,
 } = newpassengerformEndpoints;
 
-/**
- * Fetch all passengers based on account number.
- * 
- * @param {string} token - User's authentication token.
- * @param {string} accountNo - The account number to fetch passengers.
- * @returns {Array|Object} List of passengers or an empty array on failure.
- */
 export const getAllPassengers = async (token, accountNo) => {
   try {
     // Making a GET request with authorization headers
@@ -40,13 +33,6 @@ export const getAllPassengers = async (token, accountNo) => {
   }
 };
 
-/**
- * Delete a passenger by ID.
- * 
- * @param {string} token - User's authentication token.
- * @param {number} id - The passenger ID to delete.
- * @returns {Object|null} Response data or null on failure.
- */
 export const deletePassenger = async (token, id) => {
   try {
     // Making a DELETE request with authorization headers
@@ -64,13 +50,6 @@ export const deletePassenger = async (token, id) => {
   }
 };
 
-/**
- * Add a new passenger and create a passenger form.
- * 
- * @param {string} token - User's authentication token.
- * @param {Object} data - The passenger data to send to the API.
- * @returns {Object|null} Response data or null on failure.
- */
 export const addnewpassengercreateForm = async (token, data) => {
   try {
     // Ensure data is in correct format (e.g., FormData)

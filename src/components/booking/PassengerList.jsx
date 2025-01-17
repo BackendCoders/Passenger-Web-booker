@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchPassengers, removePassenger } from "../../slices/formSlice";
 import Header from "../Common/header";
+import { MdDeleteForever } from "react-icons/md";
 
 const PassengerList = () => {
   const dispatch = useDispatch();
@@ -161,9 +162,9 @@ const PassengerList = () => {
                       <td className="border border-gray-300 px-4 py-2 flex gap-2">
                         <button
                           onClick={() => handleDelete(passenger.id)}
-                          className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+                          className="px-3 py-1 text-red-500 rounded-md hover:bg-red-700 hover:text-white"
                         >
-                          Delete
+                          <MdDeleteForever />
                         </button>
                       </td>
                     </tr>

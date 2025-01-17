@@ -10,6 +10,7 @@ import {
 } from '../../utils/addressAPI'; // Utility functions for address handling
 import { LuArrowDownUp } from 'react-icons/lu'; // Importing switch icon
 import Header from '../Common/header'; // Header component
+import { updateForm } from '../../slices/formSlice'; // Redux action to update form data
 
 // Mock data for existing passengers (Replace with actual API or Redux data)
 const existingPassengers = [
@@ -177,7 +178,7 @@ function CreateBookingForm() {
 		};
 
 		// Dispatch the form data to Redux
-		dispatch(updateFormData(bookingDetails));
+		dispatch(updateForm(bookingDetails));
 
 		// Navigate to the next step
 		navigate('/confirmation');
@@ -196,7 +197,7 @@ function CreateBookingForm() {
 				<div className='bg-white bg-opacity-90 p-4 sm:p-8 rounded-xl shadow-lg w-full max-w-4xl  h-[110vh]'>
 					<button
 						onClick={backhistory}
-						className="bg-gradient-to-r from-red-500 to-red-400 text-white py-1 px-5 mb-4 rounded-lg hover:from-red-600 hover:to-red-500 transition-all duration-300 shadow-md"
+						className=" bg-red-500 text-white py-1 px-5 mb-4 rounded-lg hover:from-red-600 hover:to-red-500 transition-all duration-300 shadow-md"
 					>
 						Back
 					</button>
@@ -221,7 +222,7 @@ function CreateBookingForm() {
 							)}
 						</div>
 						<div className='flex items-center gap-2 sm:gap-4 w-full sm:w-auto'>
-							<button className='w-full sm:w-auto bg-gradient-to-r from-red-500 to-red-400 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:from-red-600 hover:to-red-500 transition-all duration-300'>
+							<button className='w-full sm:w-auto bg-red-500 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:from-red-600 hover:to-red-500 transition-all duration-300'>
 								Repeat Booking
 							</button>
 							<label className='flex items-center gap-1 sm:gap-2 text-gray-700 cursor-pointer text-xs sm:text-sm'>
