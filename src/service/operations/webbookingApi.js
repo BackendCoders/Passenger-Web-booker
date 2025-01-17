@@ -16,9 +16,9 @@ export const createActionPlan = async (token, webBookingData) => {
       }
     );
 
-    // Check if the response is successful
-    if (response.status === 201) {
-      toast.success("Action plan created successfully!");
+    // Handle success based on status code
+    if (response.status === 201 || response.status === 200) {
+      toast.success("Action plan created successfully!"); // Show success toast
       return response.data; // Return the response data
     } else {
       throw new Error(
@@ -30,9 +30,10 @@ export const createActionPlan = async (token, webBookingData) => {
     handleError(error, "Failed to create action plan");
   }
 };
+
 const handleError = (error, defaultMessage) => {
   console.error("API Error:", error);
   const errorMessage =
     error.response?.data?.error || error.message || defaultMessage;
-  toast.error(errorMessage);
+  toast.error(errorMessage); // Show error toast
 };
