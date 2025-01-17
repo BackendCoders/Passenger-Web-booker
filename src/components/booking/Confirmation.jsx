@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../Common/header';
+import { RiLogoutBoxLine } from "react-icons/ri";
 
 function Confirmation() {
   const navigate = useNavigate();
@@ -16,35 +17,37 @@ function Confirmation() {
   return (
     <div>
       <Header />
-      <div className="flex flex-col items-center min-h-screen p-6 bg-gray-100">
+      <div className="flex flex-col pt-20 items-center  min-h-screen bg-gradient-to-br from-red-50 to-red-100 px-4">
         {/* Success Banner */}
-        <div className="w-full max-w-xl bg-green-500 text-white text-lg font-bold text-center py-4 rounded-md">
-          BOOKING REQUEST CREATED
+        <div className="w-full max-w-lg bg-green-500 text-white text-xl font-bold text-center py-4 rounded-lg shadow-md">
+          <p>🎉 Booking Request Created</p>
         </div>
 
         {/* Confirmation Message */}
-        <div className="w-full max-w-xl mt-6 text-center">
-          <p className="text-gray-700 text-base">
-            AN OPERATOR WILL REVIEW YOUR BOOKING SHORTLY AND YOU WILL RECEIVE AN EMAIL CONFIRMATION.
+        <div className="w-full max-w-lg mt-8 bg-white shadow-lg rounded-lg p-6">
+          <p className="text-gray-700 text-center text-lg leading-relaxed">
+            Your booking request has been successfully created. An operator will review your booking shortly, and you will receive an email confirmation.
           </p>
-          <p className="mt-4 text-red-600 font-semibold">
-            PLEASE NOTE THIS BOOKING IS NOT CONFIRMED UNTIL YOU RECEIVE A BOOKING CONFIRMATION.
+          <p className="mt-4 text-red-600 font-semibold text-center">
+            Please note: This booking is not confirmed until you receive a booking confirmation email.
           </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex mt-8 space-x-4">
+        <div className="flex flex-col sm:flex-row gap-4 mt-10 w-full max-w-md">
+          {/* Log Out Button */}
           <button
             onClick={handleLogOut}
-            className="px-6 py-2 bg-blue-600 text-white font-medium text-base rounded-md hover:bg-blue-700 transition duration-300"
+            className="w-full sm:w-auto px-6 py-3 bg-red-600 text-white font-medium text-lg rounded-lg hover:bg-red-700 transition duration-300 shadow-md flex items-center justify-center gap-2"
           >
+            <RiLogoutBoxLine className="text-2xl" />
             Log Out
           </button>
           <button
             onClick={handleNewBooking}
-            className="px-6 py-2 bg-blue-600 text-white font-medium text-base rounded-md hover:bg-blue-700 transition duration-300"
+            className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-medium text-lg rounded-lg hover:bg-blue-700 transition duration-300 shadow-md"
           >
-            New Booking Request
+            New Booking Request +
           </button>
         </div>
       </div>

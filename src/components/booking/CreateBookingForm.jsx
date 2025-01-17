@@ -20,7 +20,9 @@ function CreateBookingForm() {
 	const navigate = useNavigate(); // React Router function for navigation
 
 	// Use the passengers array from Redux store dynamically
-	const { formData, passengers = [] } = useSelector((state) => state.forms);
+	const { passengers = [] } = useSelector((state) => state.forms);
+
+	const formData = useState();
 
 	// Fetch passengers when the component mounts
 	useEffect(() => {
@@ -28,8 +30,6 @@ function CreateBookingForm() {
 			dispatch(fetchPassengers());
 		}
 	}, [dispatch, passengers.length]);
-
-	console.log('passengers' + passengers);
 
 	// Map and transform passengers if needed
 	const existingPassengers = passengers.map((passenger) => ({
@@ -89,7 +89,7 @@ function CreateBookingForm() {
 	const [name, setName] = useState(''); // Name state
 	const [email, setEmail] = useState(''); // Email state
 	const [phone, setPhone] = useState(''); // Phone number state
-	const [bookingdetails, setBookingdetails] = useState('');
+	const [bookingdetails, setBookingdetails] = useState(''); // bookingdetails 
 
 	// States for address suggestions
 	const [pickupSuggestions, setPickupSuggestions] = useState([]); // Suggestions for pickup address
@@ -101,7 +101,6 @@ function CreateBookingForm() {
 	const [viewMode, setViewMode] = useState('address'); // "address" or "existing"
 	const [destiMode, setDestiMode] = useState('address');
 
-	// Function to handle selecting an existing passenger
 	// Function to handle selecting an existing passenger
 	const handleExistingPassengerSelect = (passengerId, mode) => {
 		const selectedPassenger = existingPassengers.find(
@@ -187,6 +186,7 @@ function CreateBookingForm() {
 			destinationPostCode,
 			pickupDateTime: `${pickupDate} ${pickupTime}`, // Combine date and time
 			passengers,
+			bookingdetails,
 			name,
 			email,
 			phone,

@@ -1,5 +1,4 @@
 /** @format */
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { createActionPlan } from "../service/operations/webbookingApi"; // Import the API function
 
@@ -10,11 +9,9 @@ export const createActionPlanThunk = createAsyncThunk(
   "actionPlan/create",
   async ({ token, webBookingData }, { rejectWithValue }) => {
     try {
-      // Call the API function
       const response = await createActionPlan(token, webBookingData);
       return response; // Return the response data
     } catch (error) {
-      // Reject with an error message
       return rejectWithValue(
         error.response?.data?.error || error.message || "Failed to create action plan"
       );
@@ -22,15 +19,12 @@ export const createActionPlanThunk = createAsyncThunk(
   }
 );
 
-/**
- * Slice: Manages the action plan creation state
- */
 const actionPlanSlice = createSlice({
   name: "actionPlan",
   initialState: {
-    loading: false, // Loading state for the POST request
-    success: null, // Success message
-    error: null, // Error message
+    loading: false,
+    success: null,
+    error: null,
   },
   reducers: {
     resetStatus: (state) => {
@@ -43,11 +37,11 @@ const actionPlanSlice = createSlice({
       // Pending State
       .addCase(createActionPlanThunk.pending, (state) => {
         state.loading = true;
-        state.error = null;
         state.success = null;
+        state.error = null;
       })
       // Fulfilled State
-      .addCase(createActionPlanThunk.fulfilled, (state, action) => {
+      .addCase(createActionPlanThunk.fulfilled, (state) => {
         state.loading = false;
         state.success = "Action plan created successfully!";
         state.error = null;
@@ -55,12 +49,12 @@ const actionPlanSlice = createSlice({
       // Rejected State
       .addCase(createActionPlanThunk.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "Failed to create action plan";
+        state.error = action.payload;
         state.success = null;
       });
   },
 });
 
-// Export the reducer and actions
+// Export actions and reducer
 export const { resetStatus } = actionPlanSlice.actions;
 export default actionPlanSlice.reducer;
