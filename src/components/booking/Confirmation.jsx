@@ -2,17 +2,20 @@
 import { useNavigate } from 'react-router-dom';
 import Header from '../Common/header';
 import { RiLogoutBoxLine } from "react-icons/ri";
+import { useDispatch } from 'react-redux';
+import { logout } from '../../service/operations/authApi';
 
 function Confirmation() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleNewBooking = () => {
     navigate('/createbookingform'); // Adjust this route as needed
   };
 
-  const handleLogOut = () => {
-    navigate('/login'); // Adjust this route as needed
-  };
+  // const handleLogOut = () => {
+  //   navigate('/login'); // Adjust this route as needed
+  // };
 
   return (
     <div>
@@ -37,7 +40,7 @@ function Confirmation() {
         <div className="flex flex-col sm:flex-row gap-4 mt-10 w-full max-w-md">
           {/* Log Out Button */}
           <button
-            onClick={handleLogOut}
+            onClick={() => dispatch(logout(navigate))}
             className="w-full sm:w-auto px-6 py-3 bg-red-600 text-white font-medium text-lg rounded-lg hover:bg-red-700 transition duration-300 shadow-md flex items-center justify-center gap-2"
           >
             <RiLogoutBoxLine className="text-2xl" />
