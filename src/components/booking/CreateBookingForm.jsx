@@ -246,7 +246,7 @@ function CreateBookingForm() {
 
 	// Navigate back to the dashboard
 	const backhistory = () => {
-		navigate('/dashboard');
+		navigate('/');
 	};
 
 	return (

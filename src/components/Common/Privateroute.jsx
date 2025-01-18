@@ -8,7 +8,7 @@ const Privateroute = () => {
 
     console.log('isAuth:', isAuth, 'token:', token); // Debug log
 
-    return isAuth && token ? <Outlet /> : <Navigate to="/" />;
+    return isAuth && token ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default Privateroute;

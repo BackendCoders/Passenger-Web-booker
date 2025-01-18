@@ -135,7 +135,7 @@ const AddPassenger = () => {
 				{/* Button Section */}
 				<div className='flex justify-center gap-2 sm:gap-4 mb-6 sm:mb-8'>
 					<button
-						onClick={() => navigate('/dashboard')}
+						onClick={() => navigate('/')}
 						className='px-3 py-2 sm:px-5 sm:py-2 bg-gray-300 text-gray-700 text-xs sm:text-sm rounded-lg hover:bg-gray-400 transition flex items-center'
 					>
 						<TiArrowBack className='mr-1 sm:mr-2' />

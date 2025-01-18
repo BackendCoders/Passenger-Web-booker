@@ -11,7 +11,7 @@ function Confirmation() {
   };
 
   const handleLogOut = () => {
-    navigate('/'); // Adjust this route as needed
+    navigate('/login'); // Adjust this route as needed
   };
 
   return (

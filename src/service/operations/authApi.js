@@ -38,7 +38,7 @@ export function login(username, password, navigate) {
 			localStorage.setItem("token", JSON.stringify(token));
 
 			// Navigate to dashboard
-			navigate("/dashboard");
+			navigate("/");
 		} catch (error) {
 			dispatch(setIsAuth(false));
 			toast.error("Invalid credentials");
@@ -72,7 +72,7 @@ export function logout(navigate) {
 		localStorage.removeItem('token');
 		localStorage.removeItem('hasModalShown');
 		toast.success('Logged Out');
-		navigate('/');
+		navigate('/login');
 	};
 }
 

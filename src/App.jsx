@@ -15,12 +15,12 @@ function App() {
 		<div className="h-screen w-screen overflow-hidden bg-[#F3F4F6]">
 			<Routes>
 				{/* Public Routes */}
-				<Route path="/" element={<Login />} />
+				<Route path="/login" element={<Login />} />
 				
 
 				{/* Protected Routes */}
 				<Route element={<Privateroute />}>
-					<Route path="/dashboard" element={<BookingDashboard />} />
+					<Route path="/" element={<BookingDashboard />} />
 					<Route path="/createbookingform" element={<CreateBookingForm />} />
 					<Route path="/confirmation" element={<Confirmation />} />
           <Route path="/AddPassenger" element={<AddPassenger />} />

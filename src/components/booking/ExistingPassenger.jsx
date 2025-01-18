@@ -74,7 +74,7 @@ const ExistingPassenger = () => {
 				<div className='flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4'>
 					{/* Back Button */}
 					<button
-						onClick={() => navigate('/dashboard')}
+						onClick={() => navigate('/')}
 						className='flex-shrink-0 px-3 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300 transition flex items-center justify-center'
 					>
 						<TiArrowBack className='mr-2' />
