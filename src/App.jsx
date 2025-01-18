@@ -1,5 +1,5 @@
 /** @format */
-
+import PrivateRoute from './components/Common/PrivateRoute';
 import { Route, Routes } from 'react-router-dom';
 import CreateBookingForm from './components/booking/CreateBookingForm';
 import Confirmation from './components/booking/Confirmation';
@@ -8,7 +8,7 @@ import AddPassenger from './components/booking/AddPassenger';
 import BookingDashboard from './components/booking/BookingDashboard';
 import PassengerList from './components/booking/PassengerList';
 import ExistingPassenger from './components/booking/ExistingPassenger';
-import Privateroute from './components/Common/PrivateRoute';
+
 
 function App() {
 	return (
@@ -19,7 +19,7 @@ function App() {
 				
 
 				{/* Protected Routes */}
-				<Route element={<Privateroute />}>
+				<Route element={<PrivateRoute />}>
 					<Route path="/" element={<BookingDashboard />} />
 					<Route path="/createbookingform" element={<CreateBookingForm />} />
 					<Route path="/confirmation" element={<Confirmation />} />
