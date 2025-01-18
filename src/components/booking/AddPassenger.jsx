@@ -3,7 +3,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'; // Redux hooks
-import { addPassenger } from '../../slices/formSlice'; // Redux thunk for adding a passenger
+import {
+	addPassenger,
+	fetchPassengers,
+	setPassengers,
+} from '../../slices/formSlice'; // Redux thunk for adding a passenger
 import Header from '../Common/header';
 import toast from 'react-hot-toast'; // Notification library
 import { TiArrowBack } from 'react-icons/ti';
@@ -11,6 +15,7 @@ import {
 	getAddressSuggestions,
 	getAddressDetails,
 } from '../../utils/addressAPI'; // Utility functions for address handling
+import { getAllPassengers } from '../../service/operations/formApi';
 
 const AddPassenger = () => {
 	const navigate = useNavigate();
@@ -18,6 +23,8 @@ const AddPassenger = () => {
 
 	// Redux states
 	const { loading } = useSelector((state) => state.forms); // Select loading state from Redux
+	// const { token = '' } = useSelector((state) => state.auth);
+	const token = 'static-token';
 
 	// Local state for form inputs
 	const [formData, setFormData] = useState({
@@ -111,6 +118,9 @@ const AddPassenger = () => {
 			).unwrap(); // Wait for thunk to complete and throw errors if any
 
 			toast.success('Passenger created successfully!');
+			const response = await getAllPassengers(token, 9999);
+			console.log(response);
+			if (response.length > 0) dispatch(setPassengers(response));
 			navigate('/passengerlist'); // Redirect after success
 		} catch (error) {
 			console.error('Error creating passenger:', error);
