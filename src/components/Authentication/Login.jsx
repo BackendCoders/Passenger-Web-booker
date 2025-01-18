@@ -7,7 +7,6 @@ import carlogo from "../../assets/logo.png"; // Ensure this path is correct
 const LoginForm = () => {
 	const [formData, setFormData] = useState({
 		accountNumber: "",
-		username: "",
 		password: "",
 	});
 	const navigate = useNavigate();
@@ -22,7 +21,7 @@ const LoginForm = () => {
 		e.preventDefault();
 
 		// Validation for empty fields
-		if (!formData.accountNumber || !formData.username || !formData.password) {
+		if (!formData.accountNumber || !formData.password) {
 			toast.error("All fields are required!");
 			return;
 		}
@@ -63,24 +62,6 @@ const LoginForm = () => {
 								placeholder="Enter your account number"
 								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring"
 								value={formData.accountNumber}
-								onChange={handleChange}
-								required
-							/>
-						</div>
-
-						<div>
-							<label
-								htmlFor="username"
-								className="block text-gray-600 font-medium mb-1"
-							>
-								Username:
-							</label>
-							<input
-								type="text"
-								name="username"
-								placeholder="Enter your username"
-								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring "
-								value={formData.username}
 								onChange={handleChange}
 								required
 							/>
