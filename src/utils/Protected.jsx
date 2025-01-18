@@ -1,15 +1,27 @@
 /** @format */
+// import { Navigate } from 'react-router-dom';
+// import { useSelector } from 'react-redux';
 
+const ProtectedRoute = ({ element }) => {
+	// const { isAuth, loading } = useSelector((state) => state.auth);
 
-import { Navigate } from 'react-router-dom';
+	// if (loading) {
+	// 	// Show a loading screen while authentication is being checked
+	// 	return <div>Loading...</div>;
+	// }
 
-// Example of checking authentication, replace with your actual logic
-const isAuthenticated = () => {
-  return localStorage.getItem('authToken'); // Check for a token or authentication flag
-};
+	// if (!isAuth) {
+	// 	// If user is not authenticated, redirect to login
+	// 	return (
+	// 		<Navigate
+	// 			to='/login'
+	// 			replace
+	// 		/>
+	// 	);
+	// }
 
-const ProtectedRoute = ({ children }) => {
-  return isAuthenticated() ? children : <Navigate to="/" />;
+	// If the user is authenticated, render the component
+	return element;
 };
 
 export default ProtectedRoute;
