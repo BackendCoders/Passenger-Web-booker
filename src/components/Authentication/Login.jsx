@@ -1,15 +1,22 @@
 /** @format */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux"; // Import Redux hooks
 import toast from "react-hot-toast";
 import carlogo from "../../assets/logo.png"; // Ensure this path is correct
+import { login } from "../../service/operations/authApi"; // Import login action
 
 const LoginForm = () => {
 	const [formData, setFormData] = useState({
-		accountNumber: "",
+		username: "",
 		password: "",
 	});
+
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	// Access loading and error state from Redux
+	const { loading, error } = useSelector((state) => state.auth);
 
 	// Handle input changes
 	const handleChange = (e) => {
@@ -17,18 +24,21 @@ const LoginForm = () => {
 	};
 
 	// Handle form submission
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		// Validation for empty fields
-		if (!formData.accountNumber || !formData.password) {
+		if (!formData.username || !formData.password) {
 			toast.error("All fields are required!");
 			return;
 		}
 
-		// Simulate login success
-		toast.success("Login successful!");
-		navigate("/dashboard"); // Replace "/dashboard" with the desired route
+		// Dispatch the login action
+		try {
+			await dispatch(login(formData.username, formData.password, navigate));
+		} catch (error) {
+			toast.error("Login failed!");
+		}
 	};
 
 	return (
@@ -48,20 +58,25 @@ const LoginForm = () => {
 						ACE TAXIS - ACCOUNT LOGIN
 					</h2>
 
+					{/* Display error message if login fails */}
+					{error && (
+						<p className="text-red-500 text-center mb-4">{error}</p>
+					)}
+
 					<form onSubmit={handleSubmit} className="space-y-4">
 						<div>
 							<label
-								htmlFor="accountNumber"
+								htmlFor="username"
 								className="block text-gray-600 font-medium mb-1"
 							>
 								Account Number:
 							</label>
 							<input
 								type="text"
-								name="accountNumber"
+								name="username"
 								placeholder="Enter your account number"
 								className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring"
-								value={formData.accountNumber}
+								value={formData.username}
 								onChange={handleChange}
 								required
 							/>
@@ -85,11 +100,13 @@ const LoginForm = () => {
 							/>
 						</div>
 
+						{/* Disable button when loading */}
 						<button
 							type="submit"
 							className="w-full bg-red-700 text-white py-3 rounded-lg font-bold hover:bg-red-800 transition duration-300"
+							disabled={loading}
 						>
-							Login
+							{loading ? "Logging in..." : "Login"}
 						</button>
 					</form>
 				</div>

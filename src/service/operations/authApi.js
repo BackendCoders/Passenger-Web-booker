@@ -8,90 +8,46 @@ import {
 	setUser,
 } from '../../slices/authSlice';
 
-const { LOGIN_API, SIGNUP_API, GET_ME_API, FORGET_PASSWORD_API } = endpoints;
+const { LOGIN_API } = endpoints;
 
-export function signUp(data, navigate) {
+
+
+export function login(username, password, navigate) {
 	return async (dispatch) => {
 		dispatch(setLoading(true));
 		try {
-			const response = await apiConnector('POST', SIGNUP_API, {
-				contactPerson: `${data.firstName} ${data.lastName}`,
-				email: data.email,
-				password: data.password,
-				role: data.role || '2',
-			});
-			console.log('SIGNUP API RESPONSE.........', response);
-
-			if (response.status !== 201) {
-				throw new Error(response.data.message);
-			}
-
-			const user = response.data.user;
-			dispatch(setToken(response.data.token));
-			dispatch(setUser(user)); // Assuming `setUser` stores user details
-			dispatch(setIsAuth(true));
-
-			localStorage.setItem('token', JSON.stringify(response.data.token));
-
-			console.log(user);
-
-			toast.success('Signup Successfully');
-			if (user.role === '1') {
-				navigate('/dashboard-role1'); // Admin Dashboard
-			} else if (user.role === '2') {
-				navigate('/dashboard-role2'); // Regular User Dashboard
-			} else {
-				navigate('/'); // Default route if no role matches
-			}
-		} catch (error) {
-			console.log('SIGNUP API ERROR.........', error);
-			const errorMessage = error.response.data.error;
-			toast.error(errorMessage);
-			navigate('/');
-		}
-		dispatch(setLoading(false));
-	};
-}
-
-export function login(email, password, navigate) {
-	return async (dispatch) => {
-		dispatch(setLoading(true));
-		try {
-			// Make API call for login
-			const response = await apiConnector('POST', LOGIN_API, {
-				email,
+			// Simulate API call
+			const response = await apiConnector("POST", LOGIN_API, {
+				username,
 				password,
 			});
 
-			console.log('LOGIN API RESPONSE.........', response);
-
-			// Check if response is successful
 			if (response.status !== 200) {
-				throw new Error(response.data);
+				throw new Error(response.data?.message || "Login failed");
 			}
 
-			toast.success('Login Successfully');
+			toast.success("Login successful!");
 
 			// Store token and user in Redux
 			const { token, user } = response.data;
 			dispatch(setToken(token));
-			dispatch(setUser(user)); // Assuming `setUser` stores user details
+			dispatch(setUser(user));
 			dispatch(setIsAuth(true));
 
-			// Save token to local storage
-			localStorage.setItem('token', JSON.stringify(token));
+			// Save token to localStorage
+			localStorage.setItem("token", JSON.stringify(token));
 
-			// Navigate directly to the dashboard or home page
-			navigate('/bookinghistory'); // Navigate to a generic dashboard or desired page
+			// Navigate to dashboard
+			navigate("/dashboard");
 		} catch (error) {
-			console.log('LOGIN API ERROR........', error);
-			const errorMessage =
-				error.response?.data?.error || 'Something went wrong';
-			toast.error(errorMessage);
+			dispatch(setIsAuth(false));
+			toast.error("Invalid credentials");
+		} finally {
+			dispatch(setLoading(false));
 		}
-		dispatch(setLoading(false));
 	};
 }
+
 
 
 // Ensure refreshToken is declared and exported
@@ -106,59 +62,6 @@ export const refreshToken = async () => {
 	return await response.json();
 };
 
-export function getMe(navigate) {
-	return async (dispatch, getState) => {
-		// Check for token in Redux state or localStorage
-		const storedToken = getState().auth.token || localStorage.getItem('token');
-
-		if (!storedToken) {
-			console.log('No token provided, redirecting to sign-in.');
-			toast.error('No token found. Please log in.');
-			dispatch(setToken(null));
-			dispatch(setIsAuth(false));
-			dispatch(setUser(null));
-			navigate('/'); // Redirect to login
-			return;
-		}
-		dispatch(setLoading(true));
-
-		try {
-			// Fetch current user details using token
-			const response = await apiConnector('POST', GET_ME_API, null, {
-				'Authorization': `Bearer ${storedToken}`,
-				'Content-Type': 'application/json',
-			});
-
-			console.log('GET ME API RESPONSE.........', response);
-
-			if (response.status !== 200) {
-				throw new Error(response.data);
-			}
-
-			// Save user info and mark the user as authenticated
-			dispatch(setUser(response.data.user));
-			dispatch(setIsAuth(true));
-
-			// Redirect user to locationStep or other relevant page
-			// navigate('/about');
-		} catch (error) {
-			console.log('GET ME API ERROR........', error);
-
-			// const errorMessage = error?.response?.data?.error || '';
-			// toast.error(errorMessage);
-
-			// Log user out on failure
-			dispatch(setToken(null));
-			dispatch(setIsAuth(false));
-			localStorage.removeItem('token');
-			localStorage.removeItem('hasModalShown');
-			// Redirect to login page
-			navigate('/');
-		} finally {
-			dispatch(setLoading(false));
-		}
-	};
-}
 
 export function logout(navigate) {
 	return (dispatch) => {
@@ -173,20 +76,4 @@ export function logout(navigate) {
 	};
 }
 
-export const forgetPassword = async (email) => {
-	try {
-		// Fetch current user details using token
-		const response = await apiConnector('POST', FORGET_PASSWORD_API, { email });
 
-		console.log('Forget Password API RESPONSE.........', response);
-
-		if (response.status !== 200) {
-			throw new Error(response.data);
-		}
-
-		return response.data;
-	} catch (error) {
-		console.log('Forget Password API ERROR........', error);
-		toast.error(error.response.data.error || 'Forget Password Error');
-	}
-};
