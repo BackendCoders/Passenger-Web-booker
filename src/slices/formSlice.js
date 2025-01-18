@@ -1,5 +1,3 @@
-/** @format */
-
 // Import required functions from Redux Toolkit
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
@@ -10,76 +8,6 @@ import {
   addNewPassenger, // Import add passenger API function
 } from "../service/operations/formApi";
 
-/**
- * Async Thunk: Fetch all passengers from the API with caching and pagination.
- */
-export const fetchPassengers = createAsyncThunk(
-  "forms/fetchPassengers",
-  async (_, { getState, rejectWithValue }) => {
-    const { forms } = getState();
-    if (forms.passengers.length > 0) {
-      // Return cached passengers if already fetched
-      console.log("Using cached passengers");
-      return forms.passengers;
-    }
-
-    try {
-      const token = "static-token"; // Replace with your actual token
-      const accountNo = 9999; // Static account number
-      const response = await getAllPassengers(token, accountNo); // API call
-      return response; // Return passenger list
-    } catch (error) {
-      console.error("Fetch Passengers Error:", error);
-      return rejectWithValue(
-        error.response?.data?.error || "Failed to fetch passengers"
-      );
-    }
-  }
-);
-
-/**
- * Async Thunk: Delete a passenger by ID.
- */
-export const removePassenger = createAsyncThunk(
-  "forms/removePassenger",
-  async ({ token, id }, { rejectWithValue }) => {
-    try {
-      // API call
-      await deletePassenger(token, id);
-
-      // Return the deleted passenger ID
-      return id;
-    } catch (error) {
-      console.error("Delete Passenger Error:", error.message);
-      return rejectWithValue(
-        error.response?.data?.error || "Failed to delete passenger"
-      );
-    }
-  }
-);
-
-
-/**
- * Async Thunk: Add a new passenger.
- */
-export const addPassenger = createAsyncThunk(
-  "forms/addPassenger",
-  async ({ token, data }, { rejectWithValue }) => {
-    try {
-      const response = await addNewPassenger(token, data); // API call
-      return response; // Return added passenger data
-    } catch (error) {
-      console.error("Add Passenger Error:", error.message);
-      return rejectWithValue(
-        error.response?.data?.error || "Failed to add passenger"
-      );
-    }
-  }
-);
-
-/**
- * Slice: Manages form and passenger-related state and actions.
- */
 const formSlice = createSlice({
   name: "forms",
   initialState: {
@@ -158,6 +86,63 @@ const formSlice = createSlice({
       });
   },
 });
+
+export const fetchPassengers = createAsyncThunk(
+  "forms/fetchPassengers",
+  async (_, { getState, rejectWithValue }) => {
+    const { forms } = getState();
+    if (forms.passengers.length > 0) {
+      // Return cached passengers if already fetched
+      console.log("Using cached passengers");
+      return forms.passengers;
+    }
+
+    try {
+      const token = "static-token"; // Replace with your actual token
+      const accountNo = 9999; // Static account number
+      const response = await getAllPassengers(token, accountNo); // API call
+      return response; // Return passenger list
+    } catch (error) {
+      console.error("Fetch Passengers Error:", error);
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to fetch passengers"
+      );
+    }
+  }
+);
+
+export const removePassenger = createAsyncThunk(
+  "forms/removePassenger",
+  async ({ token, id }, { rejectWithValue }) => {
+    try {
+      // API call
+      await deletePassenger(token, id);
+
+      // Return the deleted passenger ID
+      return id;
+    } catch (error) {
+      console.error("Delete Passenger Error:", error.message);
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to delete passenger"
+      );
+    }
+  }
+);
+
+export const addPassenger = createAsyncThunk(
+  "forms/addPassenger",
+  async ({ token, data }, { rejectWithValue }) => {
+    try {
+      const response = await addNewPassenger(token, data); // API call
+      return response; // Return added passenger data
+    } catch (error) {
+      console.error("Add Passenger Error:", error.message);
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to add passenger"
+      );
+    }
+  }
+);
 
 // Export reducers and actions
 export const { updateForm, setSelectedPassenger, resetStatus } = formSlice.actions;
