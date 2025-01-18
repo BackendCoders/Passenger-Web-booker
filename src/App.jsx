@@ -1,6 +1,7 @@
 /** @format */
 
 import { Route, Routes } from 'react-router-dom';
+import ProtectedRoute from './utils/Protected'; // Import the ProtectedRoute component
 import CreateBookingForm from './components/booking/CreateBookingForm';
 import Confirmation from './components/booking/Confirmation';
 import Login from './components/Authentication/Login';
@@ -8,50 +9,70 @@ import AddPassenger from './components/booking/AddPassenger';
 import BookingDashboard from './components/booking/BookingDashboard';
 import PassengerList from './components/booking/PassengerList';
 import ExistingPassenger from './components/booking/ExistingPassenger';
-// import { useEffect } from 'react';
 
 function App() {
-	return (
-		<div className='h-screen w-screen overflow-hidden bg-[#F3F4F6]'>
-			<Routes>
-				{/* Login Route */}
-				<Route
-					path='/'
-					element={<Login />}
-				/>
-				<Route
-					path='/dashboard'
-					element={<BookingDashboard />}
-				/>
+  return (
+    <div className="h-screen w-screen overflow-hidden bg-[#F3F4F6]">
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={<Login />} />
 
-				<Route
-					path='/AddPassenger'
-					element={<AddPassenger />}
-				/>
+        {/* Protected Routes */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <BookingDashboard />
+            </ProtectedRoute>
+          }
+        />
 
-				<Route
-					path='/existingpassengers'
-					element={<ExistingPassenger />}
-				/>
+        <Route
+          path="/AddPassenger"
+          element={
+            <ProtectedRoute>
+              <AddPassenger />
+            </ProtectedRoute>
+          }
+        />
 
-				<Route
-					path='/passengerlist'
-					element={<PassengerList />}
-				/>
+        <Route
+          path="/existingpassengers"
+          element={
+            <ProtectedRoute>
+              <ExistingPassenger />
+            </ProtectedRoute>
+          }
+        />
 
-				{/* Booking Steps (Protected) */}
+        <Route
+          path="/passengerlist"
+          element={
+            <ProtectedRoute>
+              <PassengerList />
+            </ProtectedRoute>
+          }
+        />
 
-				<Route
-					path='/createbookingform'
-					element={<CreateBookingForm />}
-				/>
-				<Route
-					path='/confirmation'
-					element={<Confirmation />}
-				/>
-			</Routes>
-		</div>
-	);
+        <Route
+          path="/createbookingform"
+          element={
+            <ProtectedRoute>
+              <CreateBookingForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/confirmation"
+          element={
+            <ProtectedRoute>
+              <Confirmation />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </div>
+  );
 }
 
 export default App;

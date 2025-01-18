@@ -38,7 +38,7 @@ export function login(username, password, navigate) {
 			localStorage.setItem("token", JSON.stringify(token));
 
 			// Navigate to dashboard
-			navigate("/dashboard");
+			navigate("/");
 		} catch (error) {
 			dispatch(setIsAuth(false));
 			toast.error("Invalid credentials");
