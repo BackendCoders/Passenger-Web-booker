@@ -17,7 +17,6 @@ export const getAllPassengers = async (token, accountNo) => {
     return response.data;
   } catch (error) {
     console.error('Get all passengers error:', error.response?.data || error.message);
-    toast.error(error.response?.data?.error || 'Failed to fetch passengers');
   }
 };
 
@@ -28,11 +27,9 @@ export const addNewPassenger = async (token, data) => {
       Authorization: `Bearer ${token}`,
     });
     if (response.status !== 201) throw new Error("Couldn't create a new passenger");
-    toast.success('New passenger added successfully');
     return response.data;
   } catch (error) {
     console.error('Add new passenger error:', error.response?.data || error.message);
-    toast.error(error.response?.data?.error || 'Failed to add passenger');
   }
 };
 
@@ -43,10 +40,11 @@ export const deletePassenger = async (token, id) => {
       Authorization: `Bearer ${token}`,
     });
     if (response.status !== 200) throw new Error('Could not delete passenger');
-    toast.success('Passenger deleted successfully');
     return id;
   } catch (error) {
     console.error('Delete passenger error:', error.response?.data || error.message);
-    toast.error(error.response?.data?.error || 'Failed to delete passenger');
   }
 };
+
+
+
