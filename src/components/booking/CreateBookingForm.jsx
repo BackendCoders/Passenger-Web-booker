@@ -14,6 +14,7 @@ import { updateForm } from '../../slices/formSlice'; // Redux action to update f
 import { TiArrowBack } from 'react-icons/ti';
 import { fetchPassengers } from '../../slices/formSlice';
 import { createActionPlanThunk } from '../../slices/webbookingSlice'; // Redux action
+import RepeatBooking from './RepeatBooking'; // Import the modal component
 
 // Main functional component for creating a booking form
 function CreateBookingForm() {
@@ -48,24 +49,35 @@ function CreateBookingForm() {
 	useEffect(() => {
 		// Function to get the current date and time in the required format
 		const getCurrentDateTime = () => {
-		  const now = new Date();
-		  const year = now.getUTCFullYear();
-		  const month = String(now.getUTCMonth() + 1).padStart(2, '0'); // Add leading zero to month
-		  const day = String(now.getUTCDate()).padStart(2, '0'); // Add leading zero to day
-		  const hours = String(now.getUTCHours()).padStart(2, '0'); // Add leading zero to hours
-		  const minutes = String(now.getUTCMinutes()).padStart(2, '0'); // Add leading zero to minutes
-		  const seconds = String(now.getUTCSeconds()).padStart(2, '0'); // Add leading zero to seconds
-		  const milliseconds = String(now.getUTCMilliseconds()).padStart(3, '0'); // Add leading zero to milliseconds
-	  
-		  // Format: YYYY-MM-DDTHH:mm:ss.sss
-		  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+			const now = new Date();
+			const year = now.getUTCFullYear();
+			const month = String(now.getUTCMonth() + 1).padStart(2, '0'); // Add leading zero to month
+			const day = String(now.getUTCDate()).padStart(2, '0'); // Add leading zero to day
+			const hours = String(now.getUTCHours()).padStart(2, '0'); // Add leading zero to hours
+			const minutes = String(now.getUTCMinutes()).padStart(2, '0'); // Add leading zero to minutes
+			const seconds = String(now.getUTCSeconds()).padStart(2, '0'); // Add leading zero to seconds
+			const milliseconds = String(now.getUTCMilliseconds()).padStart(3, '0'); // Add leading zero to milliseconds
+
+			// Format: YYYY-MM-DDTHH:mm:ss.sss
+			return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
 		};
-	  
+
 		// Set the current and return date/time states
 		setCurrentDateTime(getCurrentDateTime());
 		setReturnDateTime(getCurrentDateTime());
-	  }, []);
-	  
+	}, []);
+
+	const [isRepeatModalOpen, setIsRepeatModalOpen] = useState(false); // Modal state
+
+	// Handle modal open/close
+	const openRepeatModal = () => setIsRepeatModalOpen(true);
+	const closeRepeatModal = () => setIsRepeatModalOpen(false);
+
+	// Handle confirm in the modal
+	const handleRepeatConfirm = (data) => {
+		console.log('Repeat Booking Data:', data); // Handle repeat booking logic
+		closeRepeatModal(); // Close the modal after confirming
+	};
 
 	// States for pickup and destination details
 	const [pickupAddress, setPickupAddress] = useState(
@@ -175,7 +187,8 @@ function CreateBookingForm() {
 	};
 
 	// Handle form submission
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
+		// Validate required fields
 		if (
 			!pickupAddress ||
 			!pickupPostCode ||
@@ -187,6 +200,7 @@ function CreateBookingForm() {
 			return;
 		}
 
+		// Prepare the common form data
 		const formData = {
 			accNo: 9999, // Static account number
 			pickupDateTime: currentDateTime, // Dynamic field
@@ -201,14 +215,33 @@ function CreateBookingForm() {
 			email: email?.trim() || '', // Optional field with fallback
 		};
 
-		dispatch(createActionPlanThunk({ formData }))
-			.unwrap()
-			.then(() => {
-				navigate('/confirmation');
-			})
-			.catch((error) => {
-				console.error('Error submitting form:', error);
-			});
+		try {
+			// First API call: Submit the original data
+			await dispatch(createActionPlanThunk({ formData })).unwrap();
+
+			// If it's a return trip, prepare and send the second API call
+			if (isReturn) {
+				const returnFormData = {
+					...formData,
+					pickupDateTime: returnDateTime, // Use the return date and time for the second trip
+					pickupAddress: destinationAddress.trim(), // Swap pickup and destination
+					pickupPostCode: destinationPostCode.trim(),
+					destinationAddress: pickupAddress.trim(),
+					destinationPostCode: pickupPostCode.trim(),
+				};
+
+				// Second API call for the return trip
+				await dispatch(
+					createActionPlanThunk({ formData: returnFormData })
+				).unwrap();
+			}
+
+			// Navigate to the confirmation page after successful submissions
+			navigate('/confirmation');
+		} catch (error) {
+			console.error('Error submitting form:', error);
+			alert('An error occurred while creating the booking.');
+		}
 	};
 
 	// Navigate back to the dashboard
@@ -252,7 +285,10 @@ function CreateBookingForm() {
 
 						{/* Buttons and Toggle */}
 						<div className='flex flex-row sm:flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto'>
-							<button className='w-50 sm:w-auto bg-[#b91c1c] text-white px-2 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:from-[#b91c1c] hover:to-red-500 transition-all duration-300'>
+							<button
+								onClick={openRepeatModal}
+								className='w-50 sm:w-auto bg-[#b91c1c] text-white px-2 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm hover:from-[#b91c1c] hover:to-red-500 transition-all duration-300'
+							>
 								Repeat Booking
 							</button>
 							<label className='flex items-center gap-1 sm:gap-2 text-gray-700 cursor-pointer text-xs sm:text-sm'>
@@ -597,6 +633,13 @@ function CreateBookingForm() {
 					</div>
 				</div>
 			</div>
+
+			{/* Repeat Booking Modal */}
+			<RepeatBooking
+				isOpen={isRepeatModalOpen}
+				onClose={closeRepeatModal}
+				onConfirm={handleRepeatConfirm}
+			/>
 		</div>
 	);
 }
