@@ -3,16 +3,19 @@ import { useLocation, useNavigate } from 'react-router-dom'; // Import useLocati
 import carlogo from '../../assets/logo.png'; // Replace with the correct path to your logo image
 import { FaAngleDown } from 'react-icons/fa';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../service/operations/authApi';
 
 const Header = () => {
 	const location = useLocation();
-	const navigate = useNavigate(); // For navigation
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const [dropdownOpen, setDropdownOpen] = useState(false); // Dropdown state
 
 	// Handle logout
-	const handleLogout = () => {
-		navigate('/'); // Navigate to the logout route
-	};
+	// const handleLogout = () => {
+	// 	navigate('/'); // Navigate to the logout route
+	// };
 
 	// Define headings for different routes
 	const routeHeadings = {
@@ -66,7 +69,7 @@ const Header = () => {
 				{dropdownOpen && (
 					<div className='absolute right-0 mt-2 w-48 bg-white border border-gray-300 shadow-md rounded-md z-10'>
 						<button
-							onClick={handleLogout}
+							onClick={() => dispatch(logout(navigate))}
 							className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
 						>
 							Logout
