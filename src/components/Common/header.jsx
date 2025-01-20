@@ -70,7 +70,7 @@ const Header = () => {
 						Logged in as: <span className='font-semibold ml-1'>{fullName}</span>
 						<FaAngleDown
 							className={`ml-1 transform transition-transform duration-200 ${
-								dropdownOpen ? 'rotate-180' : 'rotate-0'
+								dropdownOpen ? 'rotate-0' : 'rotate-180'
 							}`} // Arrow rotation based on dropdown state
 						/>
 					</p>
