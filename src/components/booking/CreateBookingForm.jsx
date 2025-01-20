@@ -10,7 +10,6 @@ import {
 } from '../../utils/addressAPI'; // Utility functions for address handling
 import { LuArrowDownUp } from 'react-icons/lu'; // Importing switch icon
 import Header from '../Common/header'; // Header component
-import { updateForm } from '../../slices/formSlice'; // Redux action to update form data
 import { TiArrowBack } from 'react-icons/ti';
 import { fetchPassengers } from '../../slices/formSlice';
 import { createActionPlanThunk } from '../../slices/webbookingSlice'; // Redux action
@@ -20,10 +19,8 @@ import RepeatBooking from './RepeatBooking'; // Import the modal component
 function CreateBookingForm() {
 	const dispatch = useDispatch(); // Redux dispatch function
 	const navigate = useNavigate(); // React Router function for navigation
-
 	// Use the passengers array from Redux store dynamically
 	const { passengers = [] } = useSelector((state) => state.forms);
-
 	const formData = useState();
 
 	// Fetch passengers when the component mounts
@@ -69,13 +66,11 @@ function CreateBookingForm() {
 
 	// State for the recurrence rule string
 	const [recurrenceRule, setRecurrenceRule] = useState('');
-	console.log(recurrenceRule + "craete booking")
+	console.log(recurrenceRule + 'craete booking');
 	const [isRepeatModalOpen, setIsRepeatModalOpen] = useState(false); // Modal state
-
 	// Handle modal open/close
 	const openRepeatModal = () => setIsRepeatModalOpen(true);
 	const closeRepeatModal = () => setIsRepeatModalOpen(false);
-
 	// Handle confirm in the modal
 	const handleRepeatConfirm = (data) => {
 		const generatedRule = data.recurrenceRule;
@@ -88,23 +83,11 @@ function CreateBookingForm() {
 	const [pickupAddress, setPickupAddress] = useState(
 		formData?.pickupAddress || '' // Use optional chaining and a default value
 	);
-
 	const [pickupPostCode, setPickupPostCode] = useState(''); // Pickup postcode state
 	const [destinationAddress, setDestinationAddress] = useState(
 		formData?.destinationAddress || '' // Prefill from Redux or set as empty
 	);
 	const [destinationPostCode, setDestinationPostCode] = useState(''); // Destination postcode state
-	const [pickupDate, setPickupDate] = useState(
-		formData?.pickupDateTime // Prefill pickup date from Redux or default to current date
-			? formData?.pickupDateTime.split(' ')[0] // Extract date
-			: new Date().toISOString().slice(0, 10) // Default to current date in YYYY-MM-DD format
-	);
-	const [pickupTime, setPickupTime] = useState(
-		formData?.pickupDateTime // Prefill pickup time from Redux or default to current time
-			? formData?.pickupDateTime.split(' ')[1] // Extract time
-			: new Date().toLocaleTimeString('en-US', { hour12: false }).slice(0, 5) // Default to current time in HH:MM format
-	);
-
 	// States for other form details
 	const [passengerscount, setPassengers] = useState(1); // Number of passengers state
 	const [passengerName, setName] = useState(''); // Name state
@@ -258,7 +241,6 @@ function CreateBookingForm() {
 	return (
 		<div>
 			<Header />
-
 			<div className='flex justify-center px-4 py-4 sm:py-5 sm:px-4 bg-white overflow-y-auto h-[95vh]'>
 				<div className='bg-white bg-opacity-90 p-4 shadow-xl sm:p-8 rounded-xl w-full max-w-4xl sm:min-h-[810px] min-h-[1100px]  max-h-[40vh] overflow-y-auto'>
 					<button
