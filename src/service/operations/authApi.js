@@ -36,6 +36,7 @@ export function login(username, password, navigate) {
 
 			// Save token to localStorage
 			localStorage.setItem("token", JSON.stringify(token));
+			localStorage.setItem("fullName", JSON.stringify(fullName));
 
 			// Navigate to dashboard
 			navigate("/");
@@ -71,6 +72,7 @@ export function logout(navigate) {
 		dispatch(setIsAuth(false));
 		localStorage.removeItem('token');
 		localStorage.removeItem('hasModalShown');
+		localStorage.removeItem('fullname');
 		toast.success('Logged Out');
 		navigate('/login');
 	};

@@ -7,16 +7,25 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../service/operations/authApi';
 import { useSelector } from 'react-redux'; // Redux hooks
 import { RiLogoutBoxLine } from 'react-icons/ri';
+import { useEffect } from 'react';
 
 const Header = () => {
 	const location = useLocation();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [dropdownOpen, setDropdownOpen] = useState(false); // Dropdown state
+	const [fullName, setFullName] = useState(""); // State for fullName
 
+	// Retrieve fullName from localStorage on component mount
+	useEffect(() => {
+		const storedName = localStorage.getItem("fullName");
+		setFullName(storedName || "Guest"); // Default to "Guest" if no fullName found
+	  }, []);
+     
+	  
 	// Access loading and error state from Redux
-	const { fullName } = useSelector((state) => state.auth);
-	console.log(fullName);
+	// const { fullName } = useSelector((state) => state.auth);
+	// console.log(fullName);
 
 	// Handle logout
 	// const handleLogout = () => {
