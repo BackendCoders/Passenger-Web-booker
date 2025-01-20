@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../service/operations/authApi';
 import { useSelector } from 'react-redux'; // Redux hooks
+import { RiLogoutBoxLine } from 'react-icons/ri';
 
 const Header = () => {
 	const location = useLocation();
@@ -15,8 +16,7 @@ const Header = () => {
 
 	// Access loading and error state from Redux
 	const { fullName } = useSelector((state) => state.auth);
-	console.log( fullName );
-	
+	console.log(fullName);
 
 	// Handle logout
 	// const handleLogout = () => {
@@ -39,7 +39,10 @@ const Header = () => {
 		routeHeadings[location.pathname] || 'ACE TAXIS - ACCOUNT WEB BOOKING';
 
 	return (
-		<header className='p-4 flex flex-col sm:flex-row items-center justify-between' style={{ backgroundColor: '#cd1a21' }}>
+		<header
+			className='p-4 flex flex-col sm:flex-row items-center justify-between'
+			style={{ backgroundColor: '#cd1a21' }}
+		>
 			{/* Left Section: Logo */}
 			<div className='flex items-center space-x-3'>
 				<img
@@ -52,22 +55,24 @@ const Header = () => {
 			{/* Center Section: Title */}
 			<div className='flex-grow text-center'>
 				<h1 className='text-lg sm:text-2xl font-extrabold text-white font-mono'>
-					 ACCOUNT WEB BOOKING - {currentHeading}{' '}
-					{/* Dynamic Heading */}
+					ACCOUNT WEB BOOKING - {currentHeading} {/* Dynamic Heading */}
 				</h1>
 			</div>
 
 			{/* Right Section: Account Info */}
 			<div className='relative text-center sm:text-right text-xs sm:text-base text-gray-700 mt-3 sm:mt-0'>
 				<div
-					className=' space-x-1 cursor-pointer'
+					className='space-x-1 cursor-pointer'
 					onClick={() => setDropdownOpen(!dropdownOpen)} // Toggle dropdown
 				>
 					<p className='font-medium text-white'>9015 - Harbour Vale Acc</p>
 					<p className='text-white flex items-center'>
-						Logged in as:{' '}
-						<span className='font-semibold ml-1'>{fullName}</span>
-						<FaAngleDown className='ml-1' />
+						Logged in as: <span className='font-semibold ml-1'>{fullName}</span>
+						<FaAngleDown
+							className={`ml-1 transform transition-transform duration-200 ${
+								dropdownOpen ? 'rotate-180' : 'rotate-0'
+							}`} // Arrow rotation based on dropdown state
+						/>
 					</p>
 				</div>
 
@@ -76,9 +81,10 @@ const Header = () => {
 					<div className='absolute right-0 mt-2 w-48 bg-white border border-gray-300 shadow-md rounded-md z-10'>
 						<button
 							onClick={() => dispatch(logout(navigate))}
-							className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+							className='flex items-center justify-start w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
 						>
-							Logout
+							<RiLogoutBoxLine className='text-xl mr-2' /> {/* Logout icon */}
+							<span>Log Out</span> {/* Logout text */}
 						</button>
 					</div>
 				)}
