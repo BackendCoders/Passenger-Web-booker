@@ -67,6 +67,9 @@ function CreateBookingForm() {
 		setReturnDateTime(getCurrentDateTime());
 	}, []);
 
+	// State for the recurrence rule string
+	const [recurrenceRule, setRecurrenceRule] = useState('');
+	console.log(recurrenceRule + "craete booking")
 	const [isRepeatModalOpen, setIsRepeatModalOpen] = useState(false); // Modal state
 
 	// Handle modal open/close
@@ -75,6 +78,8 @@ function CreateBookingForm() {
 
 	// Handle confirm in the modal
 	const handleRepeatConfirm = (data) => {
+		const generatedRule = data.recurrenceRule;
+		setRecurrenceRule(generatedRule);
 		console.log('Repeat Booking Data:', data); // Handle repeat booking logic
 		closeRepeatModal(); // Close the modal after confirming
 	};
@@ -204,7 +209,7 @@ function CreateBookingForm() {
 		const formData = {
 			accNo: 9999, // Static account number
 			pickupDateTime: currentDateTime, // Dynamic field
-			recurrenceRule: new Date(currentDateTime).toISOString(), // Static or fallback value
+			recurrenceRule: recurrenceRule, // Static or fallback value
 			pickupAddress: pickupAddress.trim(), // Trim whitespace
 			pickupPostCode: pickupPostCode.trim(), // Trim whitespace
 			destinationAddress: destinationAddress.trim(), // Trim whitespace

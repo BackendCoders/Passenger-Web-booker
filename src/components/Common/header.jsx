@@ -25,7 +25,7 @@ const Header = () => {
 
 	// Define headings for different routes
 	const routeHeadings = {
-		'/': 'ACE TAXIS - ACCOUNT WEB BOOKING',
+		'/': 'DASHBOARD',
 		'/dashboard': 'DASHBOARD',
 		'/AddPassenger': 'ADD PASSENGER',
 		'/passengerlist': 'PASSENGER LIST',
