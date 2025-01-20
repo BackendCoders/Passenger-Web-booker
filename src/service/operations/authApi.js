@@ -29,9 +29,9 @@ export function login(username, password, navigate) {
 			toast.success("Login successful!");
 
 			// Store token and user in Redux
-			const { token, user } = response.data;
+			const { token, fullName } = response.data;
 			dispatch(setToken(token));
-			dispatch(setUser(user));
+			dispatch(setUser(fullName));
 			dispatch(setIsAuth(true));
 
 			// Save token to localStorage

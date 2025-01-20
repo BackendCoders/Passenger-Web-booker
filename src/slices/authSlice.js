@@ -8,7 +8,7 @@ const initialState = {
 		? JSON.parse(localStorage.getItem('token'))
 		: null,
 	isAuth: localStorage.getItem('token') ? true : false,
-	user: null,
+	fullName: null,
 };
 
 const authSlice = createSlice({
@@ -23,7 +23,7 @@ const authSlice = createSlice({
 			state.token = action.payload;
 		},
 		setUser(state, action) {
-			state.user = action.payload;
+			state.fullName = action.payload;
 		},
 		setIsAuth(state, action) {
 			state.isAuth = action.payload;

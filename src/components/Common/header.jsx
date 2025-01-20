@@ -5,12 +5,18 @@ import { FaAngleDown } from 'react-icons/fa';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../service/operations/authApi';
+import { useSelector } from 'react-redux'; // Redux hooks
 
 const Header = () => {
 	const location = useLocation();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [dropdownOpen, setDropdownOpen] = useState(false); // Dropdown state
+
+	// Access loading and error state from Redux
+	const { fullName } = useSelector((state) => state.auth);
+	console.log( fullName );
+	
 
 	// Handle logout
 	// const handleLogout = () => {
@@ -60,7 +66,7 @@ const Header = () => {
 					<p className='font-medium text-white'>9015 - Harbour Vale Acc</p>
 					<p className='text-white flex items-center'>
 						Logged in as:{' '}
-						<span className='font-semibold ml-1'>Peter Farrell</span>
+						<span className='font-semibold ml-1'>{fullName}</span>
 						<FaAngleDown className='ml-1' />
 					</p>
 				</div>
