@@ -218,6 +218,7 @@ function CreateBookingForm() {
 			passengerName: passengerName.trim(), // Map passengerName to passenger
 			phoneNumber: phoneNumber?.trim() || '', // Optional field with fallback
 			email: email?.trim() || '', // Optional field with fallback
+			passengers: passengerscount,
 		};
 
 		try {
