@@ -254,9 +254,9 @@ function CreateBookingForm() {
 					{/* Date and ASAP */}
 					<div className='flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-6 mb-6'>
 						{/* Date and Time Inputs */}
-						<div className='flex sm:flex-row items-center gap-2 sm:gap-4'>
+						<div className='flex sm:flex-row items-center gap-2 sm:gap-4 w-full sm:w-1/2'>
 							{/* Date Input */}
-							<div className='flex flex-col w-1/2 sm:w-auto'>
+							<div className='flex flex-col w-1/2'>
 								<label className='block text-xs sm:text-sm font-medium text-gray-700 '>
 									Date
 								</label>
@@ -264,12 +264,12 @@ function CreateBookingForm() {
 									type='date'
 									value={pickupDate} // Bind to pickupDate state
 									onChange={(e) => setPickupDate(e.target.value)} // Update date state
-									className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
+									className='w-full p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
 								/>
 							</div>
 
 							{/* Time Input */}
-							<div className='flex flex-col w-full sm:w-auto'>
+							<div className='flex flex-col w-1/2'>
 								<label className='block text-xs sm:text-sm font-medium text-gray-700'>
 									Arrived By
 								</label>
@@ -277,7 +277,7 @@ function CreateBookingForm() {
 									type='time'
 									value={pickupTime} // Bind to pickupTime state
 									onChange={(e) => setPickupTime(e.target.value)} // Update time state
-									className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
+									className='w-full p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
 								/>
 							</div>
 						</div>
