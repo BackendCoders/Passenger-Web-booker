@@ -39,30 +39,28 @@ function CreateBookingForm() {
 	}));
 
 	// States for date and time management
-	const [currentDateTime, setCurrentDateTime] = useState(''); // Current datetime state
-	const [returnDateTime, setReturnDateTime] = useState(''); // Return datetime state
+	// const [currentDateTime, setCurrentDateTime] = useState(''); // Current datetime state
+	// const [returnDateTime, setReturnDateTime] = useState(''); // Return datetime state
+
+	// Separate states for pickup and return date/time
+	const [pickupDate, setPickupDate] = useState(''); // Pickup date
+	const [pickupTime, setPickupTime] = useState(''); // Pickup time
+	const [returnDate, setReturnDate] = useState(''); // Return date
+	const [returnTime, setReturnTime] = useState(''); // Return time
+
 
 	// useEffect to initialize current and return date/time
 	useEffect(() => {
-		// Function to get the current date and time in the required format
-		const getCurrentDateTime = () => {
-			const now = new Date();
-			const year = now.getUTCFullYear();
-			const month = String(now.getUTCMonth() + 1).padStart(2, '0'); // Add leading zero to month
-			const day = String(now.getUTCDate()).padStart(2, '0'); // Add leading zero to day
-			const hours = String(now.getUTCHours()).padStart(2, '0'); // Add leading zero to hours
-			const minutes = String(now.getUTCMinutes()).padStart(2, '0'); // Add leading zero to minutes
-			const seconds = String(now.getUTCSeconds()).padStart(2, '0'); // Add leading zero to seconds
-			const milliseconds = String(now.getUTCMilliseconds()).padStart(3, '0'); // Add leading zero to milliseconds
+		const now = new Date();
 
-			// Format: YYYY-MM-DDTHH:mm:ss.sss
-			return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
-		};
+		// Set the initial values for pickup and return date/time
+		setPickupDate(now.toISOString().split('T')[0]);
+		setPickupTime(now.toTimeString().split(':').slice(0, 2).join(':'));
 
-		// Set the current and return date/time states
-		setCurrentDateTime(getCurrentDateTime());
-		setReturnDateTime(getCurrentDateTime());
+		setReturnDate(now.toISOString().split('T')[0]);
+		setReturnTime(now.toTimeString().split(':').slice(0, 2).join(':'));
 	}, []);
+
 
 	// State for the recurrence rule string
 	const [recurrenceRule, setRecurrenceRule] = useState('');
@@ -174,6 +172,10 @@ function CreateBookingForm() {
 		setDestinationPostCode(pickupPostCode);
 	};
 
+	// Combine date and time into ISO format (without milliseconds)
+	const pickupDateTime = `${pickupDate}T${pickupTime}:00`; // Example: 2025-01-22T03:34:20
+	const returnDateTime = isReturn ? `${returnDate}T${returnTime}:00` : null;
+
 	// Handle form submission
 	const handleSubmit = async () => {
 		// Validate required fields
@@ -191,7 +193,7 @@ function CreateBookingForm() {
 		// Prepare the common form data
 		const formData = {
 			accNo: 9999, // Static account number
-			pickupDateTime: currentDateTime, // Dynamic field
+			pickupDateTime, // Dynamic field
 			recurrenceRule: recurrenceRule, // Static or fallback value
 			pickupAddress: pickupAddress.trim(), // Trim whitespace
 			pickupPostCode: pickupPostCode.trim(), // Trim whitespace
@@ -254,22 +256,41 @@ function CreateBookingForm() {
 					{/* Date and ASAP */}
 					<div className='flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-6 mb-6'>
 						{/* Date and Time Inputs */}
-						<div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto'>
+						<div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-4'>
+							{/* Date Input */}
 							<input
-								type='datetime-local'
-								value={currentDateTime}
-								onChange={(e) => setCurrentDateTime(e.target.value)}
+								type='date'
+								value={pickupDate} // Bind to pickupDate state
+								onChange={(e) => setPickupDate(e.target.value)} // Update date state
 								className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
 							/>
-							{isReturn && (
+							{/* Time Input */}
+							<input
+								type='time'
+								value={pickupTime} // Bind to pickupTime state
+								onChange={(e) => setPickupTime(e.target.value)} // Update time state
+								className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
+							/>
+						</div>
+						{isReturn && (
+							<div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-4'>
+								{/* Return Date Input */}
 								<input
-									type='datetime-local'
-									value={returnDateTime}
-									onChange={(e) => setReturnDateTime(e.target.value)}
+									type='date'
+									value={returnDate} // Bind to returnDate state
+									onChange={(e) => setReturnDate(e.target.value)} // Update date state
 									className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
 								/>
-							)}
-						</div>
+								{/* Return Time Input */}
+								<input
+									type='time'
+									value={returnTime} // Bind to returnTime state
+									onChange={(e) => setReturnTime(e.target.value)} // Update time state
+									className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
+								/>
+							</div>
+						)}
+
 
 						{/* Buttons and Toggle */}
 						<div className='flex flex-row sm:flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto'>
@@ -281,17 +302,15 @@ function CreateBookingForm() {
 							</button>
 							<label className='flex items-center gap-1 sm:gap-2 text-gray-700 cursor-pointer text-xs sm:text-sm'>
 								<div
-									className={`relative w-8 h-5 sm:w-10 sm:h-6 rounded-full ${
-										isReturn ? 'bg-red-500' : 'bg-gray-300'
-									}`}
+									className={`relative w-8 h-5 sm:w-10 sm:h-6 rounded-full ${isReturn ? 'bg-red-500' : 'bg-gray-300'
+										}`}
 									onClick={handleReturnToggle}
 								>
 									<div
-										className={`absolute w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-md top-[1px] sm:top-[2px] left-[1px] transform transition-transform duration-300 ${
-											isReturn
-												? 'translate-x-4 sm:translate-x-5'
-												: 'translate-x-0'
-										}`}
+										className={`absolute w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-md top-[1px] sm:top-[2px] left-[1px] transform transition-transform duration-300 ${isReturn
+											? 'translate-x-4 sm:translate-x-5'
+											: 'translate-x-0'
+											}`}
 									></div>
 								</div>
 								<span>Return</span>
@@ -303,21 +322,19 @@ function CreateBookingForm() {
 					<div className='flex gap-2 sm:gap-4 mb-4'>
 						<button
 							onClick={() => setViewMode('address')}
-							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
-								viewMode === 'address'
-									? 'bg-[#b91c1c] text-white'
-									: 'bg-gray-200 text-gray-700'
-							} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
+							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${viewMode === 'address'
+								? 'bg-[#b91c1c] text-white'
+								: 'bg-gray-200 text-gray-700'
+								} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
 						>
 							Address
 						</button>
 						<button
 							onClick={() => setViewMode('existing')}
-							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
-								viewMode === 'existing'
-									? 'bg-[#b91c1c] text-white'
-									: 'bg-gray-200 text-gray-700'
-							} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
+							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${viewMode === 'existing'
+								? 'bg-[#b91c1c] text-white'
+								: 'bg-gray-200 text-gray-700'
+								} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
 						>
 							Existing Passenger
 						</button>
@@ -418,21 +435,19 @@ function CreateBookingForm() {
 					<div className='flex gap-2 sm:gap-4 mb-4'>
 						<button
 							onClick={() => setDestiMode('address')}
-							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
-								destiMode === 'address'
-									? 'bg-[#b91c1c] text-white'
-									: 'bg-gray-200 text-gray-700'
-							} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
+							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${destiMode === 'address'
+								? 'bg-[#b91c1c] text-white'
+								: 'bg-gray-200 text-gray-700'
+								} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
 						>
 							Address
 						</button>
 						<button
 							onClick={() => setDestiMode('existing')}
-							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
-								destiMode === 'existing'
-									? 'bg-[#b91c1c] text-white'
-									: 'bg-gray-200 text-gray-700'
-							} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
+							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${destiMode === 'existing'
+								? 'bg-[#b91c1c] text-white'
+								: 'bg-gray-200 text-gray-700'
+								} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
 						>
 							Existing Passenger
 						</button>
