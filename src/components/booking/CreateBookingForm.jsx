@@ -48,7 +48,6 @@ function CreateBookingForm() {
 	const [returnDate, setReturnDate] = useState(''); // Return date
 	const [returnTime, setReturnTime] = useState(''); // Return time
 
-
 	// useEffect to initialize current and return date/time
 	useEffect(() => {
 		const now = new Date();
@@ -60,7 +59,6 @@ function CreateBookingForm() {
 		setReturnDate(now.toISOString().split('T')[0]);
 		setReturnTime(now.toTimeString().split(':').slice(0, 2).join(':'));
 	}, []);
-
 
 	// State for the recurrence rule string
 	const [recurrenceRule, setRecurrenceRule] = useState('');
@@ -243,8 +241,8 @@ function CreateBookingForm() {
 	return (
 		<div>
 			<Header />
-			<div className='flex justify-center px-4 py-4 sm:py-5 sm:px-4 bg-white overflow-y-auto h-[95vh]'>
-				<div className='bg-white bg-opacity-90 p-4 shadow-xl sm:p-8 rounded-xl w-full max-w-4xl sm:min-h-[810px] min-h-[1100px]  max-h-[40vh] overflow-y-auto'>
+			<div className='flex justify-center px-4 py-4 sm:py-5 sm:px-4 bg-white overflow-y-auto h-[90vh]'>
+				<div className='bg-white bg-opacity-90 p-4 shadow-xl sm:p-8 rounded-xl w-full max-w-4xl sm:min-h-[850px] min-h-[1100px]  max-h-[40vh] overflow-y-auto'>
 					<button
 						onClick={backhistory}
 						className='bg-[#b91c1c] text-white py-1 px-2 sm:py-1 sm:px-5 mb-4 rounded-md sm:rounded-lg hover:from-[#b91c1c] hover:to-red-500 transition-all duration-300 shadow-md flex items-center text-sm sm:text-base'
@@ -256,41 +254,63 @@ function CreateBookingForm() {
 					{/* Date and ASAP */}
 					<div className='flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-6 mb-6'>
 						{/* Date and Time Inputs */}
-						<div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-4'>
+						<div className='flex sm:flex-row items-center gap-2 sm:gap-4'>
 							{/* Date Input */}
-							<input
-								type='date'
-								value={pickupDate} // Bind to pickupDate state
-								onChange={(e) => setPickupDate(e.target.value)} // Update date state
-								className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
-							/>
-							{/* Time Input */}
-							<input
-								type='time'
-								value={pickupTime} // Bind to pickupTime state
-								onChange={(e) => setPickupTime(e.target.value)} // Update time state
-								className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
-							/>
-						</div>
-						{isReturn && (
-							<div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-4'>
-								{/* Return Date Input */}
+							<div className='flex flex-col w-1/2 sm:w-auto'>
+								<label className='block text-xs sm:text-sm font-medium text-gray-700 '>
+									Date
+								</label>
 								<input
 									type='date'
-									value={returnDate} // Bind to returnDate state
-									onChange={(e) => setReturnDate(e.target.value)} // Update date state
-									className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
-								/>
-								{/* Return Time Input */}
-								<input
-									type='time'
-									value={returnTime} // Bind to returnTime state
-									onChange={(e) => setReturnTime(e.target.value)} // Update time state
+									value={pickupDate} // Bind to pickupDate state
+									onChange={(e) => setPickupDate(e.target.value)} // Update date state
 									className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
 								/>
 							</div>
-						)}
 
+							{/* Time Input */}
+							<div className='flex flex-col w-full sm:w-auto'>
+								<label className='block text-xs sm:text-sm font-medium text-gray-700'>
+									Arrived By
+								</label>
+								<input
+									type='time'
+									value={pickupTime} // Bind to pickupTime state
+									onChange={(e) => setPickupTime(e.target.value)} // Update time state
+									className='w-full sm:w-auto p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
+								/>
+							</div>
+						</div>
+
+						{isReturn && (
+							<div className='flex flex-row items-center gap-2 sm:gap-4 w-full'>
+								{/* Return Date Input */}
+								<div className='flex flex-col w-1/2'>
+									<label className='block text-xs sm:text-sm font-medium text-gray-700'>
+										Return Date
+									</label>
+									<input
+										type='date'
+										value={returnDate} // Bind to returnDate state
+										onChange={(e) => setReturnDate(e.target.value)} // Update date state
+										className='w-full p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
+									/>
+								</div>
+
+								{/* Return Time Input */}
+								<div className='flex flex-col w-1/2'>
+									<label className='block text-xs sm:text-sm font-medium text-gray-700'>
+										Return Time
+									</label>
+									<input
+										type='time'
+										value={returnTime} // Bind to returnTime state
+										onChange={(e) => setReturnTime(e.target.value)} // Update time state
+										className='w-full p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black'
+									/>
+								</div>
+							</div>
+						)}
 
 						{/* Buttons and Toggle */}
 						<div className='flex flex-row sm:flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto'>
@@ -302,15 +322,17 @@ function CreateBookingForm() {
 							</button>
 							<label className='flex items-center gap-1 sm:gap-2 text-gray-700 cursor-pointer text-xs sm:text-sm'>
 								<div
-									className={`relative w-8 h-5 sm:w-10 sm:h-6 rounded-full ${isReturn ? 'bg-red-500' : 'bg-gray-300'
-										}`}
+									className={`relative w-8 h-5 sm:w-10 sm:h-6 rounded-full ${
+										isReturn ? 'bg-red-500' : 'bg-gray-300'
+									}`}
 									onClick={handleReturnToggle}
 								>
 									<div
-										className={`absolute w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-md top-[1px] sm:top-[2px] left-[1px] transform transition-transform duration-300 ${isReturn
-											? 'translate-x-4 sm:translate-x-5'
-											: 'translate-x-0'
-											}`}
+										className={`absolute w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-md top-[1px] sm:top-[2px] left-[1px] transform transition-transform duration-300 ${
+											isReturn
+												? 'translate-x-4 sm:translate-x-5'
+												: 'translate-x-0'
+										}`}
 									></div>
 								</div>
 								<span>Return</span>
@@ -322,19 +344,21 @@ function CreateBookingForm() {
 					<div className='flex gap-2 sm:gap-4 mb-4'>
 						<button
 							onClick={() => setViewMode('address')}
-							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${viewMode === 'address'
-								? 'bg-[#b91c1c] text-white'
-								: 'bg-gray-200 text-gray-700'
-								} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
+							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
+								viewMode === 'address'
+									? 'bg-[#b91c1c] text-white'
+									: 'bg-gray-200 text-gray-700'
+							} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
 						>
 							Address
 						</button>
 						<button
 							onClick={() => setViewMode('existing')}
-							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${viewMode === 'existing'
-								? 'bg-[#b91c1c] text-white'
-								: 'bg-gray-200 text-gray-700'
-								} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
+							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
+								viewMode === 'existing'
+									? 'bg-[#b91c1c] text-white'
+									: 'bg-gray-200 text-gray-700'
+							} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
 						>
 							Existing Passenger
 						</button>
@@ -435,19 +459,21 @@ function CreateBookingForm() {
 					<div className='flex gap-2 sm:gap-4 mb-4'>
 						<button
 							onClick={() => setDestiMode('address')}
-							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${destiMode === 'address'
-								? 'bg-[#b91c1c] text-white'
-								: 'bg-gray-200 text-gray-700'
-								} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
+							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
+								destiMode === 'address'
+									? 'bg-[#b91c1c] text-white'
+									: 'bg-gray-200 text-gray-700'
+							} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
 						>
 							Address
 						</button>
 						<button
 							onClick={() => setDestiMode('existing')}
-							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${destiMode === 'existing'
-								? 'bg-[#b91c1c] text-white'
-								: 'bg-gray-200 text-gray-700'
-								} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
+							className={`px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
+								destiMode === 'existing'
+									? 'bg-[#b91c1c] text-white'
+									: 'bg-gray-200 text-gray-700'
+							} hover:bg-[#b91c1c] hover:text-white transition-all duration-300`}
 						>
 							Existing Passenger
 						</button>
