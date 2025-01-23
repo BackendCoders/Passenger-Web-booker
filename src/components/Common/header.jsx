@@ -34,37 +34,48 @@ const Header = () => {
 
 	// Define headings for different routes
 	const routeHeadings = {
-		'/': 'DASHBOARD',
+		
 		'/dashboard': 'DASHBOARD',
-		'/AddPassenger': 'ADD PASSENGER',
-		'/passengerlist': 'PASSENGER LIST',
-		'/existingPassengers': 'EXISTING PASSENGERS',
-		'/createbookingform': 'CREATE BOOKING FORM',
-		'/confirmation': 'CONFIRMATION',
+		'/AddPassenger': 'ACCOUNT WEB BOOKING - ADD PASSENGER',
+		'/passengerlist': 'ACCOUNT WEB BOOKING - PASSENGER LIST',
+		'/existingPassengers': 'ACCOUNT WEB BOOKING - EXISTING PASSENGERS',
+		'/createbookingform': 'ACCOUNT WEB BOOKING - CREATE BOOKING FORM',
+		'/confirmation': 'ACCOUNT WEB BOOKING - CONFIRMATION',
 	};
 
 	// Determine heading based on current route
 	const currentHeading =
-		routeHeadings[location.pathname] || 'ACE TAXIS - ACCOUNT WEB BOOKING';
+		routeHeadings[location.pathname];
 
 	return (
 		<header
-			className='p-4 flex flex-col sm:flex-row items-center justify-between'
-			style={{ backgroundColor: '#cd1a21' }}
+			className='p-4 bg-white flex flex-col sm:flex-row items-center justify-between'
 		>
+			 {/* Left Section: Logo */}
 			{/* Left Section: Logo */}
-			<div className='flex items-center space-x-3'>
-				<img
-					src={carlogo}
-					alt='Logo'
-					className='w-10 h-10 sm:w-12 sm:h-12 rounded-md object-contain' // Logo styling
-				/>
-			</div>
+<div className="flex items-center space-x-3">
+  {/* Mobile View: Always show logo */}
+  <img
+    src={carlogo}
+    alt="Logo"
+    className="sm:hidden w-10 h-10 rounded-md object-contain" // Logo visible only on mobile
+  />
+
+  {/* Larger Screens: Show logo only if not on "/" route */}
+  {location.pathname !== "/" && (
+    <img
+      src={carlogo}
+      alt="Logo"
+      className="hidden sm:block w-10 h-10 sm:w-12 sm:h-12 rounded-md object-contain" // Logo logic for larger screens
+    />
+  )}
+</div>
+
 
 			{/* Center Section: Title */}
 			<div className='flex-grow text-center'>
-				<h1 className='text-lg sm:text-2xl font-extrabold text-white font-mono'>
-					ACCOUNT WEB BOOKING - {currentHeading} {/* Dynamic Heading */}
+				<h1 className='text-lg sm:text-2xl font-extrabold text-red-700 font-mono'>
+					 {currentHeading} {/* Dynamic Heading */}
 				</h1>
 			</div>
 
@@ -74,8 +85,8 @@ const Header = () => {
 					className='space-x-1 cursor-pointer'
 					onClick={() => setDropdownOpen(!dropdownOpen)} // Toggle dropdown
 				>
-					<p className='font-medium text-white'>9015 - Harbour Vale Acc</p>
-					<p className='text-white flex items-center'>
+					<p className='font-medium text-red-700'>9015 - Harbour Vale Acc</p>
+					<p className='text-red-700 flex items-center'>
 						Logged in as: <span className='font-semibold ml-1'>{fullName}</span>
 						<FaAngleDown
 							className={`ml-1 transform transition-transform duration-200 ${

@@ -4,6 +4,7 @@ import Header from "../Common/header";
 import addpassenger from "../../assets/addpassenger.svg";
 import existingpassenger from "../../assets/existingpassenger.svg";
 import newbooking from "../../assets/newbooking.svg";
+import customImage from "../../assets/dorset.png"; // Import your uploaded image
 
 const BookingDashboard = () => {
   const navigate = useNavigate();
@@ -21,9 +22,18 @@ const BookingDashboard = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen bg-white">
       {/* Header Section */}
       <Header />
+
+      {/* Custom Image Section */}
+      <div className="relative flex justify-center items-center mt-4">
+        <img
+          src={customImage}
+          alt="Custom Banner"
+          className="w-[500px] h-[150px] object-contain hidden sm:block" // Adjust width and height here
+        />
+      </div>
 
       {/* Main Section */}
       <div className="flex-1 flex justify-center items-center overflow-y-auto p-4">
@@ -80,3 +90,4 @@ const BookingDashboard = () => {
 };
 
 export default BookingDashboard;
+
