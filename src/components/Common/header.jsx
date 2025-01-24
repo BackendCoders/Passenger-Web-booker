@@ -44,24 +44,18 @@ const Header = () => {
 	const currentHeading = routeHeadings[location.pathname];
 
 	return (
+		<div className='bg-white'>
 		<header className='px-4 bg-white sm:flex-row justify-between  flex'>
 			{/* Custom Image Section */}
-			<div
-				className='flex flex-1 justify-center items-center'
-				style={{ marginLeft: '12rem' }}
-			>
+			<div className='flex flex-1 justify-center items-center sm:ml-[12rem] flex-col sm:flex-row'>
 				<div>
 					<div className='relative flex justify-center items-center'>
+						{/* Image: Smaller for mobile, larger for desktop */}
 						<img
 							src={customImage}
 							alt='Custom Banner'
-							className='w-[450px] h-[120px] object-contain hidden sm:block'
+							className='w-[180px] h-[50px] sm:w-[450px] sm:h-[120px] object-contain'
 						/>
-					</div>
-					<div className='flex justify-center items-center px-4 rounded'>
-						<h2 className='text-lg sm:text-2xl font-bold text-center'>
-							{currentHeading}
-						</h2>
 					</div>
 				</div>
 			</div>
@@ -73,7 +67,8 @@ const Header = () => {
 					onClick={() => setDropdownOpen(!dropdownOpen)} // Toggle dropdown
 				>
 					<p className='text-red-700 flex items-center'>
-						Logged in as: <span className='font-semibold ml-1'>{fullName}</span>
+					<span className="hidden sm:inline">Logged in as:</span> {/* Hide on mobile, show on larger screens */}
+					<span className='font-semibold ml-1'>{fullName}</span>
 						<FaAngleDown
 							className={`ml-1 transform transition-transform duration-200 ${
 								dropdownOpen ? 'rotate-0' : 'rotate-180'
@@ -84,7 +79,10 @@ const Header = () => {
 
 				{/* Dropdown Menu */}
 				{dropdownOpen && (
-					<div className='absolute right-0 mt-2 w-48 bg-white border border-gray-300 shadow-md rounded-md z-10' style={{ marginTop: '5rem'}}>
+					<div
+						className='absolute right-0 mt-2 w-48 bg-white border border-gray-300 shadow-md rounded-md z-10'
+						style={{ marginTop: '5rem' }}
+					>
 						<button
 							onClick={() => dispatch(logout(navigate))}
 							className='flex items-center justify-start w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
@@ -95,7 +93,15 @@ const Header = () => {
 					</div>
 				)}
 			</div>
+			
 		</header>
+		<div className='bg-white flex justify-center items-center px-4 rounded mt-2 sm:mt-0'>
+		{/* Heading: Smaller for mobile */}
+		<h2 className='text-sm sm:text-2xl font-bold text-center'>
+			{currentHeading}
+		</h2>
+	</div>
+	</div>
 	);
 };
 
