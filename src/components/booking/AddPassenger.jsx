@@ -131,7 +131,7 @@ const AddPassenger = () => {
 	return (
 		<div>
 			<Header />
-			<div className=' bg-white p-4 min-h-[500px] max-h-[70vh] overflow-y-auto sm:min-h-screen sm:max-h-full'>
+			<div className=' bg-white pt-10 p-4 min-h-[500px] max-h-[70vh] overflow-y-auto sm:min-h-screen sm:max-h-full'>
 				{/* Button Section */}
 				<div className='flex justify-center gap-2 sm:gap-4 mb-6 sm:mb-8'>
 					<button

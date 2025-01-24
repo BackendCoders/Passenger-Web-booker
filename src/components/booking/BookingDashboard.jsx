@@ -27,18 +27,18 @@ const BookingDashboard = () => {
 			<Header />
 
 			{/* Custom Image Section */}
-			<div className='relative flex justify-center items-center mt-8'>
+			{/* <div className='relative flex justify-center items-center mt-8'>
 				<img
 					src={customImage}
 					alt='Custom Banner'
 					className='w-[550px] h-[200px] object-contain hidden sm:block' // Adjust width and height here
 				/>
 			</div>
-			<div className='flex justify-center items-center py-4 px-8 rounded'>
+			<div className='flex justify-center items-center px-4 rounded'>
 				<h2 className='text-lg sm:text-2xl font-bold text-center'>
 					ACCOUNT BOOKING REQUEST FORM
 				</h2>
-			</div>
+			</div> */}
 
 			{/* Main Section */}
 			<div className='flex-1 flex justify-center items-center overflow-y-auto p-4'>

@@ -110,7 +110,7 @@ const RepeatBooking = ({ isOpen, onClose, onConfirm }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+      className="fixed pt-10 inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       role="dialog"
       aria-labelledby="repeat-booking-title"
     >
