@@ -85,7 +85,7 @@ const Header = () => {
 					className='space-x-1 cursor-pointer'
 					onClick={() => setDropdownOpen(!dropdownOpen)} // Toggle dropdown
 				>
-					<p className='font-medium text-red-700'>9015 - Harbour Vale Acc</p>
+					{/* <p className='font-medium text-red-700'>9015 - Harbour Vale Acc</p> */}
 					<p className='text-red-700 flex items-center'>
 						Logged in as: <span className='font-semibold ml-1'>{fullName}</span>
 						<FaAngleDown
