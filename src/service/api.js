@@ -1,7 +1,7 @@
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const endpoints = {	
-	LOGIN_API: `${BASE_URL}/UserProfile/Login`,
+	LOGIN_API: `${BASE_URL}/Auth/Authenticate`,
 };
 
 export const newpassengerformEndpoints = {

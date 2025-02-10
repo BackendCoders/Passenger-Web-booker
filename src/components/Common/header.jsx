@@ -17,7 +17,7 @@ const Header = () => {
 
 	// Retrieve fullName from localStorage on component mount
 	useEffect(() => {
-		const storedName = localStorage.getItem('fullName');
+		const storedName = localStorage.getItem('username');
 		setFullName(storedName || 'Guest'); // Default to "Guest" if no fullName found
 	}, []);
 

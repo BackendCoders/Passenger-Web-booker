@@ -1,52 +1,47 @@
-import { toast } from 'react-hot-toast';
-import { endpoints } from '../api';
-import { apiConnector } from '../apiConnector';
-import {
-	setIsAuth,
-	setLoading,
-	setToken,
-	setUser,
-} from '../../slices/authSlice';
+import { toast } from "react-hot-toast";
+import { endpoints } from "../api";
+import { apiConnector } from "../apiConnector";
+import { setIsAuth, setLoading, setToken, setUser } from "../../slices/authSlice";
 
 const { LOGIN_API } = endpoints;
 
+export function login(userName, password, navigate) {
+    return async (dispatch) => {
+        dispatch(setLoading(true));
+        try {
+            // Call API for login
+            const response = await apiConnector("POST", LOGIN_API, {
+                userName,
+                password,
+            });
 
+            if (response.status !== 200) {
+                throw new Error(response.data?.message || "Login failed");
+            }
 
-export function login(username, password, navigate) {
-	return async (dispatch) => {
-		dispatch(setLoading(true));
-		try {
-			// Simulate API call
-			const response = await apiConnector("POST", LOGIN_API, {
-				username,
-				password,
-			});
+            toast.success("Login successful!");
 
-			if (response.status !== 200) {
-				throw new Error(response.data?.message || "Login failed");
-			}
+            // Extract token and username from API response
+            const { token, username } = response.data; 
 
-			toast.success("Login successful!");
+            // Update Redux Store
+            dispatch(setToken(token));
+            dispatch(setUser(username)); // Store only username
+            dispatch(setIsAuth(true));
 
-			// Store token and user in Redux
-			const { token, fullName } = response.data;
-			dispatch(setToken(token));
-			dispatch(setUser(fullName));
-			dispatch(setIsAuth(true));
+            // Save token & username to localStorage
+            localStorage.setItem("token", JSON.stringify(token));
+            localStorage.setItem("username", JSON.stringify(username)); // Save only username
 
-			// Save token to localStorage
-			localStorage.setItem("token", JSON.stringify(token));
-			localStorage.setItem("fullName", JSON.stringify(fullName));
-
-			// Navigate to dashboard
-			navigate("/");
-		} catch (error) {
-			dispatch(setIsAuth(false));
-			toast.error("Invalid credentials");
-		} finally {
-			dispatch(setLoading(false));
-		}
-	};
+            // Navigate to dashboard
+            navigate("/");
+        } catch (error) {
+            dispatch(setIsAuth(false));
+            toast.error("Invalid credentials");
+        } finally {
+            dispatch(setLoading(false));
+        }
+    };
 }
 
 
@@ -65,17 +60,21 @@ export const refreshToken = async () => {
 
 
 export function logout(navigate) {
-	return (dispatch) => {
-		console.log('LOGOUT');
-		dispatch(setToken(null));
-		dispatch(setUser(null));
-		dispatch(setIsAuth(false));
-		localStorage.removeItem('token');
-		localStorage.removeItem('hasModalShown');
-		localStorage.removeItem('fullname');
-		toast.success('Logged Out');
-		navigate('/login');
-	};
+    return (dispatch) => {
+        console.log("LOGOUT");
+        dispatch(setToken(null));
+        dispatch(setUser(null));
+        dispatch(setIsAuth(false));
+
+        // Remove token & username from localStorage
+        localStorage.removeItem("token");
+        localStorage.removeItem("username"); // Remove username
+        localStorage.removeItem("hasModalShown");
+
+        toast.success("Logged Out");
+        navigate("/login");
+    };
 }
+
 
 
