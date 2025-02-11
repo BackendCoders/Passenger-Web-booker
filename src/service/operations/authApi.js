@@ -21,17 +21,18 @@ export function login(userName, password, navigate) {
 
             toast.success("Login successful!");
 
-            // Extract token and username from API response
-            const { token, username } = response.data; 
+            // Extract token, userId, and username from API response
+            const { token, userId, username } = response.data; 
 
             // Update Redux Store
             dispatch(setToken(token));
-            dispatch(setUser(username)); // Store only username
-            dispatch(setIsAuth(true));
+            dispatch(setUser({ username, userId })); // Store username & userId
+            dispatch(setIsAuth(true)); 
 
-            // Save token & username to localStorage
+            // Save token, username, and userId to localStorage
             localStorage.setItem("token", JSON.stringify(token));
-            localStorage.setItem("username", JSON.stringify(username)); // Save only username
+            localStorage.setItem("username", JSON.stringify(username)); 
+            localStorage.setItem("userId", JSON.stringify(userId)); // Store userId
 
             // Navigate to dashboard
             navigate("/");
@@ -43,7 +44,6 @@ export function login(userName, password, navigate) {
         }
     };
 }
-
 
 
 // Ensure refreshToken is declared and exported
@@ -63,18 +63,20 @@ export function logout(navigate) {
     return (dispatch) => {
         console.log("LOGOUT");
         dispatch(setToken(null));
-        dispatch(setUser(null));
+        dispatch(setUser({ username: null, userId: null }));
         dispatch(setIsAuth(false));
 
-        // Remove token & username from localStorage
+        // Remove token, username, and userId from localStorage
         localStorage.removeItem("token");
-        localStorage.removeItem("username"); // Remove username
+        localStorage.removeItem("username"); 
+        localStorage.removeItem("userId"); // Remove userId
         localStorage.removeItem("hasModalShown");
 
         toast.success("Logged Out");
         navigate("/login");
     };
 }
+
 
 
 

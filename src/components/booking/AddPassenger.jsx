@@ -23,8 +23,8 @@ const AddPassenger = () => {
 
 	// Redux states
 	const { loading } = useSelector((state) => state.forms); // Select loading state from Redux
-	// const { token = '' } = useSelector((state) => state.auth);
-	const token = 'static-token';
+	 const { token = '', username, userId } = useSelector((state) => state.auth);
+	// const token = 'static-token';
 
 	// Local state for form inputs
 	const [formData, setFormData] = useState({
@@ -80,9 +80,57 @@ const AddPassenger = () => {
 	//   setFormData({ ...formData, [id]: value });
 	// };
 
+	// const handleSubmit = async (e) => {
+	// 	e.preventDefault();
+
+	// 	// Validate required fields
+	// 	if (
+	// 		!formData.passengerName ||
+	// 		!formData.description ||
+	// 		!formData.address ||
+	// 		!formData.postcode
+	// 	) {
+	// 		toast.error('Please fill in all required fields');
+	// 		return;
+	// 	}
+
+	// 	// Prepare payload
+	// 	const requestBody = {
+	// 		id: 0, // Static value for new passengers
+	// 		accNo: {username}, // Static account number
+	// 		description: formData.description,
+	// 		passenger: formData.passengerName, // Map passengerName to passenger
+	// 		address: formData.address,
+	// 		postcode: formData.postcode,
+	// 		phone: formData.phone || '', // Optional field
+	// 		email: formData.email || '', // Optional field
+	// 	};
+
+	// 	console.log('Sending Request Body via Redux Thunk:', requestBody);
+
+	// 	try {
+	// 		// Dispatch Redux thunk
+	// 		await dispatch(
+	// 			addPassenger({
+	// 				token: 'your-auth-token-here', // Replace with actual token
+	// 				data: requestBody,
+	// 			})
+	// 		).unwrap(); // Wait for thunk to complete and throw errors if any
+
+	// 		toast.success('Passenger created successfully!');
+	// 		const response = await getAllPassengers(token, 9999);
+	// 		console.log(response);
+	// 		if (response.length > 0) dispatch(setPassengers(response));
+	// 		navigate('/passengerlist'); // Redirect after success
+	// 	} catch (error) {
+	// 		console.error('Error creating passenger:', error);
+	// 		toast.error(error || 'An error occurred');
+	// 	}
+	// };
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
+	
 		// Validate required fields
 		if (
 			!formData.passengerName ||
@@ -93,11 +141,21 @@ const AddPassenger = () => {
 			toast.error('Please fill in all required fields');
 			return;
 		}
-
-		// Prepare payload
+	
+		// Ensure token and username are available
+		if (!token) {
+			toast.error('Authentication failed. Please login again.');
+			return;
+		}
+		if (!username) {
+			toast.error('Username is missing. Please login again.');
+			return;
+		}
+	
+		// Prepare request payload
 		const requestBody = {
 			id: 0, // Static value for new passengers
-			accNo: 9999, // Static account number
+			accNo: username, // Use username instead of accNo object
 			description: formData.description,
 			passenger: formData.passengerName, // Map passengerName to passenger
 			address: formData.address,
@@ -105,28 +163,32 @@ const AddPassenger = () => {
 			phone: formData.phone || '', // Optional field
 			email: formData.email || '', // Optional field
 		};
-
-		console.log('Sending Request Body via Redux Thunk:', requestBody);
-
+	
+		console.log('Submitting Passenger Data:', requestBody);
+	
 		try {
-			// Dispatch Redux thunk
+			// Dispatch Redux action with token & data
 			await dispatch(
 				addPassenger({
-					token: 'your-auth-token-here', // Replace with actual token
+					token, // Use token from Redux
 					data: requestBody,
 				})
-			).unwrap(); // Wait for thunk to complete and throw errors if any
-
+			).unwrap(); // Wait for thunk to complete
+	
 			toast.success('Passenger created successfully!');
+			
+			// Fetch updated passenger list
 			const response = await getAllPassengers(token, 9999);
-			console.log(response);
 			if (response.length > 0) dispatch(setPassengers(response));
-			navigate('/passengerlist'); // Redirect after success
+	
+			// Redirect after successful creation
+			navigate('/passengerlist');
 		} catch (error) {
 			console.error('Error creating passenger:', error);
-			toast.error(error || 'An error occurred');
+			toast.error(error.message || 'An error occurred');
 		}
 	};
+	
 
 	return (
 		<div>
