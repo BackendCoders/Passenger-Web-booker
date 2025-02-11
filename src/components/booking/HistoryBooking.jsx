@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import Header from '../Common/header'; // ✅ Keeping the same Header
 import { TiArrowBack } from 'react-icons/ti';
 import { fetchWebBookings } from '../../service/operations/getwebbooking'; // ✅ Import Redux action
+import moment from "moment";
 
 // ✅ MUI Imports
 import {
@@ -79,12 +80,15 @@ function Row({ row }) {
 					)}
 				</TableCell>
 				<TableCell sx={{ fontWeight: 'bold', padding: '12px' }}>
+					{row.accNo}
+				</TableCell>
+				<TableCell sx={{ fontWeight: 'bold', padding: '12px' }}>
 					{row.passengerName}
 				</TableCell>
 				<TableCell sx={{ padding: '12px' }}>{row.pickupAddress}</TableCell>
 				<TableCell sx={{ padding: '12px' }}>{row.destinationAddress}</TableCell>
 				<TableCell sx={{ padding: '12px' }}>{row.phoneNumber}</TableCell>
-				<TableCell sx={{ padding: '12px' }}>{row.email}</TableCell>
+				<TableCell sx={{ padding: '12px' }}> {moment(row.pickupDateTime).format("DD-MM-YYYY hh:mm")}</TableCell>
 				<TableCell
 					sx={{ fontWeight: 'bold', padding: '12px', color: getStatusColor() }}
 				>
@@ -149,11 +153,12 @@ function Row({ row }) {
 
 Row.propTypes = {
 	row: PropTypes.shape({
+		accNo: PropTypes.string.isRequired,
 		passengerName: PropTypes.string.isRequired,
 		pickupAddress: PropTypes.string.isRequired,
 		destinationAddress: PropTypes.string.isRequired,
 		phoneNumber: PropTypes.string.isRequired,
-		email: PropTypes.string.isRequired,
+		pickupDateTime: PropTypes.string.isRequired,
 		status: PropTypes.number.isRequired,
 		rejectedReason: PropTypes.string,
 	}).isRequired,
@@ -225,6 +230,9 @@ const HistoryBooking = () => {
 								<TableRow sx={{ backgroundColor: '#dc2626' }}>
 									<TableCell sx={{ color: 'white', fontWeight: 'bold' }} />
 									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
+										AccNo
+									</TableCell>
+									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
 										Passenger
 									</TableCell>
 									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
@@ -237,7 +245,7 @@ const HistoryBooking = () => {
 										Phone
 									</TableCell>
 									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-										Email
+										Time & Date
 									</TableCell>
 									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
 										Status
