@@ -178,7 +178,7 @@ const AddPassenger = () => {
 			toast.success('Passenger created successfully!');
 			
 			// Fetch updated passenger list
-			const response = await getAllPassengers(token, 9999);
+			const response = await getAllPassengers(token, username);
 			if (response.length > 0) dispatch(setPassengers(response));
 	
 			// Redirect after successful creation
