@@ -21,6 +21,7 @@ function CreateBookingForm() {
 	const navigate = useNavigate(); // React Router function for navigation
 	// Use the passengers array from Redux store dynamically
 	const { passengers = [] } = useSelector((state) => state.forms);
+	const { token = '', username, userId } = useSelector((state) => state.auth);
 	const formData = useState();
 
 	// Fetch passengers when the component mounts
@@ -190,7 +191,7 @@ function CreateBookingForm() {
 
 		// Prepare the common form data
 		const formData = {
-			accNo: 9999, // Static account number
+			accNo: username, // Static account number
 			pickupDateTime, // Dynamic field
 			recurrenceRule: recurrenceRule, // Static or fallback value
 			pickupAddress: pickupAddress.trim(), // Trim whitespace

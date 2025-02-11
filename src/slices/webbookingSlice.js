@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { createActionPlan } from "../service/operations/webbookingApi"; // Import the API function
 
+
 /**
  * Async Thunk: Create a new action plan
  */
@@ -9,7 +10,7 @@ export const createActionPlanThunk = createAsyncThunk(
   "actionPlan/create",
   async ({ formData }, { rejectWithValue }) => {
     try {
-      const response = await createActionPlan("your-token-here", formData); // Ensure the correct token is used
+      const response = await createActionPlan("token", formData); // Ensure the correct token is used
       return response;
     } catch (error) {
       return rejectWithValue(

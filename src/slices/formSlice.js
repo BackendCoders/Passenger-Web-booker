@@ -10,6 +10,8 @@ import {
 	addNewPassenger, // Import add passenger API function
 } from '../service/operations/formApi';
 
+
+
 const formSlice = createSlice({
 	name: 'forms',
 	initialState: {
@@ -105,8 +107,8 @@ export const fetchPassengers = createAsyncThunk(
 		}
 
 		try {
-			const token = 'static-token'; // Replace with your actual token
-			const accountNo = 9999; // Static account number
+			const token = getState().auth.token; // Replace with your actual token
+			const accountNo = getState().auth.username; // Static account number
 			const response = await getAllPassengers(token, accountNo); // API call
 			return response; // Return passenger list
 		} catch (error) {

@@ -11,6 +11,7 @@ import { TiArrowBack } from 'react-icons/ti';
 const ExistingPassenger = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const { token = '', username, userId } = useSelector((state) => state.auth);	
 
 	const {
 		passengers = [],
@@ -30,7 +31,7 @@ const ExistingPassenger = () => {
 
 	// Delete passenger
 	const handleDelete = (id) => {
-		const token = 'static-token'; // Use actual token here
+		const token = token; // Use actual token here
 		dispatch(removePassenger({ token, id }));
 	};
 
