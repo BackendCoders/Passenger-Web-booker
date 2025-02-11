@@ -8,25 +8,48 @@ import AddPassenger from './components/booking/AddPassenger';
 import BookingDashboard from './components/booking/BookingDashboard';
 import PassengerList from './components/booking/PassengerList';
 import ExistingPassenger from './components/booking/ExistingPassenger';
-
-
+import HistoryBooking from './components/booking/HistoryBooking';
 
 function App() {
 	return (
-		<div className="h-screen w-screen overflow-hidden bg-[#F3F4F6]">
+		<div className='h-screen w-screen overflow-hidden bg-[#F3F4F6]'>
 			<Routes>
 				{/* Public Routes */}
-				<Route path="/login" element={<Login />} />
-				
+				<Route
+					path='/login'
+					element={<Login />}
+				/>
 
 				{/* Protected Routes */}
 				<Route element={<PrivateRoute />}>
-					<Route path="/" element={<BookingDashboard />} />
-					<Route path="/createbookingform" element={<CreateBookingForm />} />
-					<Route path="/confirmation" element={<Confirmation />} />
-          <Route path="/AddPassenger" element={<AddPassenger />} />
-				<Route path="/existingpassengers" element={<ExistingPassenger />} />
-				<Route path="/passengerlist" element={<PassengerList />} />
+					<Route
+						path='/'
+						element={<BookingDashboard />}
+					/>
+					<Route
+						path='/createbookingform'
+						element={<CreateBookingForm />}
+					/>
+					<Route
+						path='/bookinghistory'
+						element={<HistoryBooking />}
+					/>
+					<Route
+						path='/confirmation'
+						element={<Confirmation />}
+					/>
+					<Route
+						path='/AddPassenger'
+						element={<AddPassenger />}
+					/>
+					<Route
+						path='/existingpassengers'
+						element={<ExistingPassenger />}
+					/>
+					<Route
+						path='/passengerlist'
+						element={<PassengerList />}
+					/>
 				</Route>
 			</Routes>
 		</div>
