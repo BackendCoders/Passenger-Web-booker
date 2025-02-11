@@ -18,7 +18,7 @@ export const createActionPlan = async (token, webBookingData) => {
 
     // Handle success based on status code
     if (response.status === 201 || response.status === 200) {
-      toast.success("Action plan created successfully!"); // Show success toast
+      toast.success("Booking Added Successfully"); // Show success toast
       return response.data; // Return the response data
     } else {
       throw new Error(
