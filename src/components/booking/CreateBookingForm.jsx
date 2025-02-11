@@ -3,7 +3,7 @@
 // Importing necessary hooks and libraries
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import {  useLocation, useNavigate } from 'react-router-dom';
 import {
 	getAddressSuggestions,
 	getAddressDetails,
@@ -23,6 +23,9 @@ function CreateBookingForm() {
 	const { passengers = [] } = useSelector((state) => state.forms);
 	const { token = '', username, userId } = useSelector((state) => state.auth);
 	const formData = useState();
+
+	const location = useLocation(); // ✅ Fetch passed data from state
+	const bookingData = location.state; // ✅ Default to empty object if no data
 
 	// Fetch passengers when the component mounts
 	useEffect(() => {
@@ -101,6 +104,20 @@ function CreateBookingForm() {
 
 	const [viewMode, setViewMode] = useState('address'); // "address" or "existing"
 	const [destiMode, setDestiMode] = useState('address');
+
+	  // ✅ Prefill form fields when page loads
+	  useEffect(() => {
+		if (bookingData) {
+		  setPickupAddress(bookingData.pickupAddress || "");
+		  setPickupPostCode(bookingData.pickupPostCode || "");
+		  setDestinationAddress(bookingData.destinationAddress || "");
+		  setDestinationPostCode(bookingData.destinationPostCode || "");
+		  setName(bookingData.passengerName || "");
+		  setPassengers(bookingData.passengers || 1);
+		  setPhone(bookingData.phoneNumber || "");
+		  setEmail(bookingData.email || "");
+		}
+	  }, [bookingData]);
 
 	// Function to handle selecting an existing passenger
 	const handleExistingPassengerSelect = (passengerId, mode) => {

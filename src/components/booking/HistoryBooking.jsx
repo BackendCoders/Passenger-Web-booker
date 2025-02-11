@@ -33,6 +33,12 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 function Row({ row }) {
   const [open, setOpen] = useState(false);
 
+  const navigate = useNavigate(); // ✅ Get navigation function
+
+  const handleReBooking = () => {
+    navigate("/createbookingform", { state: row }); // ✅ Pass row data to the new page
+  };
+
   const getStatusText = () => {
     switch (row.status) {
       case 0:
@@ -49,9 +55,9 @@ function Row({ row }) {
   const getStatusColor = () => {
     switch (row.status) {
       case 0:
-        return "green";
+        return "yellow";
       case 1:
-        return "blue";
+        return "green";
       case 2:
         return "red";
       default:
@@ -85,7 +91,7 @@ function Row({ row }) {
         <TableRow>
           <TableCell colSpan={7} sx={{ paddingBottom: 0, paddingTop: 0 }}>
             <Collapse in={open} timeout="auto" unmountOnExit>
-              <Box sx={{ margin: 2, backgroundColor: "#fff5f5", padding: 2, borderRadius: "5px" }}>
+              <Box sx={{ margin: 2, padding: 2, borderRadius: "5px" }}>
                 <Typography variant="h6" gutterBottom sx={{ color: "#dc2626", fontWeight: "bold" }}>
                   Rejected Reason
                 </Typography>
@@ -98,15 +104,15 @@ function Row({ row }) {
                       color: "white",
                       "&:hover": { backgroundColor: "#b91c1c" },
                     }}
+                    onClick={handleReBooking} // ✅ Trigger navigation with row data
                   >
                     Re-Booking
                   </Button>
                   <Button
                     variant="contained"
                     sx={{
-                      backgroundColor: "#b91c1c",
+                      backgroundColor: "black",
                       color: "white",
-                      "&:hover": { backgroundColor: "#7f1d1d" },
                     }}
                   >
                     Cancel
