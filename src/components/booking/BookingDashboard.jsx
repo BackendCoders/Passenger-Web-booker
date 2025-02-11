@@ -4,7 +4,7 @@ import Header from '../Common/header';
 import addpassenger from '../../assets/addpassenger.svg';
 import existingpassenger from '../../assets/existingpassenger.svg';
 import newbooking from '../../assets/newbooking.svg';
-import payment from '../../assets/payment (1).svg';
+import payment from '../../assets/transaction-history.svg';
 import customImage from '../../assets/acelogo2.png'; // Import your uploaded image
 
 const BookingDashboard = () => {
