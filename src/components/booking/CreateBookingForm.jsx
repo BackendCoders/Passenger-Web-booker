@@ -218,6 +218,7 @@ function CreateBookingForm() {
 					pickupPostCode: destinationPostCode.trim(),
 					destinationAddress: pickupAddress.trim(),
 					destinationPostCode: pickupPostCode.trim(),
+					recurrenceRule: null, // Clear the recurrence rule for the return trip
 				};
 
 				// Second API call for the return trip
