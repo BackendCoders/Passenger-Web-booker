@@ -33,7 +33,7 @@ const PassengerList = () => {
 
 	// Delete passenger
 	const handleDelete = (id) => {
-		const token = token; // Use actual token here
+		// const token = 'token'; // Use actual token here
 		dispatch(removePassenger({ token, id }));
 	};
 
