@@ -124,13 +124,14 @@ function CreateBookingForm() {
 		const selectedPassenger = existingPassengers.find(
 			(passenger) => passenger.id === passengerId
 		);
+		console.log(existingPassengers + "hiiiiiiiiiiiiiiiiiiiiii");
 
 		if (selectedPassenger) {
 			if (mode === 'pickup') {
 				// Fill pickup address and postcode
 				setPickupAddress(selectedPassenger.address);
 				setPickupPostCode(selectedPassenger.postcode);
-
+                setName(selectedPassenger.name);
 				// Automatically switch to "Address" mode
 				setViewMode('address');
 			} else if (mode === 'destination') {
