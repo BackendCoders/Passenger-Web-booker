@@ -13,3 +13,7 @@ export const newpassengerformEndpoints = {
 export const webbookingfromEndpoints = {
 	CREATEWEBBOOKING_CREATE_FORM: `${BASE_URL}/WeBooking/CreateWebBooking`, // CREATEWEB BOOKING From 
 }
+
+export const getwebbookingEndpoints = { 
+	GETWEBBOOKING: `${BASE_URL}/WeBooking/GetWebBookings`, // Get web booking
+}
