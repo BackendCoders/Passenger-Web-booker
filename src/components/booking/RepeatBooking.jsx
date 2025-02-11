@@ -8,24 +8,24 @@ const RepeatBooking = ({ isOpen, onClose, onConfirm }) => {
   const [repeatEnd, setRepeatEnd] = useState("Never");
   const [endDate, setEndDate] = useState("");
   const [selectedDays, setSelectedDays] = useState({
-    sun: false,
     mon: false,
     tue: false,
     wed: false,
     thu: false,
     fri: false,
     sat: false,
+    sun: false,
   });
   const [error, setError] = useState("");
 
   const dayLabels = [
-    { key: "sun", label: "S" },
     { key: "mon", label: "M" },
     { key: "tue", label: "Tu" }, // ✅ Changed "T" to "Tu" for Tuesday
     { key: "wed", label: "W" },
     { key: "thu", label: "Th" }, // ✅ Changed "T" to "Th" for Thursday
     { key: "fri", label: "F" },
     { key: "sat", label: "S" },
+    { key: "sun", label: "S" },
   ];
   
 
@@ -58,13 +58,13 @@ const RepeatBooking = ({ isOpen, onClose, onConfirm }) => {
   // Function to generate RRULE string
   const generateRecurrenceRule = () => {
     const daysOfWeekMap = {
-      sun: RRule.SU,
       mon: RRule.MO,
       tue: RRule.TU,
       wed: RRule.WE,
       thu: RRule.TH,
       fri: RRule.FR,
       sat: RRule.SA,
+      sun: RRule.SU,
     };
   
     const selectedDaysOfWeek = Object.keys(selectedDays)
@@ -81,11 +81,10 @@ const RepeatBooking = ({ isOpen, onClose, onConfirm }) => {
       byweekday: selectedDaysOfWeek.length > 0 ? selectedDaysOfWeek : undefined,
     };
   
-    // ✅ Fix the `until` date format issue
+    // ✅ Fix UNTIL format issue
     if (repeatEnd === "On Date" && endDate) {
-      // Convert YYYY-MM-DD to a valid Date object
-      const [year, month, day] = endDate.split("-");
-      ruleOptions.until = new Date(year, month - 1, day); // ✅ Corrected
+      // Convert YYYY-MM-DD to YYYYMMDD format
+      ruleOptions.until = new Date(endDate);
     }
   
     if (!ruleOptions.freq) {
@@ -96,9 +95,9 @@ const RepeatBooking = ({ isOpen, onClose, onConfirm }) => {
     let ruleString = rule.toString();
   
     // ✅ Remove unnecessary time format from UNTIL
-    ruleString = ruleString.replace(/T000000Z/, "");
-    ruleString = ruleString.replace(/RRULE:/, "");
-    ruleString += ";";
+    ruleString = ruleString.replace(/T000000Z/, ""); // Remove time part
+    ruleString = ruleString.replace(/RRULE:/, ""); // Remove "RRULE:" prefix
+    ruleString += ";"; // Ensure proper ending
   
     return ruleString;
   };
