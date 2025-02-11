@@ -201,7 +201,7 @@ function CreateBookingForm() {
       !pickupPostCode ||
       !destinationAddress ||
       !passengerName ||
-      !phoneNumber
+	  !phoneNumber
     ) {
       alert("Please fill in all required fields.");
       return;
@@ -278,7 +278,7 @@ function CreateBookingForm() {
               {/* Date Input */}
               <div className="flex flex-col w-1/2">
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 ">
-                  Date
+                  Date  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
@@ -291,7 +291,7 @@ function CreateBookingForm() {
               {/* Time Input */}
               <div className="flex flex-col w-1/2">
                 <label className="block text-xs sm:text-sm font-medium text-gray-700">
-                  Arrived By
+                  Arrived By  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="time"
@@ -307,7 +307,7 @@ function CreateBookingForm() {
                 {/* Return Date Input */}
                 <div className="flex flex-col w-1/2">
                   <label className="block text-xs sm:text-sm font-medium text-gray-700">
-                    Return Date
+                    Return Date  <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="date"
@@ -320,7 +320,7 @@ function CreateBookingForm() {
                 {/* Return Time Input */}
                 <div className="flex flex-col w-1/2">
                   <label className="block text-xs sm:text-sm font-medium text-gray-700">
-                    Return Time
+                    Return Time  <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="time"
@@ -425,7 +425,7 @@ function CreateBookingForm() {
               {/* Post Code */}
               <div>
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                  Post Code
+                  Post Code <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -534,7 +534,7 @@ function CreateBookingForm() {
               {/* Destination Post Code */}
               <div>
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                  Post Code
+                  Post Code <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -621,7 +621,7 @@ function CreateBookingForm() {
             {/* Phone Input */}
             <div>
               <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                Phone
+                Phone <span className="text-red-500">*</span>
               </label>
               <div className="flex items-center gap-2 sm:gap-4">
                 <input
