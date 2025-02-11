@@ -36,7 +36,7 @@ function Row({ row }) {
   const getStatusText = () => {
     switch (row.status) {
       case 0:
-        return "Processed";
+        return "";
       case 1:
         return "Accepted";
       case 2:
