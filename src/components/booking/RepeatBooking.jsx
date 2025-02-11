@@ -21,12 +21,13 @@ const RepeatBooking = ({ isOpen, onClose, onConfirm }) => {
   const dayLabels = [
     { key: "sun", label: "S" },
     { key: "mon", label: "M" },
-    { key: "tue", label: "T" },
+    { key: "tue", label: "Tu" }, // ✅ Changed "T" to "Tu" for Tuesday
     { key: "wed", label: "W" },
-    { key: "thu", label: "T" },
+    { key: "thu", label: "Th" }, // ✅ Changed "T" to "Th" for Thursday
     { key: "fri", label: "F" },
     { key: "sat", label: "S" },
   ];
+  
 
   const handleDayClick = (day) => {
     if (frequency !== "Weekly") return; // Prevent interaction if not weekly
@@ -41,13 +42,18 @@ const RepeatBooking = ({ isOpen, onClose, onConfirm }) => {
       setError("Please select at least one day for weekly recurrence.");
       return false;
     }
-    if (repeatEnd === "On Date" && new Date(endDate) < new Date()) {
-      setError("End date cannot be in the past.");
+    if (repeatEnd === "On Date" && (!endDate || new Date(endDate) < new Date())) {
+      setError("End date cannot be in the past or empty.");
       return false;
     }
     setError("");
     return true;
   };
+  
+
+  // const formatDateForRRule = (dateString) => {
+  //   return dateString.replace(/-/g, ""); // ✅ Convert YYYY-MM-DD to YYYYMMDD
+  // };
 
   // Function to generate RRULE string
   const generateRecurrenceRule = () => {
@@ -60,12 +66,11 @@ const RepeatBooking = ({ isOpen, onClose, onConfirm }) => {
       fri: RRule.FR,
       sat: RRule.SA,
     };
-
+  
     const selectedDaysOfWeek = Object.keys(selectedDays)
       .filter((day) => selectedDays[day])
       .map((day) => daysOfWeekMap[day]);
-
-    // Create RRule options based on the form input
+  
     const ruleOptions = {
       freq:
         frequency === "Daily"
@@ -74,27 +79,37 @@ const RepeatBooking = ({ isOpen, onClose, onConfirm }) => {
           ? RRule.WEEKLY
           : null,
       byweekday: selectedDaysOfWeek.length > 0 ? selectedDaysOfWeek : undefined,
-      until: repeatEnd === "On Date" ? new Date(endDate) : undefined,
     };
-
+  
+    // ✅ Fix the `until` date format issue
+    if (repeatEnd === "On Date" && endDate) {
+      // Convert YYYY-MM-DD to a valid Date object
+      const [year, month, day] = endDate.split("-");
+      ruleOptions.until = new Date(year, month - 1, day); // ✅ Corrected
+    }
+  
     if (!ruleOptions.freq) {
       return "";
     }
-
-    // Generate the RRULE string
+  
     const rule = new RRule(ruleOptions);
-    return rule.toString();
+    let ruleString = rule.toString();
+  
+    // ✅ Remove unnecessary time format from UNTIL
+    ruleString = ruleString.replace(/T000000Z/, "");
+    ruleString = ruleString.replace(/RRULE:/, "");
+    ruleString += ";";
+  
+    return ruleString;
   };
+  
 
   const handleConfirm = () => {
     if (!validateForm()) return;
-
-    // Generate RRULE string
+  
     const recurrenceRule = generateRecurrenceRule();
-
-    console.log("Generated Recurrence Rule:", recurrenceRule); // Log RRULE string to the console
-
-    // Pass the recurrence rule and other data to the parent
+  
+    // ✅ Removed console.log before production
     onConfirm({
       frequency,
       repeatEnd,
@@ -102,9 +117,10 @@ const RepeatBooking = ({ isOpen, onClose, onConfirm }) => {
       selectedDays,
       recurrenceRule,
     });
-
-    onClose(); // Close the modal after confirming
+  
+    onClose(); // ✅ Close modal after confirming
   };
+  
 
   if (!isOpen) return null; // Do not render if modal is not open
 

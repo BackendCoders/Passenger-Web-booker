@@ -12,11 +12,14 @@ const PassengerList = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	
+
 	const {
 		passengers = [],
 		loading,
 		error,
 	} = useSelector((state) => state.forms); // Default empty array for passengers
+	const { token = '', username, userId } = useSelector((state) => state.auth);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
 	const [rowsPerPage, setRowsPerPage] = useState(5); // Default rows per page
@@ -30,7 +33,7 @@ const PassengerList = () => {
 
 	// Delete passenger
 	const handleDelete = (id) => {
-		const token = 'static-token'; // Use actual token here
+		const token = token; // Use actual token here
 		dispatch(removePassenger({ token, id }));
 	};
 
