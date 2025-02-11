@@ -10,11 +10,16 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@emotion/react": "^11.14.0",
+		"@emotion/styled": "^11.14.0",
+		"@mui/icons-material": "^6.4.3",
+		"@mui/material": "^6.4.3",
 		"@reduxjs/toolkit": "^2.5.0",
 		"axios": "^1.7.9",
 		"getaddress-autocomplete": "^2.1.1",
 		"leaflet": "^1.9.4",
 		"leaflet-defaulticon-compatibility": "^0.1.2",
+		"prop-types": "^15.8.1",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
 		"react-hot-toast": "^2.5.1",
