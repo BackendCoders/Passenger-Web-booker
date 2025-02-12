@@ -69,9 +69,9 @@ const Header = () => {
 				>
 					<p className='text-gray-700 flex items-center'>
 					<span className="hidden sm:inline text-lg md:text-lg">Logged in as:</span> {/* Hide on mobile, show on larger screens */}
-					<span className='font-semibold ml-1 text-sm md:text-lg'>{fullName}</span>
+					<span className='text-red-700 font-semibold ml-1 text-sm md:text-lg'>{fullName}</span>
 						<FaAngleDown
-							className={`ml-1 transform transition-transform duration-200 ${
+							className={`text-red-700 ml-1 transform transition-transform duration-200 ${
 								dropdownOpen ? 'rotate-0' : 'rotate-180'
 							}`}
 						/>
