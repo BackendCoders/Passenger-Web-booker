@@ -198,9 +198,9 @@ const HistoryBooking = () => {
 	};
 
 	return (
-		<div>
+		<div className='bg-white'>
 			<Header />
-			<div className='bg-white pt-10 p-4 flex flex-col items-center min-h-[500px] sm:min-h-screen'>
+			<div className='bg-white pt-10 mx-16 p-4 flex flex-col items-center min-h-[500px] sm:min-h-screen'>
 				{/* ✅ Back Button */}
 				<button
 					onClick={() => navigate('/')}
@@ -272,7 +272,7 @@ const HistoryBooking = () => {
 
 				{/* ✅ Pagination */}
 				<TablePagination
-					rowsPerPageOptions={[5, 10, 25]}
+					rowsPerPageOptions={[5, 10, 25, 50]}
 					component='div'
 					count={sortedBookings.length}
 					rowsPerPage={rowsPerPage}

@@ -32,7 +32,7 @@ const Header = () => {
 
 	// Define headings for different routes
 	const routeHeadings = {
-		'/': 'ACCOUNT BOOKING REQUEST FORM',
+		'/': 'ACCOUNT BOOKING FORM',
 		'/AddPassenger': ' ADD PASSENGER',
 		'/passengerlist': ' PASSENGER LIST',
 		'/existingPassengers': ' EXISTING PASSENGERS',
