@@ -32,7 +32,7 @@ const Header = () => {
 
 	// Define headings for different routes
 	const routeHeadings = {
-		'/': 'ACCOUNT BOOKING FORM',
+		'/': 'ACCOUNT BOOKING REQUEST FORM',
 		'/AddPassenger': ' ADD PASSENGER',
 		'/passengerlist': ' PASSENGER LIST',
 		'/existingPassengers': ' EXISTING PASSENGERS',
@@ -46,7 +46,7 @@ const Header = () => {
 
 	return (
 		<div className='bg-white'>
-		<header className='px-4 bg-white sm:flex-row justify-between  flex'>
+		<header className='px-4 bg-white sm:flex-row justify-between  flex px-2 sm:px-16'>
 			{/* Custom Image Section */}
 			<div className='flex flex-1 justify-center items-center sm:ml-[12rem] flex-col sm:flex-row'>
 				<div>
@@ -96,7 +96,7 @@ const Header = () => {
 			</div>
 			
 		</header>
-		<div className='bg-white flex justify-center items-center px-4 rounded mt-2 sm:mt-0'>
+		<div className='bg-white flex justify-center items-center px-4 sm:pl-16 rounded mt-2 sm:mt-0'>
 		{/* Heading: Smaller for mobile */}
 		<h2 className='text-sm sm:text-2xl font-bold text-center'>
 			{currentHeading}
