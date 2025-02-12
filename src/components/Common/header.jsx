@@ -68,8 +68,8 @@ const Header = () => {
 					onClick={() => setDropdownOpen(!dropdownOpen)} // Toggle dropdown
 				>
 					<p className='text-red-700 flex items-center'>
-					<span className="hidden sm:inline">Logged in as:</span> {/* Hide on mobile, show on larger screens */}
-					<span className='font-semibold ml-1'>{fullName}</span>
+					<span className="hidden sm:inline text-lg md:text-lg">Logged in as:</span> {/* Hide on mobile, show on larger screens */}
+					<span className='font-semibold ml-1 text-sm md:text-lg'>{fullName}</span>
 						<FaAngleDown
 							className={`ml-1 transform transition-transform duration-200 ${
 								dropdownOpen ? 'rotate-0' : 'rotate-180'
@@ -96,7 +96,7 @@ const Header = () => {
 			</div>
 			
 		</header>
-		<div className='bg-white flex justify-center items-center px-4 sm:pl-16 rounded mt-2 sm:mt-0'>
+		<div className='bg-white flex justify-center items-center px-4 sm:pl-12 rounded mt-2 sm:mt-0'>
 		{/* Heading: Smaller for mobile */}
 		<h2 className='text-sm sm:text-2xl font-bold text-center'>
 			{currentHeading}
