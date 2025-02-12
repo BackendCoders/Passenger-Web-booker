@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import Header from '../Common/header'; // ✅ Keeping the same Header
 import { TiArrowBack } from 'react-icons/ti';
 import { fetchWebBookings } from '../../service/operations/getwebbooking'; // ✅ Import Redux action
-import moment from "moment";
+import moment from 'moment';
 
 // ✅ MUI Imports
 import {
@@ -25,6 +25,7 @@ import {
 	Button,
 	CircularProgress,
 	TablePagination,
+	TextField,
 } from '@mui/material';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -88,7 +89,10 @@ function Row({ row }) {
 				<TableCell sx={{ padding: '12px' }}>{row.pickupAddress}</TableCell>
 				<TableCell sx={{ padding: '12px' }}>{row.destinationAddress}</TableCell>
 				<TableCell sx={{ padding: '12px' }}>{row.phoneNumber}</TableCell>
-				<TableCell sx={{ padding: '12px' }}> {moment(row.pickupDateTime).format("DD-MM-YYYY hh:mm")}</TableCell>
+				<TableCell sx={{ padding: '12px' }}>
+					{' '}
+					{moment(row.pickupDateTime).format('DD-MM-YYYY hh:mm')}
+				</TableCell>
 				<TableCell
 					sx={{ fontWeight: 'bold', padding: '12px', color: getStatusColor() }}
 				>
@@ -179,19 +183,41 @@ const HistoryBooking = () => {
 		dispatch(fetchWebBookings());
 	}, [dispatch]);
 
-	// ✅ Sort bookings: Processed (0) first, then Accepted (1), then Rejected (2)
-	const sortedBookings = [...webBookings].sort((a, b) => a.status - b.status);
-
-	// ✅ Pagination States
+	const [searchTerm, setSearchTerm] = useState('');
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(5);
 
-	// ✅ Handle Page Change
+	// ✅ Filter bookings based on search term
+	const filteredBookings = webBookings.filter((booking) => {
+		return (
+			(booking.passengerName || '')
+				.toLowerCase()
+				.includes(searchTerm.toLowerCase()) ||
+			(booking.pickupAddress || '')
+				.toLowerCase()
+				.includes(searchTerm.toLowerCase()) ||
+			(booking.destinationAddress || '')
+				.toLowerCase()
+				.includes(searchTerm.toLowerCase()) ||
+			(booking.phoneNumber || '')
+				.toLowerCase()
+				.includes(searchTerm.toLowerCase())
+		);
+	});
+
+	useEffect(() => {
+		setPage(0); // ✅ Reset to first page when search term changes
+	}, [searchTerm]);
+
+	// ✅ Sort bookings: Pending (0), Accepted (1), Rejected (2)
+	const sortedBookings = [...filteredBookings].sort(
+		(a, b) => a.status - b.status
+	);
+
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
 	};
 
-	// ✅ Handle Rows per Page Change
 	const handleChangeRowsPerPage = (event) => {
 		setRowsPerPage(parseInt(event.target.value, 10));
 		setPage(0);
@@ -202,13 +228,26 @@ const HistoryBooking = () => {
 			<Header />
 			<div className='bg-white pt-10 mx-16 p-4 flex flex-col items-center min-h-[500px] sm:min-h-screen'>
 				{/* ✅ Back Button */}
-				<button
-					onClick={() => navigate('/')}
-					className='flex-shrink-0 px-3 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300 transition flex items-center justify-center mb-4'
-				>
-					<TiArrowBack className='mr-2' />
-					<span className='font-medium'>Back</span>
-				</button>
+				<div className='flex flex-col sm:flex-row sm:justify-center w-full mb-4 gap-3'>
+					{/* ✅ Back Button */}
+					<button
+						onClick={() => navigate('/')}
+						className='px-3 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300 transition flex items-center justify-center'
+					>
+						<TiArrowBack className='mr-2' />
+						<span className='font-medium'>Back</span>
+					</button>
+
+					{/* ✅ Search Field */}
+					<TextField
+						label='Search Bookings...'
+						variant='outlined'
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+						size='small'
+						sx={{ width: '100%', maxWidth: '300px' }}
+					/>
+				</div>
 
 				{/* ✅ Loading & Error Handling */}
 				{loading && <CircularProgress />}
@@ -271,15 +310,59 @@ const HistoryBooking = () => {
 				)}
 
 				{/* ✅ Pagination */}
-				<TablePagination
-					rowsPerPageOptions={[5, 10, 25, 50]}
-					component='div'
-					count={sortedBookings.length}
-					rowsPerPage={rowsPerPage}
-					page={page}
-					onPageChange={handleChangePage}
-					onRowsPerPageChange={handleChangeRowsPerPage}
-				/>
+				{/* Pagination Controls */}
+				<div className='flex flex-col md:flex-row justify-between items-center mt-4 gap-2 w-full'>
+					{/* Rows Per Page Selector */}
+					<div className='flex items-center gap-2'>
+						<label
+							htmlFor='rowsPerPage'
+							className='text-sm md:text-base text-black font-medium'
+						>
+							Rows:
+						</label>
+						<select
+							id='rowsPerPage'
+							value={rowsPerPage}
+							onChange={(e) => setRowsPerPage(Number(e.target.value))}
+							className='px-2 py-1 text-sm border border-gray-300 bg-white text-black rounded-md focus:outline-none hover:bg-red-50'
+						>
+							<option value={5}>5</option>
+							<option value={10}>10</option>
+							<option value={20}>20</option>
+						</select>
+					</div>
+
+					{/* Pagination Navigation */}
+					<div className='flex items-center gap-2'>
+						<button
+							disabled={page === 0}
+							onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+							className={`px-3 py-1 text-sm md:text-base text-white bg-[#b91c1c] rounded-md hover:bg-red-700 transition ${
+								page === 0 ? 'opacity-50 cursor-not-allowed' : ''
+							}`}
+						>
+							Prev
+						</button>
+
+						<p className='text-sm md:text-base'>
+							{page * rowsPerPage + 1} -
+							{Math.min((page + 1) * rowsPerPage, filteredBookings.length)} of{' '}
+							{filteredBookings.length}
+						</p>
+
+						<button
+							disabled={(page + 1) * rowsPerPage >= filteredBookings.length}
+							onClick={() => setPage((prev) => prev + 1)}
+							className={`px-3 py-1 text-sm md:text-base text-white bg-[#b91c1c] rounded-md hover:bg-red-700 transition ${
+								(page + 1) * rowsPerPage >= filteredBookings.length
+									? 'opacity-50 cursor-not-allowed'
+									: ''
+							}`}
+						>
+							Next
+						</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
