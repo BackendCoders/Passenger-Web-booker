@@ -81,7 +81,7 @@ const Header = () => {
 				{/* Dropdown Menu */}
 				{dropdownOpen && (
 					<div
-						className='absolute right-0 mt-2 w-48 bg-white border border-gray-300 shadow-md rounded-md z-10'
+						className='absolute right-0 mt-2 sm:mr-16 w-48 bg-white border border-gray-300 shadow-md rounded-md z-10'
 						style={{ marginTop: '5rem' }}
 					>
 						<button
