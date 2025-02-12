@@ -19,8 +19,23 @@ const LoginForm = () => {
 	const { loading, error } = useSelector((state) => state.auth);
 
 	// Handle input changes
+	// Handle input changes with validation
 	const handleChange = (e) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
+		const { name, value } = e.target;
+
+		if (name === "username") {
+			// ✅ Allow only numeric values, restrict length to 10
+			if (!/^\d*$/.test(value)) {
+				toast.error("Only numeric values (0-9) are allowed!");
+				return;
+			}
+			if (value.length > 10) {
+				toast.error("Account Number cannot exceed 10 digits!");
+				return;
+			}
+		}
+
+		setFormData({ ...formData, [name]: value });
 	};
 
 	// Handle form submission
@@ -79,6 +94,8 @@ const LoginForm = () => {
 								value={formData.username}
 								onChange={handleChange}
 								required
+								pattern="\d*" // ✅ Allow only numbers on mobile keyboards
+								maxLength="10" // ✅ Restrict max length to 10
 							/>
 						</div>
 
