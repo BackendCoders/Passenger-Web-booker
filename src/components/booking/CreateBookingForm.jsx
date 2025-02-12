@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
 	getAddressSuggestions,
+  getCombinedSuggestions,
 	getAddressDetails,
 } from '../../utils/addressAPI'; // Utility functions for address handling
 import { LuArrowDownUp } from 'react-icons/lu'; // Importing switch icon
