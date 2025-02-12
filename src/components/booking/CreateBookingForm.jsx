@@ -200,8 +200,7 @@ function CreateBookingForm() {
       !pickupAddress ||
       !pickupPostCode ||
       !destinationAddress ||
-      !passengerName ||
-	  !phoneNumber
+      !passengerName
     ) {
       alert("Please fill in all required fields.");
       return;
@@ -621,7 +620,7 @@ function CreateBookingForm() {
             {/* Phone Input */}
             <div>
               <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                Phone <span className="text-red-500">*</span>
+                Phone
               </label>
               <div className="flex items-center gap-2 sm:gap-4">
                 <input
