@@ -98,6 +98,27 @@ function Row({ row }) {
 				>
 					{getStatusText()}
 				</TableCell>
+				{/* ✅ Moved "Duplicate" Button to the Last Column */}
+				<TableCell sx={{ padding: '8px', textAlign: 'center' }}>
+    <Button
+        variant='contained'
+        size='small' // ✅ Makes the button smaller
+        sx={{
+            backgroundColor: '#000000',
+            color: 'white',
+            padding: '5px 10px', // ✅ Reducing padding
+            fontSize: '12px', // ✅ Slightly smaller font
+            fontWeight: 'bold',
+            borderRadius: '6px', // ✅ Rounded corners
+            '&:hover': { backgroundColor: '#333333' }, // ✅ Hover effect
+            minWidth: '80px' // ✅ Minimum width for uniformity
+        }}
+        onClick={handleReBooking} 
+    >
+        Duplicate
+    </Button>
+</TableCell>
+
 			</TableRow>
 
 			{row.status === 2 && (
@@ -128,7 +149,7 @@ function Row({ row }) {
 									<Button
 										variant='contained'
 										sx={{
-											'backgroundColor': '#dc2626',
+											'backgroundColor': '#b91c1c',
 											'color': 'white',
 											'&:hover': { backgroundColor: '#b91c1c' },
 										}}
@@ -288,6 +309,9 @@ const HistoryBooking = () => {
 									</TableCell>
 									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
 										Status
+									</TableCell>
+									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
+										Duplicate
 									</TableCell>
 								</TableRow>
 							</TableHead>
