@@ -23,7 +23,7 @@ const AddPassenger = () => {
 
 	// Redux states
 	const { loading } = useSelector((state) => state.forms); // Select loading state from Redux
-	 const { token = '', username, userId } = useSelector((state) => state.auth);
+	const { token = '', username, userId } = useSelector((state) => state.auth);
 	// const token = 'static-token';
 
 	// Local state for form inputs
@@ -38,6 +38,7 @@ const AddPassenger = () => {
 
 	// Local state for address suggestions
 	const [addressSuggestions, setAddressSuggestions] = useState([]);
+	const [highlightIndex, setHighlightIndex] = useState(-1); // ✅ Tracks selected dropdown item
 
 	// Handle input changes
 	const handleChange = (e) => {
@@ -60,7 +61,39 @@ const AddPassenger = () => {
 		}
 	};
 
-	// Handle selecting an address from suggestions
+	const handleKeyDown = (e) => {
+		if (addressSuggestions.length === 0) return;
+	
+		if (e.key === "ArrowDown") {
+			setHighlightIndex((prev) => {
+				const nextIndex = prev < addressSuggestions.length - 1 ? prev + 1 : prev;
+				scrollToHighlightedItem(nextIndex); // ✅ Auto-scroll function call
+				return nextIndex;
+			});
+		} else if (e.key === "ArrowUp") {
+			setHighlightIndex((prev) => {
+				const prevIndex = prev > 0 ? prev - 1 : 0;
+				scrollToHighlightedItem(prevIndex); // ✅ Auto-scroll function call
+				return prevIndex;
+			});
+		} else if (e.key === "Enter" && highlightIndex !== -1) {
+			handleSelectSuggestion(addressSuggestions[highlightIndex].id);
+			setHighlightIndex(-1);
+		} else if (e.key === "Escape") {
+			setHighlightIndex(-1);
+		}
+	};
+	
+	// ✅ Function to scroll dropdown with keyboard navigation
+	const scrollToHighlightedItem = (index) => {
+		const dropdown = document.getElementById("address-dropdown");
+		const highlightedItem = document.getElementById(`suggestion-${index}`);
+	
+		if (dropdown && highlightedItem) {
+			dropdown.scrollTop = highlightedItem.offsetTop - dropdown.offsetTop;
+		}
+	};
+
 	const handleSelectSuggestion = async (id) => {
 		try {
 			const details = await getAddressDetails(id);
@@ -69,11 +102,27 @@ const AddPassenger = () => {
 				address: details.address,
 				postcode: details.postcode,
 			});
-			setAddressSuggestions([]); // Clear suggestions after selection
+			setAddressSuggestions([]); // ✅ Hide dropdown after selection
+			setHighlightIndex(-1);
 		} catch (error) {
 			console.error('Error fetching address details:', error);
 		}
 	};
+
+	// Handle selecting an address from suggestions
+	// const handleSelectSuggestion = async (id) => {
+	// 	try {
+	// 		const details = await getAddressDetails(id);
+	// 		setFormData({
+	// 			...formData,
+	// 			address: details.address,
+	// 			postcode: details.postcode,
+	// 		});
+	// 		setAddressSuggestions([]); // Clear suggestions after selection
+	// 	} catch (error) {
+	// 		console.error('Error fetching address details:', error);
+	// 	}
+	// };
 
 	// const handleChange = (e) => {
 	//   const { id, value } = e.target;
@@ -130,7 +179,7 @@ const AddPassenger = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-	
+
 		// Validate required fields
 		if (
 			!formData.passengerName ||
@@ -141,7 +190,7 @@ const AddPassenger = () => {
 			toast.error('Please fill in all required fields');
 			return;
 		}
-	
+
 		// Ensure token and username are available
 		if (!token) {
 			toast.error('Authentication failed. Please login again.');
@@ -151,7 +200,7 @@ const AddPassenger = () => {
 			toast.error('Username is missing. Please login again.');
 			return;
 		}
-	
+
 		// Prepare request payload
 		const requestBody = {
 			id: 0, // Static value for new passengers
@@ -163,9 +212,9 @@ const AddPassenger = () => {
 			phone: formData.phone || '', // Optional field
 			email: formData.email || '', // Optional field
 		};
-	
+
 		console.log('Submitting Passenger Data:', requestBody);
-	
+
 		try {
 			// Dispatch Redux action with token & data
 			await dispatch(
@@ -174,13 +223,13 @@ const AddPassenger = () => {
 					data: requestBody,
 				})
 			).unwrap(); // Wait for thunk to complete
-	
+
 			toast.success('Passenger created successfully!');
-			
+
 			// Fetch updated passenger list
 			const response = await getAllPassengers(token, username);
 			if (response.length > 0) dispatch(setPassengers(response));
-	
+
 			// Redirect after successful creation
 			navigate('/passengerlist');
 		} catch (error) {
@@ -188,7 +237,6 @@ const AddPassenger = () => {
 			toast.error(error.message || 'An error occurred');
 		}
 	};
-	
 
 	return (
 		<div>
@@ -282,24 +330,29 @@ const AddPassenger = () => {
 											placeholder='Enter address'
 											value={formData.address}
 											onChange={handleChange}
+											onKeyDown={handleKeyDown} // ✅ Keyboard navigation added
 											className='w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring text-xs sm:text-sm'
 											required
 										/>
 										{/* Suggestions Dropdown */}
 										{addressSuggestions.length > 0 && (
-											<ul className='absolute z-10 bg-white border border-gray-300 rounded shadow-lg max-h-40 overflow-y-auto w-full mt-1'>
-												{addressSuggestions.map((suggestion) => (
-													<li
-														key={suggestion.id}
-														onClick={() =>
-															handleSelectSuggestion(suggestion.id)
-														}
-														className='px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs sm:text-sm'
-													>
-														{suggestion.label}
-													</li>
-												))}
-											</ul>
+											<ul
+											id="address-dropdown" // ✅ Add this ID for scrolling
+											className='absolute z-10 bg-white border border-gray-300 rounded shadow-lg max-h-40 overflow-y-auto w-full mt-1'
+										>
+											{addressSuggestions.map((suggestion, index) => (
+												<li
+													id={`suggestion-${index}`} // ✅ Add unique ID for each item
+													key={suggestion.id}
+													onClick={() => handleSelectSuggestion(suggestion.id)}
+													className={`px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs sm:text-sm ${
+														highlightIndex === index ? "bg-gray-200" : ""
+													}`}
+												>
+													{suggestion.label}
+												</li>
+											))}
+										</ul>
 										)}
 									</div>
 								</div>
