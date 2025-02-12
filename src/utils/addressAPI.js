@@ -189,29 +189,29 @@ export async function getCombinedSuggestions(searchTerm) {
     // 🏎️ Step 2: Phir getAddressSuggestions() ka response lo
     const addressResults = await getAddressSuggestions(searchTerm); // External API Call
 
-    // 🔀 Step 3: Dono results ko combine karo
+    // 🔀 Step 3: Dono results ko combine karo (Same Format me)
     const combinedResults = [];
 
-    // ✅ Pehle Local POI results daalo
+    // ✅ Pehle Local POI results daalo (GetAddress.io format me convert karke)
     if (poiResults) {
       poiResults.forEach((place) => {
         combinedResults.push({
-          label: place.name,
-          address: place.address,
-          latitude: place.latitude,
-          longitude: place.longitude,
-          source: "Local POI", // Yeh Local POI ka hai
+          label: place.address,  // ✅ GetAddress.io ke format me
+          address: place.address || "Unknown Address",
+          postcode: place.postcode || "N/A", // ✅ Agar postcode nahi hai toh "N/A" dikhaye
+          source: "Local POI",  // ✅ Yeh local API ka source hai
         });
       });
     }
 
-    // ✅ Uske baad GetAddress.io results daalo
+    // ✅ Uske baad GetAddress.io results daalo (Same Format Maintain Rakho)
     if (addressResults) {
       addressResults.forEach((place) => {
         combinedResults.push({
-          label: place.label,
-          address: place.address,
-          source: "GetAddress.io", // Yeh external API ka hai
+          label: place.address,  // ✅ GetAddress.io ka format same rakha
+          address: place.address || "Unknown Address",
+          postcode: place.postcode || "N/A",
+          source: "GetAddress.io", // ✅ Yeh external API ka source hai
         });
       });
     }
@@ -222,6 +222,7 @@ export async function getCombinedSuggestions(searchTerm) {
     return [];
   }
 }
+
 
 
 // ✅ Generic GET request handler
