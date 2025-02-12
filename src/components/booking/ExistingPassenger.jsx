@@ -68,7 +68,7 @@ const ExistingPassenger = () => {
 	}, [searchTerm, rowsPerPage]);
 
 	return (
-		<div>
+		<div className='bg-white min-h-screen'>
 			<Header />
 			<div className=' bg-white pt-10 p-4 flex flex-col items-center  min-h-[500px] max-h-[70vh] overflow-y-auto sm:min-h-screen sm:max-h-full'>
 				{/* Button Section */}
