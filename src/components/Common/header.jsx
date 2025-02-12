@@ -37,7 +37,7 @@ const Header = () => {
 		'/passengerlist': ' PASSENGER LIST',
 		'/existingPassengers': ' EXISTING PASSENGERS',
 		'/createbookingform': ' CREATE BOOKING FORM',
-		'/bookinghistory': ' BOOKING HISTORY',
+		'/bookinghistory': '  BOOKING REQUEST HISTORY',
 		'/confirmation': ' CONFIRMATION',
 	};
 
@@ -67,7 +67,7 @@ const Header = () => {
 					className='space-x-1 cursor-pointer'
 					onClick={() => setDropdownOpen(!dropdownOpen)} // Toggle dropdown
 				>
-					<p className='text-red-700 flex items-center'>
+					<p className='text-gray-700 flex items-center'>
 					<span className="hidden sm:inline text-lg md:text-lg">Logged in as:</span> {/* Hide on mobile, show on larger screens */}
 					<span className='font-semibold ml-1 text-sm md:text-lg'>{fullName}</span>
 						<FaAngleDown

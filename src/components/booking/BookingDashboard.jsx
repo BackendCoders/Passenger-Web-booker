@@ -75,7 +75,7 @@ const BookingDashboard = () => {
 							className='w-12 h-12 sm:w-20 sm:h-20 mb-3 sm:mb-4 group-hover:scale-110 group-hover:filter transition-transform duration-300'
 						/>
 						<span className='font-semibold text-xs sm:text-lg text-center'>
-							BOOKING HISTORY
+						BOOKING REQUEST HISTORY
 						</span>
 					</button>
 
