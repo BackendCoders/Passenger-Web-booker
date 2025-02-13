@@ -120,7 +120,7 @@ const ExistingPassenger = () => {
 				{!loading && filteredPassengers.length > 0 && (
 					<div className='w-full max-w-7xl bg-white p-8 rounded-lg shadow-lg'>
 						{/* Responsive Table */}
-						<div className='overflow-auto max-h-[70vh]'>
+						<div>
 							{/* Desktop View */}
 							<table className='hidden md:table min-w-full border-collapse border border-gray-300'>
 								<thead>
