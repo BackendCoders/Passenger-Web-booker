@@ -123,6 +123,14 @@ function CreateBookingForm() {
     }
   }, [bookingData]);
 
+
+  useEffect(() => {
+    if (pickupDate) {
+      setReturnDate(pickupDate); // ✅ Auto-set Return Date same as Pickup
+    }
+  }, [pickupDate]);
+  
+
   // Function to handle selecting an existing passenger
   const handleExistingPassengerSelect = (passengerId, mode) => {
     const selectedPassenger = existingPassengers.find(
@@ -314,6 +322,16 @@ function CreateBookingForm() {
       return;
     }
 
+    if (!pickupDate || !returnDate) {
+      alert("Please select both Pickup and Return Dates.");
+      return;
+    }
+  
+    if (new Date(returnDate) < new Date(pickupDate)) {
+      alert("Return Date cannot be before Pickup Date!");
+      return;
+    }
+
     // Prepare the common form data
     const formData = {
       accNo: username, // Static account number
@@ -417,11 +435,13 @@ function CreateBookingForm() {
                     Return Date <span className="text-red-500">*</span>
                   </label>
                   <input
-                    type="date"
-                    value={returnDate} // Bind to returnDate state
-                    onChange={(e) => setReturnDate(e.target.value)} // Update date state
-                    className="w-full p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black"
-                  />
+  type="date"
+  value={returnDate}
+  onChange={(e) => setReturnDate(e.target.value)}
+  min={pickupDate} // ✅ Disable past return dates
+  className="w-full p-2 sm:p-3 bg-white border border-gray-300 rounded-md sm:rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-black"
+/>
+
                 </div>
 
                 {/* Return Time Input */}
