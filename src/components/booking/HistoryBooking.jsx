@@ -279,7 +279,7 @@ const HistoryBooking = () => {
 						component={Paper}
 						sx={{
 							backgroundColor: 'white',
-							maxHeight: '600px', // ✅ Set max height
+							maxHeight: '350px', // ✅ Set max height
 							overflowY: 'auto', // ✅ Enable vertical scrolling
 							overflowX: 'auto', // ✅ Scroll horizontally on small screens
 						}}
