@@ -100,25 +100,24 @@ function Row({ row }) {
 				</TableCell>
 				{/* ✅ Moved "Duplicate" Button to the Last Column */}
 				<TableCell sx={{ padding: '8px', textAlign: 'center' }}>
-    <Button
-        variant='contained'
-        size='small' // ✅ Makes the button smaller
-        sx={{
-            backgroundColor: '#000000',
-            color: 'white',
-            padding: '5px 10px', // ✅ Reducing padding
-            fontSize: '12px', // ✅ Slightly smaller font
-            fontWeight: 'bold',
-            borderRadius: '6px', // ✅ Rounded corners
-            '&:hover': { backgroundColor: '#333333' }, // ✅ Hover effect
-            minWidth: '80px' // ✅ Minimum width for uniformity
-        }}
-        onClick={handleReBooking} 
-    >
-        Duplicate
-    </Button>
-</TableCell>
-
+					<Button
+						variant='contained'
+						size='small' // ✅ Makes the button smaller
+						sx={{
+							'backgroundColor': '#000000',
+							'color': 'white',
+							'padding': '5px 10px', // ✅ Reducing padding
+							'fontSize': '12px', // ✅ Slightly smaller font
+							'fontWeight': 'bold',
+							'borderRadius': '6px', // ✅ Rounded corners
+							'&:hover': { backgroundColor: '#333333' }, // ✅ Hover effect
+							'minWidth': '80px', // ✅ Minimum width for uniformity
+						}}
+						onClick={handleReBooking}
+					>
+						Duplicate
+					</Button>
+				</TableCell>
 			</TableRow>
 
 			{row.status === 2 && (
@@ -247,7 +246,7 @@ const HistoryBooking = () => {
 	return (
 		<div className='bg-white'>
 			<Header />
-			<div className='bg-white pt-10 mx-16 p-4 flex flex-col items-center min-h-[500px] sm:min-h-screen'>
+			<div className='bg-white pt-10 sm:mx-16 p-4 flex flex-col items-center min-h-[500px] sm:min-h-screen'>
 				{/* ✅ Back Button */}
 				<div className='flex flex-col sm:flex-row sm:justify-center w-full mb-4 gap-3'>
 					{/* ✅ Back Button */}
@@ -261,12 +260,12 @@ const HistoryBooking = () => {
 
 					{/* ✅ Search Field */}
 					<TextField
-						label='Search Bookings...'
+						label='Search Bookings....'
 						variant='outlined'
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 						size='small'
-						sx={{ width: '100%', maxWidth: '300px' }}
+						sx={{ width: '100%', maxWidth: '350px' }}
 					/>
 				</div>
 
