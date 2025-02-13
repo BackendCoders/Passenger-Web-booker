@@ -88,7 +88,7 @@ function Row({ row }) {
 				</TableCell>
 				<TableCell sx={{ padding: '12px' }}>{row.pickupAddress}</TableCell>
 				<TableCell sx={{ padding: '12px' }}>{row.destinationAddress}</TableCell>
-				<TableCell sx={{ padding: '12px' }}>{row.phoneNumber}</TableCell>
+				<TableCell sx={{ padding: '12px' }}>{row.phoneNumber ? row.phoneNumber : ""}</TableCell>
 				<TableCell sx={{ padding: '12px' }}>
 					{' '}
 					{moment(row.pickupDateTime).format('DD-MM-YYYY hh:mm')}
@@ -279,7 +279,7 @@ const HistoryBooking = () => {
 						component={Paper}
 						sx={{
 							backgroundColor: 'white',
-							maxHeight: '350px', // ✅ Set max height
+							maxHeight: '600px', // ✅ Set max height
 							overflowY: 'auto', // ✅ Enable vertical scrolling
 							overflowX: 'auto', // ✅ Scroll horizontally on small screens
 						}}
