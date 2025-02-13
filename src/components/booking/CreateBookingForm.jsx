@@ -542,7 +542,7 @@ function CreateBookingForm() {
 													onClick={() =>
 														handleSelectAddress(suggestion.id, true)
 													}
-													className={`px-3 py-2 cursor-pointer text-xs ${
+													className={`px-3 py-2 cursor-pointer text-[0.85rem] ${
 														suggestion.type === 'passenger'
 															? 'font-bold'
 															: 'hover:bg-gray-100'
@@ -669,7 +669,7 @@ function CreateBookingForm() {
 													onClick={() =>
 														handleSelectAddress(suggestion.id, false)
 													}
-													className={`px-3 py-2 cursor-pointer text-xs ${
+													className={`px-3 py-2 cursor-pointer text-[0.85rem] ${
 														suggestion.type === 'passenger'
 															? 'bg-yellow-100 font-bold'
 															: 'hover:bg-gray-100'
