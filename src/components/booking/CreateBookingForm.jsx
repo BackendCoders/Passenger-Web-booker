@@ -671,7 +671,7 @@ function CreateBookingForm() {
 													}
 													className={`px-3 py-2 cursor-pointer text-[0.85rem] ${
 														suggestion.type === 'passenger'
-															? 'bg-yellow-100 font-bold'
+															? 'font-bold'
 															: 'hover:bg-gray-100'
 													} ${
 														highlightIndexDest === index ? 'bg-gray-300' : ''
