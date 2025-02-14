@@ -244,7 +244,7 @@ const HistoryBooking = () => {
 	// };
 
 	return (
-		<div className='bg-white'>
+		<div className='bg-white max-h-full overflow-auto'>
 			<Header />
 			<div className='bg-white pt-10 sm:mx-16 p-4 flex flex-col items-center min-h-[500px] sm:min-h-screen'>
 				{/* ✅ Back Button */}
@@ -279,9 +279,6 @@ const HistoryBooking = () => {
 						component={Paper}
 						sx={{
 							backgroundColor: 'white',
-							maxHeight: '600px', // ✅ Set max height
-							overflowY: 'auto', // ✅ Enable vertical scrolling
-							overflowX: 'auto', // ✅ Scroll horizontally on small screens
 						}}
 					>
 						<Table aria-label='collapsible table'>
