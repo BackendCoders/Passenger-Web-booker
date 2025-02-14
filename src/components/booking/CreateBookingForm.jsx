@@ -134,7 +134,7 @@ function CreateBookingForm() {
 		const selectedPassenger = existingPassengers.find(
 			(passenger) => passenger.id === passengerId
 		);
-		console.log(existingPassengers + 'hiiiiiiiiiiiiiiiiiiiiii');
+		console.log(existingPassengers + 'existingPassengers');
 
 		if (selectedPassenger) {
 			if (mode === 'pickup') {
