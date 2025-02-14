@@ -88,7 +88,9 @@ function Row({ row }) {
 				</TableCell>
 				<TableCell sx={{ padding: '12px' }}>{row.pickupAddress}</TableCell>
 				<TableCell sx={{ padding: '12px' }}>{row.destinationAddress}</TableCell>
-				<TableCell sx={{ padding: '12px' }}>{row.phoneNumber ? row.phoneNumber : ""}</TableCell>
+				<TableCell sx={{ padding: '12px' }}>
+					{row.phoneNumber ? row.phoneNumber : ''}
+				</TableCell>
 				<TableCell sx={{ padding: '12px' }}>
 					{' '}
 					{moment(row.pickupDateTime).format('DD-MM-YYYY hh:mm')}
