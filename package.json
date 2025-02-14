@@ -16,6 +16,7 @@
 		"@mui/material": "^6.4.3",
 		"@reduxjs/toolkit": "^2.5.0",
 		"axios": "^1.7.9",
+		"framer-motion": "^12.4.2",
 		"getaddress-autocomplete": "^2.1.1",
 		"leaflet": "^1.9.4",
 		"leaflet-defaulticon-compatibility": "^0.1.2",
