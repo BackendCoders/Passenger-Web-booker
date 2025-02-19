@@ -32,26 +32,12 @@ const BookingDashboard = () => {
 	};
 
 	return (
-		<div className='flex flex-col min-h-screen bg-white'>
+		<div className='flex flex-col min-h-full max-h-full overflow-y-auto bg-white'>
 			{/* Header Section */}
 			<Header />
 
-			{/* Custom Image Section */}
-			{/* <div className='relative flex justify-center items-center mt-8'>
-				<img
-					src={customImage}
-					alt='Custom Banner'
-					className='w-[550px] h-[200px] object-contain hidden sm:block' // Adjust width and height here
-				/>
-			</div>
-			<div className='flex justify-center items-center px-4 rounded'>
-				<h2 className='text-lg sm:text-2xl font-bold text-center'>
-					ACCOUNT BOOKING REQUEST FORM
-				</h2>
-			</div> */}
-
 			{/* Main Section */}
-			<div className='flex-1 flex justify-center items-center overflow-y-auto p-4'>
+			<div className='flex-1 flex justify-center items-center p-4'>
 				{/* Buttons Section */}
 				<div className='grid grid-cols-1 sm:grid-cols-5 gap-6 w-full max-w-7xl'>
 					{/* Create New Booking Button */}
@@ -95,7 +81,7 @@ const BookingDashboard = () => {
 							className='w-12 h-12 sm:w-20 sm:h-20 mb-3 sm:mb-4 group-hover:scale-110 group-hover:filter transition-transform duration-300'
 						/>
 						<span className='font-semibold text-xs sm:text-lg text-center'>
-						Active Bookings
+						ACTIVE BOOKINGS
 						</span>
 					</button>
 
