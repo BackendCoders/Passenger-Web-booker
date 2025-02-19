@@ -4,8 +4,9 @@ import Header from '../Common/header';
 import addpassenger from '../../assets/addpassenger.svg';
 import existingpassenger from '../../assets/existingpassenger.svg';
 import newbooking from '../../assets/newbooking.svg';
-import payment from '../../assets/transaction-history.svg';
+import payment from '../../assets/history.png';
 import customImage from '../../assets/acelogo2.png'; // Import your uploaded image
+import activeImage from '../../assets/task-list.png';
 
 const BookingDashboard = () => {
 	const navigate = useNavigate();
@@ -89,7 +90,7 @@ const BookingDashboard = () => {
 						className='group bg-[#b91c1c] text-white rounded-lg shadow-lg py-6 sm:py-8 px-3 sm:px-6 text-center hover:bg-red-700 transition duration-300 flex flex-col items-center'
 					>
 						<img
-							src={payment}
+							src={activeImage}
 							alt='Booking History'
 							className='w-12 h-12 sm:w-20 sm:h-20 mb-3 sm:mb-4 group-hover:scale-110 group-hover:filter transition-transform duration-300'
 						/>

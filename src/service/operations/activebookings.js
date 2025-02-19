@@ -22,6 +22,7 @@ export const getActiveBookings = async (token, accountNo) => {
 export const requestAmendment = async (token, bookingId, message) => {
     try {
         const response = await apiConnector('POST', REQUESTAMENDMENT(bookingId, message), null, {
+           
             Authorization: `Bearer ${token}`,
           });
         if (response.status !== 200) throw new Error("Failed to request amendment");
@@ -37,6 +38,7 @@ export const requestAmendment = async (token, bookingId, message) => {
 export const requestCancellation = async (token, bookingId) => {
     try {
         const response = await apiConnector("POST", REQUESTCANCELLATION(bookingId), null, {
+            
             Authorization: `Bearer ${token}`,
           });
         if (response.status !== 200) throw new Error("Failed to request cancellation");
