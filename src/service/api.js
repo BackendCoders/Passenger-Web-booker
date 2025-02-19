@@ -17,3 +17,9 @@ export const webbookingfromEndpoints = {
 export const getwebbookingEndpoints = { 
 	GETWEBBOOKING: `${BASE_URL}/WeBooking/GetWebBookings`, // Get web booking
 }
+
+export const getactivebookingEndpoints = {
+	GETACTIVEBOOKING: (accountNo) => `${BASE_URL}/WeBooking/GetAccountActiveBookings?accno=${accountNo}`, // Get active booking
+	REQUESTAMENDMENT: (bookingId, message) =>`${BASE_URL}/WeBooking/RequestAmendment?bookingId=${bookingId}&message=${message}`,
+	REQUESTCANCELLATION: (bookingId) => `${BASE_URL}/WeBooking/RequestCancellation?bookingId=${bookingId}`
+};

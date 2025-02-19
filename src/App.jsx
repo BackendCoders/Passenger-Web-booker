@@ -9,6 +9,7 @@ import BookingDashboard from './components/booking/BookingDashboard';
 import PassengerList from './components/booking/PassengerList';
 import ExistingPassenger from './components/booking/ExistingPassenger';
 import HistoryBooking from './components/booking/HistoryBooking';
+import ActiveBooking from './components/booking/ActiveBooking';
 
 function App() {
 	return (
@@ -33,6 +34,10 @@ function App() {
 					<Route
 						path='/bookinghistory'
 						element={<HistoryBooking />}
+					/>
+					<Route
+						path='/activebookings'
+						element={<ActiveBooking />}
 					/>
 					<Route
 						path='/confirmation'

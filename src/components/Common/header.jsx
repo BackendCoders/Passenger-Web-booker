@@ -38,6 +38,7 @@ const Header = () => {
 		'/existingPassengers': ' EXISTING PASSENGERS',
 		'/createbookingform': ' CREATE BOOKING FORM',
 		'/bookinghistory': '  BOOKING REQUEST HISTORY',
+		'/activebookings': ' ACTIVE BOOKINGS',
 		'/confirmation': ' CONFIRMATION',
 	};
 

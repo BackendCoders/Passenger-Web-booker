@@ -18,6 +18,10 @@ const BookingDashboard = () => {
 		navigate('/bookinghistory');
 	};
 
+	const handleActiveBookings = () => { 
+		navigate('/activebookings');
+	};
+
 	const handleAddPassenger = () => {
 		navigate('/AddPassenger');
 	};
@@ -48,7 +52,7 @@ const BookingDashboard = () => {
 			{/* Main Section */}
 			<div className='flex-1 flex justify-center items-center overflow-y-auto p-4'>
 				{/* Buttons Section */}
-				<div className='grid grid-cols-1 sm:grid-cols-4 gap-6 w-full max-w-6xl'>
+				<div className='grid grid-cols-1 sm:grid-cols-5 gap-6 w-full max-w-7xl'>
 					{/* Create New Booking Button */}
 					<button
 						onClick={handleCreateBooking}
@@ -76,6 +80,21 @@ const BookingDashboard = () => {
 						/>
 						<span className='font-semibold text-xs sm:text-lg text-center'>
 						BOOKING REQUEST HISTORY
+						</span>
+					</button>
+
+					{/* Active bookings Page */}
+					<button
+						onClick={handleActiveBookings}
+						className='group bg-[#b91c1c] text-white rounded-lg shadow-lg py-6 sm:py-8 px-3 sm:px-6 text-center hover:bg-red-700 transition duration-300 flex flex-col items-center'
+					>
+						<img
+							src={payment}
+							alt='Booking History'
+							className='w-12 h-12 sm:w-20 sm:h-20 mb-3 sm:mb-4 group-hover:scale-110 group-hover:filter transition-transform duration-300'
+						/>
+						<span className='font-semibold text-xs sm:text-lg text-center'>
+						Active Bookings
 						</span>
 					</button>
 
