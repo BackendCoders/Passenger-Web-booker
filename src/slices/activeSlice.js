@@ -13,19 +13,12 @@ export const fetchActiveBookings = createAsyncThunk(
     "activebookings/fetchActiveBookings",
     async (_, { getState, rejectWithValue }) => {
         try {
-            const { token, username: accountNo } = getState()?.auth || {}; // Destructuring & optional chaining
+            const token = getState().auth.token; // Get Token from Redux
+            const accountNo = getState().auth.username; // Get Account Number
 
-            if (!token) return rejectWithValue("Authentication failed. Please log in again.");
-
-            // 🔹 Check if cached data is available
-            const cachedData = localStorage.getItem("activeBookings");
-            if (cachedData) return JSON.parse(cachedData); // Return cached bookings to avoid unnecessary API calls
+            if (!token) throw new Error("Authentication failed. Please log in again.");
 
             const response = await getActiveBookings(token, accountNo);
-
-            // 🔹 Store fetched data in localStorage
-            localStorage.setItem("activeBookings", JSON.stringify(response));
-
             return response;
         } catch (error) {
             console.error("Fetch Active Bookings Error:", error);
@@ -33,7 +26,6 @@ export const fetchActiveBookings = createAsyncThunk(
         }
     }
 );
-
 
 // 🔥 Request Amendment (Async Thunk)
 export const amendBooking = createAsyncThunk(
