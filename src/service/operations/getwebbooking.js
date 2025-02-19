@@ -6,23 +6,24 @@ import { getwebbookingEndpoints } from "../api";
 
 // ✅ Async Thunk to fetch Web Bookings
 export const fetchWebBookings = createAsyncThunk(
-    "webbookings/fetchWebBookings",
-    async (_, { rejectWithValue }) => {
+  "webbookings/fetchWebBookings",
+  async (_, { rejectWithValue }) => {
       try {
-        const response = await axios.post(getwebbookingEndpoints.GETWEBBOOKING, {
-          processed: false,
-          accepted: false,
-          rejected: false,
-        });
-  
-        if (!response.data || !Array.isArray(response.data)) {
-          return rejectWithValue("Invalid data format");
-        }
-  
-        return response.data;
+          const { data } = await axios.post(getwebbookingEndpoints.GETWEBBOOKING, {
+              processed: false,
+              accepted: false,
+              rejected: false,
+          });
+
+          // 🔹 Validate response format in a single check
+          if (!Array.isArray(data)) {
+              return rejectWithValue("Invalid data format received from server");
+          }
+
+          return data;
       } catch (error) {
-        return rejectWithValue(error.response?.data || "Error fetching data");
+          console.error("Fetch Web Bookings Error:", error);
+          return rejectWithValue(error.response?.data || "Error fetching web bookings");
       }
-    }
-  );
-  
+  }
+);
