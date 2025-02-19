@@ -248,7 +248,7 @@ const ActiveBooking = () => {
 					</button>
 
 					<TextField
-						label='Search Bookings...'
+						label='Search Passenger Name...'
 						variant='outlined'
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
