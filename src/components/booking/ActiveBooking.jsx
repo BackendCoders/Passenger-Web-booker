@@ -53,7 +53,7 @@ function Row({ row }) {
 			await dispatch(
 				amendBooking({ bookingId: row.bookingId, message })
 			).unwrap();
-			toast.success('Booking amended successfully!');
+			toast.success('Amendment Request Submitted');
 			setOpenAmendModal(false);
 			setMessage('');
 		} catch (error) {
@@ -138,14 +138,14 @@ function Row({ row }) {
 				<DialogActions sx={{ justifyContent: 'center', paddingBottom: 2 }}>
 					<Button
 						onClick={() => setOpenAmendModal(false)}
-						sx={{ color: 'white', bgcolor: 'black' }}
+						sx={{ color: 'white', bgcolor: '#dc2626' }}
 						disabled={loading}
 					>
 						Cancel
 					</Button>
 					<Button
 						onClick={handleAmendSubmit}
-						sx={{ backgroundColor: '#dc2626', color: 'white' }}
+						sx={{ backgroundColor: 'black', color: 'white' }}
 						disabled={loading}
 					>
 						{loading ? (
@@ -177,19 +177,21 @@ function Row({ row }) {
 					Cancel Booking
 				</DialogTitle>
 				<DialogContent sx={{ textAlign: 'center', padding: '20px' }}>
-					Are you sure you want to cancel this booking?
+					Are you sure you want to submit a cancellation request for{' '}
+					<strong>{row.passengerName}</strong>?
 				</DialogContent>
+
 				<DialogActions sx={{ justifyContent: 'center', paddingBottom: 2 }}>
 					<Button
 						onClick={() => setOpenCancelModal(false)}
-						sx={{ color: 'red' }}
+						sx={{ backgroundColor: '#dc2626', color: 'white' }}
 						disabled={loading}
 					>
 						No
 					</Button>
 					<Button
 						onClick={handleCancelSubmit}
-						sx={{ backgroundColor: '#dc2626', color: 'white' }}
+						sx={{ backgroundColor: 'gray', color: 'white' }}
 						disabled={loading}
 					>
 						{loading ? (
