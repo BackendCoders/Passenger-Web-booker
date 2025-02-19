@@ -63,32 +63,33 @@ const AddPassenger = () => {
 
 	const handleKeyDown = (e) => {
 		if (addressSuggestions.length === 0) return;
-	
-		if (e.key === "ArrowDown") {
+
+		if (e.key === 'ArrowDown') {
 			setHighlightIndex((prev) => {
-				const nextIndex = prev < addressSuggestions.length - 1 ? prev + 1 : prev;
+				const nextIndex =
+					prev < addressSuggestions.length - 1 ? prev + 1 : prev;
 				scrollToHighlightedItem(nextIndex); // ✅ Auto-scroll function call
 				return nextIndex;
 			});
-		} else if (e.key === "ArrowUp") {
+		} else if (e.key === 'ArrowUp') {
 			setHighlightIndex((prev) => {
 				const prevIndex = prev > 0 ? prev - 1 : 0;
 				scrollToHighlightedItem(prevIndex); // ✅ Auto-scroll function call
 				return prevIndex;
 			});
-		} else if (e.key === "Enter" && highlightIndex !== -1) {
+		} else if (e.key === 'Enter' && highlightIndex !== -1) {
 			handleSelectSuggestion(addressSuggestions[highlightIndex].id);
 			setHighlightIndex(-1);
-		} else if (e.key === "Escape") {
+		} else if (e.key === 'Escape') {
 			setHighlightIndex(-1);
 		}
 	};
-	
+
 	// ✅ Function to scroll dropdown with keyboard navigation
 	const scrollToHighlightedItem = (index) => {
-		const dropdown = document.getElementById("address-dropdown");
+		const dropdown = document.getElementById('address-dropdown');
 		const highlightedItem = document.getElementById(`suggestion-${index}`);
-	
+
 		if (dropdown && highlightedItem) {
 			dropdown.scrollTop = highlightedItem.offsetTop - dropdown.offsetTop;
 		}
@@ -108,74 +109,6 @@ const AddPassenger = () => {
 			console.error('Error fetching address details:', error);
 		}
 	};
-
-	// Handle selecting an address from suggestions
-	// const handleSelectSuggestion = async (id) => {
-	// 	try {
-	// 		const details = await getAddressDetails(id);
-	// 		setFormData({
-	// 			...formData,
-	// 			address: details.address,
-	// 			postcode: details.postcode,
-	// 		});
-	// 		setAddressSuggestions([]); // Clear suggestions after selection
-	// 	} catch (error) {
-	// 		console.error('Error fetching address details:', error);
-	// 	}
-	// };
-
-	// const handleChange = (e) => {
-	//   const { id, value } = e.target;
-	//   setFormData({ ...formData, [id]: value });
-	// };
-
-	// const handleSubmit = async (e) => {
-	// 	e.preventDefault();
-
-	// 	// Validate required fields
-	// 	if (
-	// 		!formData.passengerName ||
-	// 		!formData.description ||
-	// 		!formData.address ||
-	// 		!formData.postcode
-	// 	) {
-	// 		toast.error('Please fill in all required fields');
-	// 		return;
-	// 	}
-
-	// 	// Prepare payload
-	// 	const requestBody = {
-	// 		id: 0, // Static value for new passengers
-	// 		accNo: {username}, // Static account number
-	// 		description: formData.description,
-	// 		passenger: formData.passengerName, // Map passengerName to passenger
-	// 		address: formData.address,
-	// 		postcode: formData.postcode,
-	// 		phone: formData.phone || '', // Optional field
-	// 		email: formData.email || '', // Optional field
-	// 	};
-
-	// 	console.log('Sending Request Body via Redux Thunk:', requestBody);
-
-	// 	try {
-	// 		// Dispatch Redux thunk
-	// 		await dispatch(
-	// 			addPassenger({
-	// 				token: 'your-auth-token-here', // Replace with actual token
-	// 				data: requestBody,
-	// 			})
-	// 		).unwrap(); // Wait for thunk to complete and throw errors if any
-
-	// 		toast.success('Passenger created successfully!');
-	// 		const response = await getAllPassengers(token, 9999);
-	// 		console.log(response);
-	// 		if (response.length > 0) dispatch(setPassengers(response));
-	// 		navigate('/passengerlist'); // Redirect after success
-	// 	} catch (error) {
-	// 		console.error('Error creating passenger:', error);
-	// 		toast.error(error || 'An error occurred');
-	// 	}
-	// };
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -337,22 +270,24 @@ const AddPassenger = () => {
 										{/* Suggestions Dropdown */}
 										{addressSuggestions.length > 0 && (
 											<ul
-											id="address-dropdown" // ✅ Add this ID for scrolling
-											className='absolute z-10 bg-white border border-gray-300 rounded shadow-lg max-h-40 overflow-y-auto w-full mt-1'
-										>
-											{addressSuggestions.map((suggestion, index) => (
-												<li
-													id={`suggestion-${index}`} // ✅ Add unique ID for each item
-													key={suggestion.id}
-													onClick={() => handleSelectSuggestion(suggestion.id)}
-													className={`px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs sm:text-sm ${
-														highlightIndex === index ? "bg-gray-200" : ""
-													}`}
-												>
-													{suggestion.label}
-												</li>
-											))}
-										</ul>
+												id='address-dropdown' // ✅ Add this ID for scrolling
+												className='absolute z-10 bg-white border border-gray-300 rounded shadow-lg max-h-40 overflow-y-auto w-full mt-1'
+											>
+												{addressSuggestions.map((suggestion, index) => (
+													<li
+														id={`suggestion-${index}`} // ✅ Add unique ID for each item
+														key={suggestion.id}
+														onClick={() =>
+															handleSelectSuggestion(suggestion.id)
+														}
+														className={`px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs sm:text-sm ${
+															highlightIndex === index ? 'bg-gray-200' : ''
+														}`}
+													>
+														{suggestion.label}
+													</li>
+												))}
+											</ul>
 										)}
 									</div>
 								</div>

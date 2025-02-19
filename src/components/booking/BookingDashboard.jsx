@@ -5,7 +5,7 @@ import addpassenger from '../../assets/addpassenger.svg';
 import existingpassenger from '../../assets/existingpassenger.svg';
 import newbooking from '../../assets/newbooking.svg';
 import payment from '../../assets/history.png';
-import customImage from '../../assets/acelogo2.png'; // Import your uploaded image
+// import customImage from '../../assets/acelogo2.png'; // Import your uploaded image
 import activeImage from '../../assets/task-list.png';
 
 const BookingDashboard = () => {
@@ -15,11 +15,11 @@ const BookingDashboard = () => {
 		navigate('/createbookingform');
 	};
 
-	const handleBookingHistory = () => { 
+	const handleBookingHistory = () => {
 		navigate('/bookinghistory');
 	};
 
-	const handleActiveBookings = () => { 
+	const handleActiveBookings = () => {
 		navigate('/activebookings');
 	};
 
@@ -66,7 +66,7 @@ const BookingDashboard = () => {
 							className='w-12 h-12 sm:w-20 sm:h-20 mb-3 sm:mb-4 group-hover:scale-110 group-hover:filter transition-transform duration-300'
 						/>
 						<span className='font-semibold text-xs sm:text-lg text-center'>
-						BOOKING REQUEST HISTORY
+							BOOKING REQUEST HISTORY
 						</span>
 					</button>
 
@@ -81,7 +81,7 @@ const BookingDashboard = () => {
 							className='w-12 h-12 sm:w-20 sm:h-20 mb-3 sm:mb-4 group-hover:scale-110 group-hover:filter transition-transform duration-300'
 						/>
 						<span className='font-semibold text-xs sm:text-lg text-center'>
-						ACTIVE BOOKINGS
+							ACTIVE BOOKINGS
 						</span>
 					</button>
 

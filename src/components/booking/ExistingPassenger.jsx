@@ -11,7 +11,7 @@ import { TiArrowBack } from 'react-icons/ti';
 const ExistingPassenger = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const { token = '', username, userId } = useSelector((state) => state.auth);	
+	const { token = '', username, userId } = useSelector((state) => state.auth);
 
 	const {
 		passengers = [],
@@ -240,7 +240,7 @@ const ExistingPassenger = () => {
 									<option value={10}>10</option>
 									<option value={20}>20</option>
 									<option value={50}>50</option>
-									<option value={100}>100</option>	
+									<option value={100}>100</option>
 								</select>
 							</div>
 

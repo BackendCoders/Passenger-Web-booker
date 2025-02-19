@@ -12,8 +12,6 @@ const PassengerList = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	
-
 	const {
 		passengers = [],
 		loading,

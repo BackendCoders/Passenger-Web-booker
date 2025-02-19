@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -117,7 +117,11 @@ function Row({ row }) {
 				fullWidth
 			>
 				<DialogTitle
-					sx={{ backgroundColor: '#dc2626', color: 'white', textAlign: 'center' }}
+					sx={{
+						backgroundColor: '#dc2626',
+						color: 'white',
+						textAlign: 'center',
+					}}
 				>
 					Amend Booking
 				</DialogTitle>
@@ -164,7 +168,11 @@ function Row({ row }) {
 				fullWidth
 			>
 				<DialogTitle
-					sx={{ backgroundColor: '#dc2626', color: 'white', textAlign: 'center' }}
+					sx={{
+						backgroundColor: '#dc2626',
+						color: 'white',
+						textAlign: 'center',
+					}}
 				>
 					Cancel Booking
 				</DialogTitle>
@@ -264,12 +272,24 @@ const ActiveBooking = () => {
 						<Table>
 							<TableHead>
 								<TableRow sx={{ backgroundColor: '#dc2626' }}>
-									<TableCell sx={{ color: 'white',  fontWeight: 'bold' }}>Booking ID</TableCell>
-									<TableCell sx={{ color: 'white',  fontWeight: 'bold' }}>Passenger</TableCell>
-									<TableCell sx={{ color: 'white',  fontWeight: 'bold' }}>Pickup Address</TableCell>
-									<TableCell sx={{ color: 'white',  fontWeight: 'bold' }}>Destination</TableCell>
-									<TableCell sx={{ color: 'white',  fontWeight: 'bold' }}>Time & Date</TableCell>
-									<TableCell sx={{ color: 'white',  fontWeight: 'bold' }}>Actions</TableCell>
+									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
+										Booking ID
+									</TableCell>
+									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
+										Passenger
+									</TableCell>
+									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
+										Pickup Address
+									</TableCell>
+									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
+										Destination
+									</TableCell>
+									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
+										Time & Date
+									</TableCell>
+									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
+										Actions
+									</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
