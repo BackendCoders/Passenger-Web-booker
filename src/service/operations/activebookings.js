@@ -21,7 +21,7 @@ export const getActiveBookings = async (token, accountNo) => {
 // 🔥 Request Amendment
 export const requestAmendment = async (token, bookingId, message) => {
     try {
-        const response = await apiConnector('POST', REQUESTAMENDMENT(bookingId, message), null, {
+        const response = await apiConnector('GET', REQUESTAMENDMENT(bookingId, message), null, {
            
             Authorization: `Bearer ${token}`,
           });
@@ -37,7 +37,7 @@ export const requestAmendment = async (token, bookingId, message) => {
 // 🔥 Request Cancellation
 export const requestCancellation = async (token, bookingId) => {
     try {
-        const response = await apiConnector("POST", REQUESTCANCELLATION(bookingId), null, {
+        const response = await apiConnector("GET", REQUESTCANCELLATION(bookingId), null, {
             
             Authorization: `Bearer ${token}`,
           });
