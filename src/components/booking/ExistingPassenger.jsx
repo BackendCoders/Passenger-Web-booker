@@ -7,6 +7,8 @@ import { fetchPassengers, removePassenger } from '../../slices/formSlice';
 import Header from '../Common/header';
 import { MdDeleteForever } from 'react-icons/md';
 import { TiArrowBack } from 'react-icons/ti';
+import { FaArrowUp } from 'react-icons/fa6';
+import { FaArrowDown } from 'react-icons/fa6';
 
 const ExistingPassenger = () => {
 	const dispatch = useDispatch();
@@ -21,6 +23,8 @@ const ExistingPassenger = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
 	const [rowsPerPage, setRowsPerPage] = useState(5); // Default rows per page
+	const [sortColumn, setSortColumn] = useState(null);
+	const [sortOrder, setSortOrder] = useState('asc');
 
 	// Fetch passengers when the component mounts
 	useEffect(() => {
@@ -35,9 +39,20 @@ const ExistingPassenger = () => {
 		dispatch(removePassenger({ token, id }));
 	};
 
-	// Filter passengers by search term
-	const filteredPassengers = passengers.filter((passenger) => {
-		if (!passenger) return false; // Ensure passenger is defined
+// Sorting Logic
+const handleSort = (column) => {
+	if (sortColumn === column) {
+		setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+	} else {
+		setSortColumn(column);
+		setSortOrder('asc');
+	}
+};
+
+// Filtering and Sorting
+const filteredPassengers = [...passengers]
+	.filter((passenger) => {
+		if (!passenger) return false;
 		return (
 			(passenger.passenger || '')
 				.toLowerCase()
@@ -52,6 +67,14 @@ const ExistingPassenger = () => {
 				.toLowerCase()
 				.includes(searchTerm.toLowerCase())
 		);
+	})
+	.sort((a, b) => {
+		if (!sortColumn) return 0;
+		const valueA = a[sortColumn] || '';
+		const valueB = b[sortColumn] || '';
+		return sortOrder === 'asc'
+			? valueA.localeCompare(valueB)
+			: valueB.localeCompare(valueA);
 	});
 
 	// Calculate pagination
@@ -123,24 +146,33 @@ const ExistingPassenger = () => {
 						<div>
 							{/* Desktop View */}
 							<table className='hidden md:table min-w-full border-collapse border border-gray-300'>
-								<thead>
-									<tr className='bg-[#b91c1c] text-white sticky top-0 z-10'>
-										<th className='border border-gray-300 px-4 py-2 text-left'>
-											Passenger
-										</th>
-										<th className='border border-gray-300 px-4 py-2 text-left'>
-											Description
-										</th>
-										<th className='border border-gray-300 px-4 py-2 text-left'>
-											Address
-										</th>
-										<th className='border border-gray-300 px-4 py-2 text-left'>
-											Postcode
-										</th>
-										<th className='border border-gray-300 px-4 py-2 text-left'>
-											Phone
-										</th>
-										<th className='border border-gray-300 px-4 py-2 text-left'>
+							<thead>
+									<tr className='bg-[#b91c1c] text-white'>
+										{[
+											'passenger',
+											'description',
+											'address',
+											'postcode',
+											'phone',
+										].map((col) => (
+											<th
+												key={col}
+												className='border border-gray-300 px-4 py-2 text-left cursor-pointer'
+												onClick={() => handleSort(col)}
+											>
+												{col.charAt(0).toUpperCase() + col.slice(1)}
+												{sortColumn === col ? (
+													sortOrder === 'asc' ? (
+														<FaArrowUp className='inline ml-2' />
+													) : (
+														<FaArrowDown className='inline ml-2' />
+													)
+												) : (
+													<></>
+												)}
+											</th>
+										))}
+										<th className='border border-gray-300 px-4 py-2'>
 											Actions
 										</th>
 									</tr>
