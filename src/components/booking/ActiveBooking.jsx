@@ -33,6 +33,8 @@ import {
 } from '../../slices/activeSlice';
 import Header from '../Common/header';
 import { toast } from 'react-hot-toast';
+import { useMemo } from 'react';
+import { debounce } from 'lodash';
 
 // Row Component for Each Booking
 function Row({ row }) {
@@ -219,9 +221,16 @@ const ActiveBooking = () => {
 	const { activeBookings, loading } = useSelector(
 		(state) => state.activebookings
 	);
-	const [searchTerm, setSearchTerm] = useState('');
+	// const [searchTerm, setSearchTerm] = useState('');
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(5);
+	const [searchInput, setSearchInput] = useState('');
+	const [searchTerm, setSearchTerm] = useState('');
+
+	// Debounce function to delay filtering while typing
+	const handleSearchChange = debounce((value) => {
+		setSearchTerm(value);
+	}, 300);
 
 	// Fetch Active Bookings on Component Mount
 	useEffect(() => {
@@ -229,9 +238,24 @@ const ActiveBooking = () => {
 	}, [dispatch]);
 
 	// Filter Bookings Based on Search
-	const filteredBookings = activeBookings.filter((booking) =>
-		booking.passengerName.toLowerCase().includes(searchTerm.toLowerCase())
-	);
+	const filteredBookings = useMemo(() => {
+		return activeBookings.filter((booking) => {
+			// Fields where the search will be applied
+			const searchableFields = [
+				'passengerName',
+				'pickupAddress',
+				'destinationAddress',
+				'bookingId',
+			];
+
+			// Check if searchTerm is present in any of these fields
+			return searchableFields.some((field) =>
+				String(booking[field] || '')
+					.toLowerCase()
+					.includes(searchTerm.toLowerCase())
+			);
+		});
+	}, [activeBookings, searchTerm]); // Recomputes only when searchTerm or activeBookings change
 
 	// **Pagination Logic**
 	const totalFilteredBookings = filteredBookings.length;
@@ -258,10 +282,13 @@ const ActiveBooking = () => {
 					</button>
 
 					<TextField
-						label='Search Passenger Name...'
+						label='Search...'
 						variant='outlined'
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
+						value={searchInput}
+						onChange={(e) => {
+							setSearchInput(e.target.value);
+							handleSearchChange(e.target.value); // Calls debounced function
+						}}
 						size='small'
 						sx={{ width: '100%', maxWidth: '350px' }}
 					/>
