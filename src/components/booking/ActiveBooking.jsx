@@ -83,10 +83,10 @@ function Row({ row }) {
 		<>
 			<TableRow>
 				<TableCell>{row.bookingId}</TableCell>
+				<TableCell>{moment(row.dateTime).format('DD-MM-YYYY hh:mm')}</TableCell>
 				<TableCell>{row.passengerName}</TableCell>
 				<TableCell>{row.pickupAddress}</TableCell>
 				<TableCell>{row.destinationAddress}</TableCell>
-				<TableCell>{moment(row.dateTime).format('DD-MM-YYYY hh:mm')}</TableCell>
 				<TableCell sx={{ padding: '8px', textAlign: 'center' }}>
 					<Box
 						display='flex'
@@ -225,7 +225,7 @@ const ActiveBooking = () => {
 	);
 	// const [searchTerm, setSearchTerm] = useState('');
 	const [page, setPage] = useState(0);
-	const [rowsPerPage, setRowsPerPage] = useState(5);
+	const [rowsPerPage, setRowsPerPage] = useState(20);
 	const [searchInput, setSearchInput] = useState('');
 	const [searchTerm, setSearchTerm] = useState('');
 	const [sortConfig, setSortConfig] = useState({ key: "bookingId", direction: "desc" });
@@ -360,6 +360,31 @@ const ActiveBooking = () => {
 											cursor: 'pointer',
 											borderBottom: 'none', // ✅ Removes white line
 										}}
+										onClick={() => handleSort('dateTime')}
+									>
+										<span
+											style={{ display: 'inline-flex', alignItems: 'center' }}
+										>
+											 Date & Time {' '}
+											{sortConfig.key === 'dateTime' ? (
+												sortConfig.direction === 'asc' ? (
+													<FaArrowUp />
+												) : (
+													<FaArrowDown />
+												)
+											) : (
+												''
+											)}
+										</span>
+									</TableCell>
+
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											cursor: 'pointer',
+											borderBottom: 'none', // ✅ Removes white line
+										}}
 										onClick={() => handleSort('passengerName')}
 									>
 										<span
@@ -425,30 +450,7 @@ const ActiveBooking = () => {
 											)}
 										</span>
 									</TableCell>
-									<TableCell
-										sx={{
-											color: 'white',
-											fontWeight: 'bold',
-											cursor: 'pointer',
-											borderBottom: 'none', // ✅ Removes white line
-										}}
-										onClick={() => handleSort('dateTime')}
-									>
-										<span
-											style={{ display: 'inline-flex', alignItems: 'center' }}
-										>
-											Time & Date{' '}
-											{sortConfig.key === 'dateTime' ? (
-												sortConfig.direction === 'asc' ? (
-													<FaArrowUp />
-												) : (
-													<FaArrowDown />
-												)
-											) : (
-												''
-											)}
-										</span>
-									</TableCell>
+									
 									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
 										Actions
 									</TableCell>
@@ -494,11 +496,11 @@ const ActiveBooking = () => {
 							onChange={(e) => setRowsPerPage(Number(e.target.value))}
 							className='px-2 py-1 text-sm border border-gray-300 bg-white text-black rounded-md focus:outline-none hover:bg-red-50'
 						>
-							<option value={5}>5</option>
-							<option value={10}>10</option>
 							<option value={20}>20</option>
-							<option value={50}>50</option>
+							<option value={40}>40</option>
+							<option value={80}>80</option>
 							<option value={100}>100</option>
+							<option value={200}>200</option>
 						</select>
 					</div>
 
