@@ -228,15 +228,18 @@ const ActiveBooking = () => {
 	const [rowsPerPage, setRowsPerPage] = useState(5);
 	const [searchInput, setSearchInput] = useState('');
 	const [searchTerm, setSearchTerm] = useState('');
-	const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+	const [sortConfig, setSortConfig] = useState({ key: "bookingId", direction: "desc" });
+
 
 	const handleSort = (key) => {
-		let direction = 'asc';
-		if (sortConfig.key === key && sortConfig.direction === 'asc') {
-			direction = 'desc';
+		let direction = "desc"; // Default desc
+	
+		if (sortConfig.key === key && sortConfig.direction === "desc") {
+			direction = "asc";
 		}
+	
 		setSortConfig({ key, direction });
-	};
+	}
 
 	// Filter Bookings Based on Search
 	const filteredBookings = useMemo(() => {
@@ -261,14 +264,15 @@ const ActiveBooking = () => {
 	const sortedBookings = useMemo(() => {
 		if (!sortConfig.key) return filteredBookings;
 		return [...filteredBookings].sort((a, b) => {
-			const valA = a[sortConfig.key];
-			const valB = b[sortConfig.key];
-
-			if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
-			if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+			const valA = a[sortConfig.key] || "";
+			const valB = b[sortConfig.key] || "";
+	
+			if (valA < valB) return sortConfig.direction === "asc" ? -1 : 1;
+			if (valA > valB) return sortConfig.direction === "asc" ? 1 : -1;
 			return 0;
 		});
 	}, [filteredBookings, sortConfig]);
+	
 
 	// Debounce function to delay filtering while typing
 	const handleSearchChange = debounce((value) => {
