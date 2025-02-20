@@ -207,7 +207,7 @@ const HistoryBooking = () => {
 
 	const [searchTerm, setSearchTerm] = useState('');
 	const [page, setPage] = useState(0);
-	const [rowsPerPage, setRowsPerPage] = useState(5);
+	const [rowsPerPage, setRowsPerPage] = useState(20);
 
 	// ✅ Filter bookings based on search term
 	const filteredBookings = webBookings.filter((booking) => {
@@ -348,11 +348,11 @@ const HistoryBooking = () => {
 							onChange={(e) => setRowsPerPage(Number(e.target.value))}
 							className='px-2 py-1 text-sm border border-gray-300 bg-white text-black rounded-md focus:outline-none hover:bg-red-50'
 						>
-							<option value={5}>5</option>
-							<option value={10}>10</option>
 							<option value={20}>20</option>
-							<option value={50}>50</option>
+							<option value={40}>40</option>
+							<option value={80}>80</option>
 							<option value={100}>100</option>
+							<option value={200}>200</option>
 						</select>
 					</div>
 
