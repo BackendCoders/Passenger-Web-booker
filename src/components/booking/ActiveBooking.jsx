@@ -35,6 +35,8 @@ import Header from '../Common/header';
 import { toast } from 'react-hot-toast';
 import { useMemo } from 'react';
 import { debounce } from 'lodash';
+import { FaArrowUp } from 'react-icons/fa6';
+import { FaArrowDown } from 'react-icons/fa6';
 
 // Row Component for Each Booking
 function Row({ row }) {
@@ -226,16 +228,15 @@ const ActiveBooking = () => {
 	const [rowsPerPage, setRowsPerPage] = useState(5);
 	const [searchInput, setSearchInput] = useState('');
 	const [searchTerm, setSearchTerm] = useState('');
+	const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
-	// Debounce function to delay filtering while typing
-	const handleSearchChange = debounce((value) => {
-		setSearchTerm(value);
-	}, 300);
-
-	// Fetch Active Bookings on Component Mount
-	useEffect(() => {
-		dispatch(fetchActiveBookings());
-	}, [dispatch]);
+	const handleSort = (key) => {
+		let direction = 'asc';
+		if (sortConfig.key === key && sortConfig.direction === 'asc') {
+			direction = 'desc';
+		}
+		setSortConfig({ key, direction });
+	};
 
 	// Filter Bookings Based on Search
 	const filteredBookings = useMemo(() => {
@@ -256,6 +257,28 @@ const ActiveBooking = () => {
 			);
 		});
 	}, [activeBookings, searchTerm]); // Recomputes only when searchTerm or activeBookings change
+
+	const sortedBookings = useMemo(() => {
+		if (!sortConfig.key) return filteredBookings;
+		return [...filteredBookings].sort((a, b) => {
+			const valA = a[sortConfig.key];
+			const valB = b[sortConfig.key];
+
+			if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+			if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+			return 0;
+		});
+	}, [filteredBookings, sortConfig]);
+
+	// Debounce function to delay filtering while typing
+	const handleSearchChange = debounce((value) => {
+		setSearchTerm(value);
+	}, 300);
+
+	// Fetch Active Bookings on Component Mount
+	useEffect(() => {
+		dispatch(fetchActiveBookings());
+	}, [dispatch]);
 
 	// **Pagination Logic**
 	const totalFilteredBookings = filteredBookings.length;
@@ -301,29 +324,136 @@ const ActiveBooking = () => {
 						<Table>
 							<TableHead>
 								<TableRow sx={{ backgroundColor: '#dc2626' }}>
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-										Booking ID
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											cursor: 'pointer',
+											borderBottom: 'none', // ✅ Removes white line
+										}}
+										onClick={() => handleSort('bookingId')}
+									>
+										<span
+											style={{ display: 'inline-flex', alignItems: 'center' }}
+										>
+											Booking ID
+											{sortConfig.key === 'bookingId' && (
+												<span style={{ marginLeft: '8px' }}>
+													{sortConfig.direction === 'asc' ? (
+														<FaArrowUp />
+													) : (
+														<FaArrowDown />
+													)}
+												</span>
+											)}
+										</span>
 									</TableCell>
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-										Passenger
+
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											cursor: 'pointer',
+											borderBottom: 'none', // ✅ Removes white line
+										}}
+										onClick={() => handleSort('passengerName')}
+									>
+										<span
+											style={{ display: 'inline-flex', alignItems: 'center' }}
+										>
+											Passenger{' '}
+											{sortConfig.key === 'passengerName' ? (
+												sortConfig.direction === 'asc' ? (
+													<FaArrowUp />
+												) : (
+													<FaArrowDown />
+												)
+											) : (
+												''
+											)}
+										</span>
 									</TableCell>
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-										Pickup Address
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											cursor: 'pointer',
+											borderBottom: 'none', // ✅ Removes white line
+										}}
+										onClick={() => handleSort('pickupAddress')}
+									>
+										<span
+											style={{ display: 'inline-flex', alignItems: 'center' }}
+										>
+											Pickup Address{' '}
+											{sortConfig.key === 'pickupAddress' ? (
+												sortConfig.direction === 'asc' ? (
+													<FaArrowUp />
+												) : (
+													<FaArrowDown />
+												)
+											) : (
+												''
+											)}
+										</span>
 									</TableCell>
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-										Destination
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											cursor: 'pointer',
+											borderBottom: 'none', // ✅ Removes white line
+										}}
+										onClick={() => handleSort('destinationAddress')}
+									>
+										<span
+											style={{ display: 'inline-flex', alignItems: 'center' }}
+										>
+											Destination{' '}
+											{sortConfig.key === 'destinationAddress' ? (
+												sortConfig.direction === 'asc' ? (
+													<FaArrowUp />
+												) : (
+													<FaArrowDown />
+												)
+											) : (
+												''
+											)}
+										</span>
 									</TableCell>
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-										Time & Date
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											cursor: 'pointer',
+											borderBottom: 'none', // ✅ Removes white line
+										}}
+										onClick={() => handleSort('dateTime')}
+									>
+										<span
+											style={{ display: 'inline-flex', alignItems: 'center' }}
+										>
+											Time & Date{' '}
+											{sortConfig.key === 'dateTime' ? (
+												sortConfig.direction === 'asc' ? (
+													<FaArrowUp />
+												) : (
+													<FaArrowDown />
+												)
+											) : (
+												''
+											)}
+										</span>
 									</TableCell>
 									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
 										Actions
 									</TableCell>
 								</TableRow>
 							</TableHead>
+
 							<TableBody>
 								{paginatedBookings.length > 0 ? (
-									paginatedBookings.map((booking) => (
+									sortedBookings.slice(startIndex, endIndex).map((booking) => (
 										<Row
 											key={booking.bookingId}
 											row={booking}
