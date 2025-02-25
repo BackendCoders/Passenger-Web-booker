@@ -22,7 +22,7 @@ const AddPassenger = () => {
 	const dispatch = useDispatch();
 
 	// Redux states
-	const { loading } = useSelector((state) => state.forms); // Select loading state from Redux
+	const { loading } = useSelector((state) => state.forms); // Sezlect loading state from Redux
 	const { token = '', username, userId } = useSelector((state) => state.auth);
 	// const token = 'static-token';
 

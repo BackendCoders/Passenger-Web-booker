@@ -41,29 +41,32 @@ function Row({ row }) {
 		navigate('/createbookingform', { state: row }); // ✅ Pass row data to the new page
 	};
 
-	const getStatusText = () => {
-		switch (row.status) {
+	const getStatusBadge = (status) => {
+		switch (status) {
 			case 0:
-				return '';
+				return {
+					text: 'Pending',
+					bgColor: '#facc15', // Yellow
+					textColor: '#000000',
+				};
 			case 1:
-				return 'Accepted';
+				return {
+					text: 'Accepted',
+					bgColor: '#22c55e', // Green
+					textColor: '#ffffff',
+				};
 			case 2:
-				return 'Rejected';
+				return {
+					text: 'Rejected',
+					bgColor: '#ef4444', // Red
+					textColor: '#ffffff',
+				};
 			default:
-				return 'Unknown';
-		}
-	};
-
-	const getStatusColor = () => {
-		switch (row.status) {
-			case 0:
-				return 'yellow';
-			case 1:
-				return 'green';
-			case 2:
-				return 'red';
-			default:
-				return 'black';
+				return {
+					text: 'Unknown',
+					bgColor: '#6b7280', // Gray
+					textColor: '#ffffff',
+				};
 		}
 	};
 
@@ -81,9 +84,6 @@ function Row({ row }) {
 					)}
 				</TableCell>
 				<TableCell sx={{ fontWeight: 'bold', padding: '12px' }}>
-					{row.accNo}
-				</TableCell>
-				<TableCell sx={{ fontWeight: 'bold', padding: '12px' }}>
 					{row.passengerName}
 				</TableCell>
 				<TableCell sx={{ padding: '12px' }}>{row.pickupAddress}</TableCell>
@@ -95,10 +95,21 @@ function Row({ row }) {
 					{' '}
 					{moment(row.pickupDateTime).format('DD-MM-YYYY hh:mm')}
 				</TableCell>
-				<TableCell
-					sx={{ fontWeight: 'bold', padding: '12px', color: getStatusColor() }}
-				>
-					{getStatusText()}
+				<TableCell sx={{ padding: '12px' }}>
+					<span
+						style={{
+							backgroundColor: getStatusBadge(row.status).bgColor,
+							color: getStatusBadge(row.status).textColor,
+							padding: '4px 12px',
+							borderRadius: '8px',
+							fontWeight: 'bold',
+							display: 'inline-block',
+							minWidth: '80px',
+							textAlign: 'center',
+						}}
+					>
+						{getStatusBadge(row.status).text}
+					</span>
 				</TableCell>
 				{/* ✅ Moved "Duplicate" Button to the Last Column */}
 				<TableCell sx={{ padding: '8px', textAlign: 'center' }}>
@@ -287,9 +298,6 @@ const HistoryBooking = () => {
 							<TableHead>
 								<TableRow sx={{ backgroundColor: '#dc2626' }}>
 									<TableCell sx={{ color: 'white', fontWeight: 'bold' }} />
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-										AccNo
-									</TableCell>
 									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
 										Passenger
 									</TableCell>
