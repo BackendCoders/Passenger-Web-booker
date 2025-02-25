@@ -109,6 +109,9 @@ function CreateBookingForm() {
 	const [highlightIndexPickup, setHighlightIndexPickup] = useState(-1); // Pickup dropdown highlight
 	const [highlightIndexDest, setHighlightIndexDest] = useState(-1); // Destination dropdown highlight
 
+	const [arriveBy, setArriveBy] = useState(false); // ✅ Default false
+
+
 	// ✅ Prefill form fields when page loads
 	useEffect(() => {
 		if (bookingData) {
@@ -344,6 +347,7 @@ function CreateBookingForm() {
 			phoneNumber: phoneNumber?.trim() || '', // Optional field with fallback
 			email: email?.trim() || '', // Optional field with fallback
 			passengers: passengerscount,
+			arriveBy: arriveBy, // ✅ True/False based on toggle
 		};
 
 		try {
@@ -385,7 +389,7 @@ function CreateBookingForm() {
 		<div className='bg-white min-h-screen overflow-y-auto h-[90vh]'>
 			<Header />
 			<div className='flex justify-center px-4 py-4 sm:py-1 sm:px-1 bg-white'>
-				<div className='bg-white bg-opacity-90 p-4 shadow-xl sm:p-2 sm:px-8 rounded-xl w-full max-w-4xl sm:min-h-[785px] min-h-[1100px]  max-h-[40vh] overflow-y-auto'>
+				<div className='bg-white bg-opacity-90 p-4 shadow-xl sm:p-2 sm:px-8 rounded-xl w-full max-w-4xl sm:min-h-[825px] min-h-[1100px]  max-h-[40vh] overflow-y-auto'>
 					<button
 						onClick={backhistory}
 						className='bg-[#b91c1c] text-white py-1 px-2 sm:py-1 sm:px-5 mb-4 rounded-md sm:rounded-lg hover:from-[#b91c1c] hover:to-red-500 transition-all duration-300 shadow-md flex items-center text-sm sm:text-base'
@@ -393,6 +397,35 @@ function CreateBookingForm() {
 						<TiArrowBack className='mr-1 sm:mr-2 text-s sm:text-xl' />
 						<span>Back</span>
 					</button>
+
+					<div className='flex  gap-2 mb-4'>
+						<span
+							className={`text-sm font-medium ${
+								arriveBy ? 'text-gray-500' : 'text-red-600'
+							}`}
+						>
+							Pickup Time
+						</span>
+						<div
+							className={`relative w-10 h-5 rounded-full cursor-pointer transition-all duration-300 ${
+								arriveBy ? 'bg-red-600' : 'bg-gray-400'
+							}`}
+							onClick={() => setArriveBy(!arriveBy)} // ✅ Toggle True/False
+						>
+							<div
+								className={`absolute w-4 h-4 bg-white rounded-full top-[2px] transition-transform duration-300 ${
+									arriveBy ? 'translate-x-5' : 'translate-x-1'
+								}`}
+							></div>
+						</div>
+						<span
+							className={`text-sm font-medium ${
+								arriveBy ? 'text-red-600' : 'text-gray-500'
+							}`}
+						>
+							Arrived By
+						</span>
+					</div>
 
 					{/* Date and ASAP */}
 					<div className='flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-6 mb-6'>
@@ -414,7 +447,7 @@ function CreateBookingForm() {
 							{/* Time Input */}
 							<div className='flex flex-col w-1/2'>
 								<label className='block text-xs sm:text-sm font-medium text-gray-700'>
-									Arrived By <span className='text-red-500'>*</span>
+									Time <span className='text-red-500'>*</span>
 								</label>
 								<input
 									type='time'
