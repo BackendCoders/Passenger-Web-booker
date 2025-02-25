@@ -119,7 +119,7 @@ function Row({ row }) {
 						sx={{
 							'backgroundColor': '#000000',
 							'color': 'white',
-							'padding': '5px 10px', // ✅ Reducing padding
+							'padding': '4px 12px', // ✅ Reducing padding
 							'fontSize': '12px', // ✅ Slightly smaller font
 							'fontWeight': 'bold',
 							'borderRadius': '6px', // ✅ Rounded corners
