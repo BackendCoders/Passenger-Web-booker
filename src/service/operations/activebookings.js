@@ -18,15 +18,14 @@ export const getActiveBookings = async (token, accountNo) => {
     }
 };
 
-// 🔥 Request Amendment
-export const requestAmendment = async (token, bookingId, message) => {
+// ✅ Request Amendment (block parameter added)
+export const requestAmendment = async (token, bookingId, message, block = false) => {
     try {
-        const response = await apiConnector('GET', REQUESTAMENDMENT(bookingId, message), null, {
-           
+        const response = await apiConnector("GET", REQUESTAMENDMENT(bookingId, message, block), null, {
             Authorization: `Bearer ${token}`,
-          });
-        if (response.status !== 200) throw new Error("Failed to request amendment");
+        });
 
+        if (response.status !== 200) throw new Error("Failed to request amendment");
         return response.data;
     } catch (error) {
         console.error("Amendment request error:", error.response?.data || error.message);
@@ -34,15 +33,14 @@ export const requestAmendment = async (token, bookingId, message) => {
     }
 };
 
-// 🔥 Request Cancellation
-export const requestCancellation = async (token, bookingId) => {
+// ✅ Request Cancellation (block parameter added)
+export const requestCancellation = async (token, bookingId, block = false) => {
     try {
-        const response = await apiConnector("GET", REQUESTCANCELLATION(bookingId), null, {
-            
+        const response = await apiConnector("GET", REQUESTCANCELLATION(bookingId, block), null, {
             Authorization: `Bearer ${token}`,
-          });
-        if (response.status !== 200) throw new Error("Failed to request cancellation");
+        });
 
+        if (response.status !== 200) throw new Error("Failed to request cancellation");
         return response.data;
     } catch (error) {
         console.error("Cancellation request error:", error.response?.data || error.message);

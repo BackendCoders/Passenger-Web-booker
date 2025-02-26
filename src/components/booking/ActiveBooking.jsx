@@ -45,17 +45,23 @@ function Row({ row }) {
 	const [openCancelModal, setOpenCancelModal] = useState(false);
 	const [message, setMessage] = useState('');
 	const [loading, setLoading] = useState(false);
+	const recurrenceId = row?.recurrenceId ?? 0; // Agar null ho toh 0 assign karega
 
-	// Handle Amendment Submission
-	const handleAmendSubmit = async () => {
+	const handleAmendSubmit = async (isSubmitAll = false) => {
 		if (!message.trim()) {
 			toast.error('Amendment message cannot be empty!');
 			return;
 		}
+
 		setLoading(true);
 		try {
 			await dispatch(
-				amendBooking({ bookingId: row.bookingId, message })
+				amendBooking({
+					bookingId: row.bookingId,
+					message,
+					block: isSubmitAll ? true : false, // ✅ "Submit All" ke liye true
+					recurrenceId: recurrenceId, // ✅ Ensure recurrenceId is always defined
+				})
 			).unwrap();
 			toast.success('Amendment Request Submitted');
 			setOpenAmendModal(false);
@@ -66,11 +72,16 @@ function Row({ row }) {
 		setLoading(false);
 	};
 
-	// Handle Cancellation Submission
-	const handleCancelSubmit = async () => {
+	const handleCancelSubmit = async (isCancelAll = false) => {
 		setLoading(true);
 		try {
-			await dispatch(cancelBooking(row.bookingId)).unwrap();
+			await dispatch(
+				cancelBooking({
+					bookingId: row.bookingId,
+					block: isCancelAll ? true : false, // ✅ "Cancel All" ke liye true
+					recurrenceId: recurrenceId, // ✅ Ensure recurrenceId is always defined
+				})
+			).unwrap();
 			toast.success('Booking cancelled successfully!');
 			setOpenCancelModal(false);
 		} catch (error) {
@@ -78,6 +89,7 @@ function Row({ row }) {
 		}
 		setLoading(false);
 	};
+	
 
 	return (
 		<>
@@ -142,8 +154,8 @@ function Row({ row }) {
 						backgroundColor: '#dc2626',
 						color: 'white',
 						textAlign: 'center',
-						fontWeight: 'bold', // ✅ Consistent styling
-						padding: '12px', // ✅ Added padding
+						fontWeight: 'bold',
+						padding: '12px',
 					}}
 				>
 					Amend Booking
@@ -157,7 +169,7 @@ function Row({ row }) {
 						onChange={(e) => setMessage(e.target.value)}
 						sx={{
 							'marginTop': 2,
-							'& .MuiOutlinedInput-root': { borderRadius: '8px' }, // ✅ Rounded corners
+							'& .MuiOutlinedInput-root': { borderRadius: '8px' },
 						}}
 					/>
 				</DialogContent>
@@ -167,17 +179,19 @@ function Row({ row }) {
 						sx={{
 							'backgroundColor': '#dc2626',
 							'color': 'white',
-							'padding': '6px 16px', // ✅ Consistent padding
+							'padding': '6px 16px',
 							'fontWeight': 'bold',
 							'borderRadius': '6px',
-							'&:hover': { backgroundColor: '#b91c1c' }, // ✅ Hover effect
+							'&:hover': { backgroundColor: '#b91c1c' },
 						}}
 						disabled={loading}
 					>
 						Cancel
 					</Button>
+
+					{/* ✅ Normal Submit Button */}
 					<Button
-						onClick={handleAmendSubmit}
+						onClick={() => handleAmendSubmit(false)}
 						sx={{
 							'backgroundColor': 'gray',
 							'color': 'white',
@@ -197,6 +211,25 @@ function Row({ row }) {
 							'Submit'
 						)}
 					</Button>
+
+					{/* ✅ "Submit All" Button only when recurrenceId is NOT 0 or null */}
+					{recurrenceId !== null && recurrenceId !== 0 && (
+						<Button
+							onClick={() => {
+								if (
+									window.confirm(
+										'Are you sure you want to submit all amendments?'
+									)
+								) {
+									handleAmendSubmit(true);
+								}
+							}}
+							sx={{ backgroundColor: '#007bff', color: 'white' }}
+							disabled={loading}
+						>
+							Submit All
+						</Button>
+					)}
 				</DialogActions>
 			</Dialog>
 
@@ -237,8 +270,10 @@ function Row({ row }) {
 					>
 						No
 					</Button>
+
+					{/* ✅ Normal Cancel Button */}
 					<Button
-						onClick={handleCancelSubmit}
+						onClick={() => handleCancelSubmit(false)}
 						sx={{
 							'backgroundColor': 'gray',
 							'color': 'white',
@@ -258,6 +293,25 @@ function Row({ row }) {
 							'Yes, Cancel'
 						)}
 					</Button>
+
+					{/* ✅ "Cancel All" Button only when recurrenceId is NOT 0 or null */}
+					{recurrenceId !== null && recurrenceId !== 0 && (
+						<Button
+							onClick={() => {
+								if (
+									window.confirm(
+										'Are you sure you want to cancel all bookings?'
+									)
+								) {
+									handleCancelSubmit(true);
+								}
+							}}
+							sx={{ backgroundColor: 'red', color: 'white' }}
+							disabled={loading}
+						>
+							Cancel All
+						</Button>
+					)}
 				</DialogActions>
 			</Dialog>
 		</>

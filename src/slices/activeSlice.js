@@ -8,13 +8,13 @@ const initialState = {
     success: null,
 };
 
-// 🔥 Fetch Active Bookings (Async Thunk)
+// 🔥 Fetch Active Bookings
 export const fetchActiveBookings = createAsyncThunk(
     "activebookings/fetchActiveBookings",
     async (_, { getState, rejectWithValue }) => {
         try {
-            const token = getState().auth.token; // Get Token from Redux
-            const accountNo = getState().auth.username; // Get Account Number
+            const token = getState().auth.token;
+            const accountNo = getState().auth.username;
 
             if (!token) throw new Error("Authentication failed. Please log in again.");
 
@@ -27,15 +27,15 @@ export const fetchActiveBookings = createAsyncThunk(
     }
 );
 
-// 🔥 Request Amendment (Async Thunk)
+// 🔥 Request Amendment (block parameter added)
 export const amendBooking = createAsyncThunk(
     "activebookings/amendBooking",
-    async ({ bookingId, message }, { getState, rejectWithValue }) => {
+    async ({ bookingId, message, block = false }, { getState, rejectWithValue }) => {
         try {
             const token = getState().auth.token;
             if (!token) throw new Error("Authentication failed. Please log in again.");
 
-            const response = await requestAmendment(token, bookingId, message);
+            const response = await requestAmendment(token, bookingId, message, block);
             return { bookingId, updatedData: response };
         } catch (error) {
             console.error("Amend Booking Error:", error);
@@ -44,16 +44,16 @@ export const amendBooking = createAsyncThunk(
     }
 );
 
-// 🔥 Request Cancellation (Async Thunk)
+// 🔥 Request Cancellation (block parameter added)
 export const cancelBooking = createAsyncThunk(
     "activebookings/cancelBooking",
-    async (bookingId, { getState, rejectWithValue }) => {
+    async ({ bookingId, block = false }, { getState, rejectWithValue }) => {
         try {
             const token = getState().auth.token;
             if (!token) throw new Error("Authentication failed. Please log in again.");
 
-            await requestCancellation(token, bookingId);
-            return bookingId;
+            await requestCancellation(token, bookingId, block);
+            return { bookingId };
         } catch (error) {
             console.error("Cancel Booking Error:", error);
             return rejectWithValue(error.response?.data?.error || "Failed to cancel booking");
@@ -72,7 +72,7 @@ const activeSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // Fetch Active Bookings
+            // ✅ Fetch Active Bookings
             .addCase(fetchActiveBookings.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -86,7 +86,7 @@ const activeSlice = createSlice({
                 state.error = action.payload;
             })
 
-            // Amend Booking
+            // ✅ Amend Booking
             .addCase(amendBooking.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -94,9 +94,12 @@ const activeSlice = createSlice({
             .addCase(amendBooking.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = "Booking amended successfully!";
-                const index = state.activeBookings.findIndex(b => b.id === action.payload.bookingId);
+                const index = state.activeBookings.findIndex(b => b.bookingId === action.payload.bookingId);
                 if (index !== -1) {
-                    state.activeBookings[index] = { ...state.activeBookings[index], ...action.payload.updatedData };
+                    state.activeBookings[index] = {
+                        ...state.activeBookings[index],
+                        ...action.payload.updatedData
+                    };
                 }
             })
             .addCase(amendBooking.rejected, (state, action) => {
@@ -104,7 +107,7 @@ const activeSlice = createSlice({
                 state.error = action.payload;
             })
 
-            // Cancel Booking
+            // ✅ Cancel Booking
             .addCase(cancelBooking.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -112,7 +115,7 @@ const activeSlice = createSlice({
             .addCase(cancelBooking.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = "Booking cancelled successfully!";
-                state.activeBookings = state.activeBookings.filter(b => b.id !== action.payload);
+                state.activeBookings = state.activeBookings.filter(b => b.bookingId !== action.payload.bookingId);
             })
             .addCase(cancelBooking.rejected, (state, action) => {
                 state.loading = false;
