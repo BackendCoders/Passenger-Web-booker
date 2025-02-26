@@ -94,39 +94,38 @@ function Row({ row }) {
 						gap={1}
 					>
 						<Button
-    variant='contained'
-    size='small'
-    sx={{
-        backgroundColor: '#0ea5e9', // ✅ Slightly darker blue
-        color: 'white',
-        padding: '6px 16px',
-        fontWeight: 'bold',
-        borderRadius: '6px',
-        textTransform: 'capitalize',
-        '&:hover': { backgroundColor: '#0284c7' }, // ✅ Darker shade on hover
-    }}
-    onClick={() => setOpenAmendModal(true)}
->
-    Amend
-</Button>
+							variant='contained'
+							size='small'
+							sx={{
+								'backgroundColor': '#0ea5e9', // ✅ Slightly darker blue
+								'color': 'white',
+								'padding': '6px 16px',
+								'fontWeight': 'bold',
+								'borderRadius': '6px',
+								'textTransform': 'capitalize',
+								'&:hover': { backgroundColor: '#0284c7' }, // ✅ Darker shade on hover
+							}}
+							onClick={() => setOpenAmendModal(true)}
+						>
+							Amend
+						</Button>
 
-<Button
-    variant='contained'
-    size='small'
-    sx={{
-        backgroundColor: '#dc2626', // ✅ Red color matching the theme
-        color: 'white',
-        padding: '6px 16px',
-        fontWeight: 'bold',
-        borderRadius: '6px',
-        textTransform: 'capitalize',
-        '&:hover': { backgroundColor: '#b91c1c' }, // ✅ Darker red on hover
-    }}
-    onClick={() => setOpenCancelModal(true)}
->
-    Cancel
-</Button>
-
+						<Button
+							variant='contained'
+							size='small'
+							sx={{
+								'backgroundColor': '#dc2626', // ✅ Red color matching the theme
+								'color': 'white',
+								'padding': '6px 16px',
+								'fontWeight': 'bold',
+								'borderRadius': '6px',
+								'textTransform': 'capitalize',
+								'&:hover': { backgroundColor: '#b91c1c' }, // ✅ Darker red on hover
+							}}
+							onClick={() => setOpenCancelModal(true)}
+						>
+							Cancel
+						</Button>
 					</Box>
 				</TableCell>
 			</TableRow>
