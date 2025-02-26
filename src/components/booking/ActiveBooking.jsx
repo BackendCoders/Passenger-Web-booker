@@ -1,6 +1,6 @@
 /** @format */
-
-import { useState, useEffect } from 'react';
+import React from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -18,6 +18,7 @@ import {
 	Button,
 	TextField,
 	CircularProgress,
+	IconButton,
 } from '@mui/material';
 import {
 	Dialog,
@@ -33,20 +34,20 @@ import {
 } from '../../slices/activeSlice';
 import Header from '../Common/header';
 import { toast } from 'react-hot-toast';
-import { useMemo } from 'react';
 import { debounce } from 'lodash';
 import { FaArrowUp } from 'react-icons/fa6';
 import { FaArrowDown } from 'react-icons/fa6';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 // Row Component for Each Booking
-function Row({ row }) {
+function Row({ row, isParent, isOpen, toggleGroup }) {
 	const dispatch = useDispatch();
 	const [openAmendModal, setOpenAmendModal] = useState(false);
 	const [openCancelModal, setOpenCancelModal] = useState(false);
 	const [message, setMessage] = useState('');
 	const [loading, setLoading] = useState(false);
-	const recurrenceId = row?.recurrenceId ?? 0; // Agar null ho toh 0 assign karega
-
+	const recurrenceId = row?.recurranceId ?? 0; // Agar null ho toh 0 assign karega
 	const handleAmendSubmit = async (isSubmitAll = false) => {
 		if (!message.trim()) {
 			toast.error('Amendment message cannot be empty!');
@@ -89,11 +90,21 @@ function Row({ row }) {
 		}
 		setLoading(false);
 	};
-	
 
 	return (
 		<>
 			<TableRow>
+				{/* Expand/Collapse button sirf parent row ke liye */}
+				<TableCell>
+					{isParent && (
+						<IconButton
+							size='small'
+							onClick={() => toggleGroup(row.recurranceId)}
+						>
+							{isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+						</IconButton>
+					)}
+				</TableCell>
 				<TableCell>{row.bookingId}</TableCell>
 				<TableCell>{moment(row.dateTime).format('DD-MM-YYYY hh:mm')}</TableCell>
 				<TableCell>{row.passengerName}</TableCell>
@@ -337,6 +348,7 @@ const ActiveBooking = () => {
 		key: 'bookingId',
 		direction: 'desc',
 	});
+	const [openGroups, setOpenGroups] = useState({}); // ✅ State to track open groups
 
 	const handleSort = (key) => {
 		let direction = 'desc'; // Default desc
@@ -391,10 +403,28 @@ const ActiveBooking = () => {
 	}, [dispatch]);
 
 	// **Pagination Logic**
-	const totalFilteredBookings = filteredBookings.length;
+	// **Pagination Logic (FIXED)**
+	const totalFilteredBookings = sortedBookings.length; // ✅ Use sortedBookings here
 	const startIndex = page * rowsPerPage;
 	const endIndex = Math.min(startIndex + rowsPerPage, totalFilteredBookings);
-	const paginatedBookings = filteredBookings.slice(startIndex, endIndex);
+	const paginatedBookings = sortedBookings.slice(startIndex, endIndex); // ✅ Use sortedBookings instead of filteredBookings
+
+	// ✅ Grouping Logic
+	const groupedBookings = useMemo(() => {
+		const groups = {};
+		paginatedBookings.forEach((booking) => {
+			const key = booking.recurranceId || booking.bookingId;
+			if (!groups[key]) {
+				groups[key] = [];
+			}
+			groups[key].push(booking);
+		});
+		return groups;
+	}, [paginatedBookings]);
+
+	const toggleGroup = (groupId) => {
+		setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
+	};
 
 	// Reset Page to 0 When Search Changes
 	useEffect(() => {
@@ -434,6 +464,7 @@ const ActiveBooking = () => {
 						<Table>
 							<TableHead>
 								<TableRow sx={{ backgroundColor: '#545454' }}>
+									<TableCell />
 									<TableCell
 										sx={{
 											color: 'white',
@@ -565,16 +596,32 @@ const ActiveBooking = () => {
 
 							<TableBody>
 								{paginatedBookings.length > 0 ? (
-									sortedBookings.slice(startIndex, endIndex).map((booking) => (
-										<Row
-											key={booking.bookingId}
-											row={booking}
-										/>
-									))
+									Object.keys(groupedBookings).map((groupId) => {
+										const bookings = groupedBookings[groupId];
+										const firstBooking = bookings[0];
+
+										return (
+											<React.Fragment key={groupId}>
+												<Row
+													row={firstBooking}
+													isParent={bookings.length > 1}
+													isOpen={!!openGroups[groupId]}
+													toggleGroup={toggleGroup}
+												/>
+												{openGroups[groupId] &&
+													bookings.slice(1).map((booking) => (
+														<Row
+															key={booking.bookingId}
+															row={booking}
+														/>
+													))}
+											</React.Fragment>
+										);
+									})
 								) : (
 									<TableRow>
 										<TableCell
-											colSpan={6}
+											colSpan={7}
 											sx={{ textAlign: 'center' }}
 										>
 											No bookings found
