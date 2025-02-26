@@ -111,7 +111,6 @@ function CreateBookingForm() {
 
 	const [arriveBy, setArriveBy] = useState(false); // ✅ Default false
 
-
 	// ✅ Prefill form fields when page loads
 	useEffect(() => {
 		if (bookingData) {
@@ -398,33 +397,54 @@ function CreateBookingForm() {
 						<span>Back</span>
 					</button>
 
-					<div className='flex  gap-2 mb-4'>
-						<span
-							className={`text-sm font-medium ${
-								arriveBy ? 'text-gray-500' : 'text-red-600'
-							}`}
-						>
-							Pickup Time
-						</span>
-						<div
-							className={`relative w-10 h-5 rounded-full cursor-pointer transition-all duration-300 ${
-								arriveBy ? 'bg-red-600' : 'bg-gray-400'
-							}`}
-							onClick={() => setArriveBy(!arriveBy)} // ✅ Toggle True/False
-						>
-							<div
-								className={`absolute w-4 h-4 bg-white rounded-full top-[2px] transition-transform duration-300 ${
-									arriveBy ? 'translate-x-5' : 'translate-x-1'
+					<div className='flex gap-4 mb-4 items-center'>
+						<label className='flex items-center gap-1 cursor-pointer'>
+							<input
+								type='radio'
+								name='timeType'
+								checked={!arriveBy}
+								onChange={() => setArriveBy(false)}
+								className='hidden'
+							/>
+							<span
+								className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${
+									!arriveBy ? 'border-red-600' : 'border-gray-400'
 								}`}
-							></div>
-						</div>
-						<span
-							className={`text-sm font-medium ${
-								arriveBy ? 'text-red-600' : 'text-gray-500'
-							}`}
-						>
-							Arrived By
-						</span>
+							>
+								<div
+									className={`w-3 h-3 rounded-full ${
+										!arriveBy ? 'bg-red-600' : 'bg-transparent'
+									}`}
+								></div>
+							</span>
+							<span className='text-sm font-medium text-gray-700'>
+								Pickup Time
+							</span>
+						</label>
+
+						<label className='flex items-center gap-1 cursor-pointer'>
+							<input
+								type='radio'
+								name='timeType'
+								checked={arriveBy}
+								onChange={() => setArriveBy(true)}
+								className='hidden'
+							/>
+							<span
+								className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${
+									arriveBy ? 'border-red-600' : 'border-gray-400'
+								}`}
+							>
+								<div
+									className={`w-3 h-3 rounded-full ${
+										arriveBy ? 'bg-red-600' : 'bg-transparent'
+									}`}
+								></div>
+							</span>
+							<span className='text-sm font-medium text-gray-700'>
+								Arrived By
+							</span>
+						</label>
 					</div>
 
 					{/* Date and ASAP */}
