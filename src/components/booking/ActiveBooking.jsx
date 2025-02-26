@@ -94,26 +94,44 @@ function Row({ row }) {
 						gap={1}
 					>
 						<Button
-							variant='contained'
-							size='small'
-							sx={{ backgroundColor: 'light', color: 'white' }}
-							onClick={() => setOpenAmendModal(true)}
-						>
-							Amend
-						</Button>
-						<Button
-							variant='contained'
-							size='small'
-							sx={{ backgroundColor: 'black', color: 'white' }}
-							onClick={() => setOpenCancelModal(true)}
-						>
-							Cancel
-						</Button>
+    variant='contained'
+    size='small'
+    sx={{
+        backgroundColor: '#0ea5e9', // ✅ Slightly darker blue
+        color: 'white',
+        padding: '6px 16px',
+        fontWeight: 'bold',
+        borderRadius: '6px',
+        textTransform: 'capitalize',
+        '&:hover': { backgroundColor: '#0284c7' }, // ✅ Darker shade on hover
+    }}
+    onClick={() => setOpenAmendModal(true)}
+>
+    Amend
+</Button>
+
+<Button
+    variant='contained'
+    size='small'
+    sx={{
+        backgroundColor: '#dc2626', // ✅ Red color matching the theme
+        color: 'white',
+        padding: '6px 16px',
+        fontWeight: 'bold',
+        borderRadius: '6px',
+        textTransform: 'capitalize',
+        '&:hover': { backgroundColor: '#b91c1c' }, // ✅ Darker red on hover
+    }}
+    onClick={() => setOpenCancelModal(true)}
+>
+    Cancel
+</Button>
+
 					</Box>
 				</TableCell>
 			</TableRow>
 
-			{/* Amendment Modal */}
+			{/* ✅ Amend Booking Modal */}
 			<Dialog
 				open={openAmendModal}
 				onClose={() => setOpenAmendModal(false)}
@@ -125,6 +143,8 @@ function Row({ row }) {
 						backgroundColor: '#dc2626',
 						color: 'white',
 						textAlign: 'center',
+						fontWeight: 'bold', // ✅ Consistent styling
+						padding: '12px', // ✅ Added padding
 					}}
 				>
 					Amend Booking
@@ -136,20 +156,37 @@ function Row({ row }) {
 						fullWidth
 						value={message}
 						onChange={(e) => setMessage(e.target.value)}
-						sx={{ marginTop: 2 }}
+						sx={{
+							'marginTop': 2,
+							'& .MuiOutlinedInput-root': { borderRadius: '8px' }, // ✅ Rounded corners
+						}}
 					/>
 				</DialogContent>
 				<DialogActions sx={{ justifyContent: 'center', paddingBottom: 2 }}>
 					<Button
 						onClick={() => setOpenAmendModal(false)}
-						sx={{ color: 'white', bgcolor: '#dc2626' }}
+						sx={{
+							'backgroundColor': '#dc2626',
+							'color': 'white',
+							'padding': '6px 16px', // ✅ Consistent padding
+							'fontWeight': 'bold',
+							'borderRadius': '6px',
+							'&:hover': { backgroundColor: '#b91c1c' }, // ✅ Hover effect
+						}}
 						disabled={loading}
 					>
 						Cancel
 					</Button>
 					<Button
 						onClick={handleAmendSubmit}
-						sx={{ backgroundColor: 'black', color: 'white' }}
+						sx={{
+							'backgroundColor': 'gray',
+							'color': 'white',
+							'padding': '6px 16px',
+							'fontWeight': 'bold',
+							'borderRadius': '6px',
+							'&:hover': { backgroundColor: '#4b4b4b' },
+						}}
 						disabled={loading}
 					>
 						{loading ? (
@@ -164,7 +201,7 @@ function Row({ row }) {
 				</DialogActions>
 			</Dialog>
 
-			{/* Cancellation Confirmation Modal */}
+			{/* ✅ Cancellation Confirmation Modal */}
 			<Dialog
 				open={openCancelModal}
 				onClose={() => setOpenCancelModal(false)}
@@ -176,6 +213,8 @@ function Row({ row }) {
 						backgroundColor: '#dc2626',
 						color: 'white',
 						textAlign: 'center',
+						fontWeight: 'bold',
+						padding: '12px',
 					}}
 				>
 					Cancel Booking
@@ -184,18 +223,31 @@ function Row({ row }) {
 					Are you sure you want to submit a cancellation request for{' '}
 					<strong>{row.passengerName}</strong>?
 				</DialogContent>
-
 				<DialogActions sx={{ justifyContent: 'center', paddingBottom: 2 }}>
 					<Button
 						onClick={() => setOpenCancelModal(false)}
-						sx={{ backgroundColor: '#dc2626', color: 'white' }}
+						sx={{
+							'backgroundColor': '#dc2626',
+							'color': 'white',
+							'padding': '6px 16px',
+							'fontWeight': 'bold',
+							'borderRadius': '6px',
+							'&:hover': { backgroundColor: '#b91c1c' },
+						}}
 						disabled={loading}
 					>
 						No
 					</Button>
 					<Button
 						onClick={handleCancelSubmit}
-						sx={{ backgroundColor: 'gray', color: 'white' }}
+						sx={{
+							'backgroundColor': 'gray',
+							'color': 'white',
+							'padding': '6px 16px',
+							'fontWeight': 'bold',
+							'borderRadius': '6px',
+							'&:hover': { backgroundColor: '#4b4b4b' },
+						}}
 						disabled={loading}
 					>
 						{loading ? (
@@ -228,18 +280,20 @@ const ActiveBooking = () => {
 	const [rowsPerPage, setRowsPerPage] = useState(20);
 	const [searchInput, setSearchInput] = useState('');
 	const [searchTerm, setSearchTerm] = useState('');
-	const [sortConfig, setSortConfig] = useState({ key: "bookingId", direction: "desc" });
-
+	const [sortConfig, setSortConfig] = useState({
+		key: 'bookingId',
+		direction: 'desc',
+	});
 
 	const handleSort = (key) => {
-		let direction = "desc"; // Default desc
-	
-		if (sortConfig.key === key && sortConfig.direction === "desc") {
-			direction = "asc";
+		let direction = 'desc'; // Default desc
+
+		if (sortConfig.key === key && sortConfig.direction === 'desc') {
+			direction = 'asc';
 		}
-	
+
 		setSortConfig({ key, direction });
-	}
+	};
 
 	// Filter Bookings Based on Search
 	const filteredBookings = useMemo(() => {
@@ -264,15 +318,14 @@ const ActiveBooking = () => {
 	const sortedBookings = useMemo(() => {
 		if (!sortConfig.key) return filteredBookings;
 		return [...filteredBookings].sort((a, b) => {
-			const valA = a[sortConfig.key] || "";
-			const valB = b[sortConfig.key] || "";
-	
-			if (valA < valB) return sortConfig.direction === "asc" ? -1 : 1;
-			if (valA > valB) return sortConfig.direction === "asc" ? 1 : -1;
+			const valA = a[sortConfig.key] || '';
+			const valB = b[sortConfig.key] || '';
+
+			if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+			if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
 			return 0;
 		});
 	}, [filteredBookings, sortConfig]);
-	
 
 	// Debounce function to delay filtering while typing
 	const handleSearchChange = debounce((value) => {
@@ -365,7 +418,7 @@ const ActiveBooking = () => {
 										<span
 											style={{ display: 'inline-flex', alignItems: 'center' }}
 										>
-											 Date & Time {' '}
+											Date & Time{' '}
 											{sortConfig.key === 'dateTime' ? (
 												sortConfig.direction === 'asc' ? (
 													<FaArrowUp />
@@ -450,7 +503,7 @@ const ActiveBooking = () => {
 											)}
 										</span>
 									</TableCell>
-									
+
 									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
 										Actions
 									</TableCell>
