@@ -99,7 +99,7 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 					{isParent && (
 						<IconButton
 							size='small'
-							onClick={() => toggleGroup(row.passengerName)}
+							onClick={() => toggleGroup(row.recurranceId)}
 						>
 							{isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
 						</IconButton>
@@ -413,7 +413,7 @@ const ActiveBooking = () => {
 	const groupedBookings = useMemo(() => {
 		const groups = {};
 		paginatedBookings.forEach((booking) => {
-			const key = booking.passengerName || booking.bookingId;
+			const key = booking.recurranceId || booking.bookingId;
 			if (!groups[key]) {
 				groups[key] = [];
 			}
