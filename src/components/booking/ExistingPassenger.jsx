@@ -22,7 +22,7 @@ const ExistingPassenger = () => {
 	} = useSelector((state) => state.forms); // Default empty array for passengers
 	const [searchTerm, setSearchTerm] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
-	const [rowsPerPage, setRowsPerPage] = useState(5); // Default rows per page
+	const [rowsPerPage, setRowsPerPage] = useState(25); // Default rows per page
 	const [sortColumn, setSortColumn] = useState(null);
 	const [sortOrder, setSortOrder] = useState('asc');
 
@@ -268,11 +268,11 @@ const filteredPassengers = [...passengers]
 									onChange={(e) => setRowsPerPage(Number(e.target.value))}
 									className='px-2 py-1 text-sm border border-gray-300 bg-white text-black rounded-md focus:outline-none hover:bg-red-50'
 								>
-									<option value={5}>5</option>
-									<option value={10}>10</option>
-									<option value={20}>20</option>
-									<option value={50}>50</option>
-									<option value={100}>100</option>
+									<option value={5}>25</option>
+									<option value={10}>50</option>
+									<option value={20}>80</option>
+									<option value={50}>100</option>
+									<option value={100}>200</option>
 								</select>
 							</div>
 
