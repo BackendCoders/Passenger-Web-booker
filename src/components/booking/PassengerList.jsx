@@ -147,7 +147,7 @@ const PassengerList = () => {
 							{/* Desktop View */}
 							<table className='hidden md:table min-w-full border-collapse border border-gray-300'>
 								<thead>
-									<tr className='bg-[#b91c1c] text-white'>
+									<tr className='bg-[#545454] text-white'>
 										{[
 											'passenger',
 											'description',
@@ -268,11 +268,11 @@ const PassengerList = () => {
 									onChange={(e) => setRowsPerPage(Number(e.target.value))}
 									className='px-2 py-1 text-sm border border-gray-300 bg-white text-black rounded-md focus:outline-none hover:bg-red-50'
 								>
-									<option value={5}>25</option>
-									<option value={10}>50</option>
-									<option value={20}>80</option>
-									<option value={50}>100</option>
-									<option value={100}>200</option>
+									<option value={25}>25</option>
+									<option value={50}>50</option>
+									<option value={80}>80</option>
+									<option value={100}>100</option>
+									<option value={200}>200</option>
 								</select>
 							</div>
 

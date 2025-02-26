@@ -8,6 +8,7 @@ import Header from '../Common/header'; // ✅ Keeping the same Header
 import { TiArrowBack } from 'react-icons/ti';
 import { fetchWebBookings } from '../../service/operations/getwebbooking'; // ✅ Import Redux action
 import moment from 'moment';
+import { useMemo } from 'react';
 
 // ✅ MUI Imports
 import {
@@ -30,6 +31,8 @@ import {
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { FaArrowUp } from 'react-icons/fa6';
+import { FaArrowDown } from 'react-icons/fa6';
 
 // ✅ Collapsible Row Component
 function Row({ row }) {
@@ -220,6 +223,19 @@ const HistoryBooking = () => {
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(20);
 
+	const [sortConfig, setSortConfig] = useState({
+		key: 'pickupDateTime',
+		direction: 'desc',
+	});
+
+	const handleSort = (key) => {
+		let direction = 'desc';
+		if (sortConfig.key === key && sortConfig.direction === 'desc') {
+			direction = 'asc';
+		}
+		setSortConfig({ key, direction });
+	};
+
 	// ✅ Filter bookings based on search term
 	const filteredBookings = webBookings.filter((booking) => {
 		return (
@@ -242,10 +258,27 @@ const HistoryBooking = () => {
 		setPage(0); // ✅ Reset to first page when search term changes
 	}, [searchTerm]);
 
+	const sortedBookings = useMemo(() => {
+		if (!sortConfig.key) {
+			// 🔹 If no column sorting is applied, just sort by status (0 → 1 → 2)
+			return [...filteredBookings].sort((a, b) => a.status - b.status);
+		}
+
+		return [...filteredBookings]
+			.sort((a, b) => {
+				const valA = String(a[sortConfig.key] || '').toLowerCase();
+				const valB = String(b[sortConfig.key] || '').toLowerCase();
+
+				if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+				if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+				return 0;
+			})
+			.sort((a, b) => a.status - b.status); // 🔹 Always ensure status sorting is first
+	}, [filteredBookings, sortConfig]);
 	// ✅ Sort bookings: Pending (0), Accepted (1), Rejected (2)
-	const sortedBookings = [...filteredBookings].sort(
-		(a, b) => a.status - b.status
-	);
+	// const sortedBookings = [...filteredBookings].sort(
+	// 	(a, b) => a.status - b.status
+	// );
 
 	// const handleChangePage = (event, newPage) => {
 	// 	setPage(newPage);
@@ -296,31 +329,147 @@ const HistoryBooking = () => {
 					>
 						<Table aria-label='collapsible table'>
 							<TableHead>
-								<TableRow sx={{ backgroundColor: '#dc2626' }}>
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }} />
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-										Passenger
+								<TableRow sx={{ backgroundColor: '#545454' }}>
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											borderBottom: 'none',
+										}}
+									/>
+
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											cursor: 'pointer',
+											borderBottom: 'none',
+										}}
+										onClick={() => handleSort('passengerName')}
+									>
+										<span
+											style={{ display: 'inline-flex', alignItems: 'center' }}
+										>
+											Passenger{' '}
+											{sortConfig.key === 'passengerName' &&
+												(sortConfig.direction === 'asc' ? (
+													<FaArrowUp />
+												) : (
+													<FaArrowDown />
+												))}
+										</span>
 									</TableCell>
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-										Pickup Address
+
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											cursor: 'pointer',
+											borderBottom: 'none',
+										}}
+										onClick={() => handleSort('pickupAddress')}
+									>
+										<span
+											style={{ display: 'inline-flex', alignItems: 'center' }}
+										>
+											Pickup Address{' '}
+											{sortConfig.key === 'pickupAddress' &&
+												(sortConfig.direction === 'asc' ? (
+													<FaArrowUp />
+												) : (
+													<FaArrowDown />
+												))}
+										</span>
 									</TableCell>
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-										Destination
+
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											cursor: 'pointer',
+											borderBottom: 'none',
+										}}
+										onClick={() => handleSort('destinationAddress')}
+									>
+										<span
+											style={{ display: 'inline-flex', alignItems: 'center' }}
+										>
+											Destination{' '}
+											{sortConfig.key === 'destinationAddress' &&
+												(sortConfig.direction === 'asc' ? (
+													<FaArrowUp />
+												) : (
+													<FaArrowDown />
+												))}
+										</span>
 									</TableCell>
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-										Phone
+
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											cursor: 'pointer',
+											borderBottom: 'none',
+										}}
+										onClick={() => handleSort('phoneNumber')}
+									>
+										<span
+											style={{ display: 'inline-flex', alignItems: 'center' }}
+										>
+											Phone{' '}
+											{sortConfig.key === 'phoneNumber' &&
+												(sortConfig.direction === 'asc' ? (
+													<FaArrowUp />
+												) : (
+													<FaArrowDown />
+												))}
+										</span>
 									</TableCell>
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-										Time & Date
+
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											cursor: 'pointer',
+											borderBottom: 'none',
+										}}
+										onClick={() => handleSort('pickupDateTime')}
+									>
+										<span
+											style={{ display: 'inline-flex', alignItems: 'center' }}
+										>
+											Time & Date{' '}
+											{sortConfig.key === 'pickupDateTime' &&
+												(sortConfig.direction === 'asc' ? (
+													<FaArrowUp />
+												) : (
+													<FaArrowDown />
+												))}
+										</span>
 									</TableCell>
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
+
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											borderBottom: 'none',
+										}}
+									>
 										Status
 									</TableCell>
-									<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
+
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											borderBottom: 'none',
+										}}
+									>
 										Duplicate
 									</TableCell>
 								</TableRow>
 							</TableHead>
+
 							<TableBody>
 								{sortedBookings
 									.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)

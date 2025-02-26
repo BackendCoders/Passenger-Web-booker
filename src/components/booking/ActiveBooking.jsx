@@ -327,7 +327,7 @@ const ActiveBooking = () => {
 					<TableContainer component={Paper}>
 						<Table>
 							<TableHead>
-								<TableRow sx={{ backgroundColor: '#dc2626' }}>
+								<TableRow sx={{ backgroundColor: '#545454' }}>
 									<TableCell
 										sx={{
 											color: 'white',
