@@ -95,9 +95,8 @@ function Row({ row }) {
 					{row.phoneNumber ? row.phoneNumber : ''}
 				</TableCell>
 				<TableCell sx={{ padding: '12px' }}>
-					{' '}
-					{moment(row.pickupDateTime).format('DD-MM-YYYY hh:mm')}
-				</TableCell>
+	{moment(row.pickupDateTime).format('DD-MM-YYYY HH:mm')}
+</TableCell>
 				<TableCell sx={{ padding: '12px' }}>
 					<span
 						style={{
