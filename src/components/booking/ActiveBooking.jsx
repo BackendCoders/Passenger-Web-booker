@@ -229,104 +229,141 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 
 			{/* Amend Booking Modal */}
 			<Dialog
-				open={openAmendModal}
-				onClose={() => setOpenAmendModal(false)}
-				maxWidth='sm'
-				fullWidth
-				sx={{
-					'& .MuiDialog-paper': {
-						borderRadius: '8px',
-						boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-					},
-				}}
-			>
-				<DialogTitle
-					sx={{
-						backgroundColor: '#dc2626',
-						color: 'white',
-						textAlign: 'center',
-						fontWeight: 'bold',
-						padding: '12px',
-					}}
-				>
-					Amend Booking
-				</DialogTitle>
-				<DialogContent
-					sx={{
-						textAlign: 'center',
-						padding: '20px',
-						backgroundColor: '#ffffff',
-					}}
-				>
-					<TextField
-						label='Enter amendment message'
-						variant='outlined'
-						fullWidth
-						value={message}
-						onChange={(e) => setMessage(e.target.value)}
-						sx={{
-							'marginTop': 2,
-							'& .MuiOutlinedInput-root': { borderRadius: '8px' },
-						}}
-					/>
-				</DialogContent>
-				<DialogActions
-					sx={{
-						justifyContent: 'center',
-						padding: '16px',
-						backgroundColor: '#ffffff',
-					}}
-				>
-					<Button
-						onClick={() => setOpenAmendModal(false)}
-						sx={{
-							'backgroundColor': '#dc2626',
-							'color': 'white',
-							'padding': '8px 24px',
-							'fontWeight': 'bold',
-							'borderRadius': '8px',
-							'textTransform': 'uppercase',
-							'&:hover': { backgroundColor: '#b91c1c' },
-						}}
-						disabled={loading}
-					>
-						CANCEL
-					</Button>
-					{isParent ? (
-						<Button
-							onClick={() => handleAmendSubmit(true)}
-							sx={{
-								'backgroundColor': '#0ea5e9',
-								'color': 'white',
-								'padding': '8px 24px',
-								'fontWeight': 'bold',
-								'borderRadius': '8px',
-								'textTransform': 'uppercase',
-								'&:hover': { backgroundColor: '#0284c7' },
-							}}
-							disabled={loading}
-						>
-							SUBMIT ALL FUTURE BOOKINGS
-						</Button>
-					) : (
-						<Button
-							onClick={() => handleAmendSubmit(false)}
-							sx={{
-								'backgroundColor': 'gray',
-								'color': 'white',
-								'padding': '8px 24px',
-								'fontWeight': 'bold',
-								'borderRadius': '8px',
-								'textTransform': 'uppercase',
-								'&:hover': { backgroundColor: '#757575' },
-							}}
-							disabled={loading}
-						>
-							SUBMIT
-						</Button>
-					)}
-				</DialogActions>
-			</Dialog>
+  open={openAmendModal}
+  onClose={() => setOpenAmendModal(false)}
+  maxWidth="sm"
+  fullWidth
+  sx={{
+    "& .MuiDialog-paper": {
+      borderRadius: "16px", // Matched with Cancel Booking Modal
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      backgroundColor: "#ffffff",
+      padding: "8px", // Slight padding for overall container
+      fontFamily: "Arial, sans-serif", // Match font from image
+    },
+  }}
+>
+  <DialogTitle
+    sx={{
+      backgroundColor: "#ffffff", // White background (matches Cancel Booking Modal)
+      color: "#4a5568", // Dark gray title color (matches image)
+      textAlign: "center",
+      fontWeight: "bold",
+      padding: "16px 24px",
+      fontSize: "1.25rem", // Slightly larger font like image
+      borderBottom: "1px solid #e2e8f0", // Light border for separation
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    }}
+  >
+    Amend Booking
+    <IconButton
+      onClick={() => setOpenAmendModal(false)}
+      sx={{
+        color: "#a0aec0", // Light gray for close icon (matches image)
+        p: 0.5, // Smaller padding for icon button
+      }}
+    >
+      <span style={{ fontSize: "24px", lineHeight: "1" }}>×</span>
+    </IconButton>
+  </DialogTitle>
+  <DialogContent
+    sx={{
+      textAlign: "center",
+      padding: "24px",
+      backgroundColor: "#ffffff", // White background for content
+      fontSize: "0.875rem", // Default text size as per image
+      color: "#4a5568", // Dark gray text (matches image)
+    }}
+  >
+    <TextField
+      label="Enter amendment message"
+      variant="outlined"
+      fullWidth
+      value={message}
+      onChange={(e) => setMessage(e.target.value)}
+      sx={{
+        marginTop: 2,
+        "& .MuiOutlinedInput-root": {
+          borderRadius: "8px",
+          "& .MuiOutlinedInput-input": {
+            fontSize: "0.875rem", // Match input text size
+            color: "#4a5568", // Dark gray text
+          },
+          "& .MuiInputLabel-root": {
+            fontSize: "0.875rem", // Match label text size
+            color: "#4a5568", // Dark gray label
+          },
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#e2e8f0", // Light gray border
+          },
+        },
+      }}
+    />
+  </DialogContent>
+  <DialogActions
+    sx={{
+      justifyContent: "center",
+      padding: "16px 24px",
+      backgroundColor: "#ffffff", // White background for actions
+      gap: "12px", // Space between buttons
+    }}
+  >
+    <Button
+      onClick={() => setOpenAmendModal(false)}
+      sx={{
+        backgroundColor: "#ffffff",
+        color: "#4a5568",
+        padding: "8px 24px",
+        fontWeight: "bold",
+        borderRadius: "8px",
+        border: "1px solid #e2e8f0", // Light border like image
+        textTransform: "none", // No uppercase (matches image)
+        fontSize: "0.875rem", // Match button text size
+        "&:hover": { backgroundColor: "#edf2f7", borderColor: "#cbd5e0" }, // Light gray hover
+      }}
+      disabled={loading}
+    >
+      Cancel
+    </Button>
+    {isParent ? (
+      <Button
+        onClick={() => handleAmendSubmit(true)}
+        sx={{
+          backgroundColor: "#0ea5e9", // Blue button color
+          color: "white",
+          padding: "8px 24px",
+          fontWeight: "bold",
+          borderRadius: "8px",
+          textTransform: "none", // No uppercase (matches image)
+          fontSize: "0.875rem", // Match button text size
+          "&:hover": { backgroundColor: "#0284c7" }, // Darker blue on hover
+        }}
+        disabled={loading}
+      >
+        Submit All Future Bookings
+      </Button>
+    ) : (
+      <Button
+        onClick={() => handleAmendSubmit(false)}
+        sx={{
+          backgroundColor: "#e53e3e", // Red button color (matches Cancel modal for Submit)
+          color: "white",
+          padding: "8px 24px",
+          fontWeight: "bold",
+          borderRadius: "8px",
+          textTransform: "none", // No uppercase (matches image)
+          fontSize: "0.875rem", // Match button text size
+          "&:hover": { backgroundColor: "#c53030" }, // Darker red on hover
+        }}
+        disabled={loading}
+      >
+        Submit
+      </Button>
+    )}
+  </DialogActions>
+</Dialog>
 
 			{/* Cancel Booking Modal */}
 			<Dialog
