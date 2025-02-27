@@ -89,14 +89,14 @@ function Row({ row }) {
 				<TableCell sx={{ fontWeight: 'bold', padding: '12px' }}>
 					{row.passengerName}
 				</TableCell>
+				<TableCell sx={{ padding: '12px' }}>
+					{moment(row.pickupDateTime).format('DD-MM-YYYY HH:mm')}
+				</TableCell>
 				<TableCell sx={{ padding: '12px' }}>{row.pickupAddress}</TableCell>
 				<TableCell sx={{ padding: '12px' }}>{row.destinationAddress}</TableCell>
 				<TableCell sx={{ padding: '12px' }}>
 					{row.phoneNumber ? row.phoneNumber : ''}
 				</TableCell>
-				<TableCell sx={{ padding: '12px' }}>
-	{moment(row.pickupDateTime).format('DD-MM-YYYY HH:mm')}
-</TableCell>
 				<TableCell sx={{ padding: '12px' }}>
 					<span
 						style={{
@@ -366,6 +366,28 @@ const HistoryBooking = () => {
 											cursor: 'pointer',
 											borderBottom: 'none',
 										}}
+										onClick={() => handleSort('pickupDateTime')}
+									>
+										<span
+											style={{ display: 'inline-flex', alignItems: 'center' }}
+										>
+											Time & Date{' '}
+											{sortConfig.key === 'pickupDateTime' &&
+												(sortConfig.direction === 'asc' ? (
+													<FaArrowUp />
+												) : (
+													<FaArrowDown />
+												))}
+										</span>
+									</TableCell>
+
+									<TableCell
+										sx={{
+											color: 'white',
+											fontWeight: 'bold',
+											cursor: 'pointer',
+											borderBottom: 'none',
+										}}
 										onClick={() => handleSort('pickupAddress')}
 									>
 										<span
@@ -425,27 +447,7 @@ const HistoryBooking = () => {
 										</span>
 									</TableCell>
 
-									<TableCell
-										sx={{
-											color: 'white',
-											fontWeight: 'bold',
-											cursor: 'pointer',
-											borderBottom: 'none',
-										}}
-										onClick={() => handleSort('pickupDateTime')}
-									>
-										<span
-											style={{ display: 'inline-flex', alignItems: 'center' }}
-										>
-											Time & Date{' '}
-											{sortConfig.key === 'pickupDateTime' &&
-												(sortConfig.direction === 'asc' ? (
-													<FaArrowUp />
-												) : (
-													<FaArrowDown />
-												))}
-										</span>
-									</TableCell>
+									
 
 									<TableCell
 										sx={{
