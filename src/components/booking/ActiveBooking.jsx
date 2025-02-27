@@ -138,15 +138,15 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 											variant='contained'
 											size='small'
 											sx={{
-												'backgroundColor': '#0ea5e9',
+												'backgroundColor': 'gray',
 												'color': 'white',
 												'padding': '6px 16px',
 												'fontWeight': 'bold',
 												'borderRadius': '6px',
 												'textTransform': 'capitalize',
-												'&:hover': { backgroundColor: '#0284c7' },
+												// '&:hover': { backgroundColor: '#0284c7' },
 											}}
-											onClick={() => setOpenAmendModal(true)}
+											// onClick={() => setOpenAmendModal(true)}
 										>
 											Amend All
 										</Button>
@@ -190,15 +190,15 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 										variant='contained'
 										size='small'
 										sx={{
-											'backgroundColor': '#0ea5e9',
+											'backgroundColor': 'gray',
 											'color': 'white',
 											'padding': '6px 16px',
 											'fontWeight': 'bold',
 											'borderRadius': '6px',
 											'textTransform': 'capitalize',
-											'&:hover': { backgroundColor: '#0284c7' },
+											// '&:hover': { backgroundColor: '#0284c7' },
 										}}
-										onClick={() => setOpenAmendModal(true)}
+										// onClick={() => setOpenAmendModal(true)}
 									>
 										Amend
 									</Button>
