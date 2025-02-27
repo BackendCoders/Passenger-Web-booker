@@ -138,12 +138,12 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 											variant='contained'
 											size='small'
 											sx={{
-												'backgroundColor': 'gray',
-												'color': 'white',
-												'padding': '6px 16px',
-												'fontWeight': 'bold',
-												'borderRadius': '6px',
-												'textTransform': 'capitalize',
+												backgroundColor: 'gray',
+												color: 'white',
+												padding: '6px 16px',
+												fontWeight: 'bold',
+												borderRadius: '6px',
+												textTransform: 'capitalize',
 												// '&:hover': { backgroundColor: '#0284c7' },
 											}}
 											// onClick={() => setOpenAmendModal(true)}
@@ -190,12 +190,12 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 										variant='contained'
 										size='small'
 										sx={{
-											'backgroundColor': 'gray',
-											'color': 'white',
-											'padding': '6px 16px',
-											'fontWeight': 'bold',
-											'borderRadius': '6px',
-											'textTransform': 'capitalize',
+											backgroundColor: 'gray',
+											color: 'white',
+											padding: '6px 16px',
+											fontWeight: 'bold',
+											borderRadius: '6px',
+											textTransform: 'capitalize',
 											// '&:hover': { backgroundColor: '#0284c7' },
 										}}
 										// onClick={() => setOpenAmendModal(true)}
@@ -376,31 +376,39 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 						borderRadius: '16px',
 						boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
 						backgroundColor: '#ffffff',
-						padding: '8px', // Slight padding for overall container
-						fontFamily: 'Arial, sans-serif', // Match font from image
+						padding: '8px',
+						fontFamily: 'Arial, sans-serif',
 					},
 				}}
 			>
 				<DialogTitle
 					sx={{
-						backgroundColor: '#ffffff', // White background for title (matches image)
-						color: '#4a5568', // Dark gray title color (matches image)
-						textAlign: 'center',
+						backgroundColor: '#ffffff',
+						color: '#4a5568',
 						fontWeight: 'bold',
 						padding: '16px 24px',
-						fontSize: '1.25rem', // Slightly larger font like image
-						borderBottom: '1px solid #e2e8f0', // Light border for separation
+						fontSize: '1.25rem',
 						display: 'flex',
-						justifyContent: 'space-between',
-						alignItems: 'center',
+						alignItems: 'center', // Align items vertically in the center
+						justifyContent: 'space-between', // Maintain space between icon+text and close button
 					}}
 				>
-					Cancel Booking
+					<Box
+						sx={{
+							display: 'flex', // Use flex to align icon and text horizontally
+							alignItems: 'center', // Center align vertically
+							color: '#e53e3e',
+						}}
+					>
+						<span style={{ fontSize: '20px', marginRight: '8px' }}>⚠</span>{' '}
+						{/* Icon with margin to separate from text */}
+						Cancel Booking
+					</Box>
 					<IconButton
 						onClick={() => setOpenCancelModal(false)}
 						sx={{
-							color: '#a0aec0', // Light gray for close icon (matches image)
-							p: 0.5, // Smaller padding for icon button
+							color: '#a0aec0',
+							p: 0.5,
 						}}
 					>
 						<span style={{ fontSize: '24px', lineHeight: '1' }}>×</span>
@@ -410,22 +418,11 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 					sx={{
 						textAlign: 'center',
 						padding: '24px',
-						backgroundColor: '#ffffff', // White background for content
-						fontSize: '0.875rem', // Default text size as per image
-						color: '#4a5568', // Dark gray text (matches image)
+						backgroundColor: '#ffffff',
+						fontSize: '1rem',
+						color: '#4a5568',
 					}}
 				>
-					<Box
-						sx={{
-							color: '#e53e3e', // Red warning icon color (matches image)
-							mb: 2,
-							display: 'flex',
-							justifyContent: 'center',
-						}}
-					>
-						<span style={{ fontSize: '20px' }}>⚠</span>{' '}
-						{/* Slightly larger warning icon */}
-					</Box>
 					<p>
 						Are you sure you want to submit a cancellation request for: <br />
 						<strong style={{ color: '#4a5568', fontWeight: 'bold' }}>
@@ -437,8 +434,8 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 					sx={{
 						justifyContent: 'center',
 						padding: '16px 24px',
-						backgroundColor: '#ffffff', // White background for actions
-						gap: '12px', // Space between buttons
+						backgroundColor: '#ffffff',
+						gap: '12px',
 					}}
 				>
 					<Button
@@ -449,10 +446,10 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 							'padding': '8px 24px',
 							'fontWeight': 'bold',
 							'borderRadius': '8px',
-							'border': '1px solid #e2e8f0', // Light border like image
-							'textTransform': 'none', // No uppercase (matches image)
-							'fontSize': '0.875rem', // Match button text size
-							'&:hover': { backgroundColor: '#edf2f7', borderColor: '#cbd5e0' }, // Light gray hover
+							'border': '1px solid #e2e8f0',
+							'textTransform': 'none',
+							'fontSize': '0.875rem',
+							'&:hover': { backgroundColor: '#edf2f7', borderColor: '#cbd5e0' },
 						}}
 					>
 						Cancel
@@ -461,14 +458,14 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 						<Button
 							onClick={() => handleCancelSubmit(true)}
 							sx={{
-								'backgroundColor': '#e53e3e', // Red button color (matches image)
+								'backgroundColor': '#e53e3e',
 								'color': 'white',
 								'padding': '8px 24px',
 								'fontWeight': 'bold',
 								'borderRadius': '8px',
-								'textTransform': 'none', // No uppercase (matches image)
-								'fontSize': '0.875rem', // Match button text size
-								'&:hover': { backgroundColor: '#c53030' }, // Darker red on hover
+								'textTransform': 'none',
+								'fontSize': '0.875rem',
+								'&:hover': { backgroundColor: '#c53030' },
 							}}
 							disabled={loading}
 						>
@@ -478,14 +475,14 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 						<Button
 							onClick={() => handleCancelSubmit(false)}
 							sx={{
-								'backgroundColor': '#e53e3e', // Red button color (matches image)
+								'backgroundColor': '#e53e3e',
 								'color': 'white',
 								'padding': '8px 24px',
 								'fontWeight': 'bold',
 								'borderRadius': '8px',
-								'textTransform': 'none', // No uppercase (matches image)
-								'fontSize': '0.875rem', // Match button text size
-								'&:hover': { backgroundColor: '#c53030' }, // Darker red on hover
+								'textTransform': 'none',
+								'fontSize': '0.875rem',
+								'&:hover': { backgroundColor: '#c53030' },
 							}}
 							disabled={loading}
 						>
