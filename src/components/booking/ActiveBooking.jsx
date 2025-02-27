@@ -330,102 +330,132 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 
 			{/* Cancel Booking Modal */}
 			<Dialog
-				open={openCancelModal}
-				onClose={() => setOpenCancelModal(false)}
-				maxWidth='sm'
-				fullWidth
-				sx={{
-					'& .MuiDialog-paper': {
-						borderRadius: '16px',
-						boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-						backgroundColor: '#ffffff',
-					},
-				}}
-			>
-				<DialogTitle
-					sx={{
-						backgroundColor: '#dc2626',
-						color: 'white',
-						textAlign: 'center',
-						fontWeight: 'bold',
-						padding: '12px',
-						display: 'flex',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-					}}
-				>
-					Cancel Booking
-					<IconButton
-						onClick={() => setOpenCancelModal(false)}
-						sx={{ color: 'white' }}
-					>
-						<span style={{ fontSize: '24px', lineHeight: '1' }}>×</span>
-					</IconButton>
-				</DialogTitle>
-				<DialogContent
-					sx={{
-						textAlign: 'center',
-						padding: '24px',
-						backgroundContent: '#f5f5f5',
-					}}
-				>
-					<Box
-						sx={{
-							color: '#d32f2f',
-							mb: 2,
-							display: 'flex',
-							justifyContent: 'center',
-						}}
-					>
-						<span style={{ fontSize: '16px' }}>⚠</span>
-					</Box>
-					<p>
-						Are you sure you want to submit a cancellation request for:{' '}
-						<strong>{row.passengerName || 'Unknown Passenger'}</strong>?
-					</p>
-				</DialogContent>
-				<DialogActions
-					sx={{
-						justifyContent: 'center',
-						padding: '16px',
-						backgroundColor: '#f5f5f5',
-					}}
-				>
-					{isParent ? (
-						<Button
-							onClick={() => handleCancelSubmit(true)}
-							sx={{
-								'backgroundColor': '#dc2626',
-								'color': 'white',
-								'padding': '8px 24px',
-								'fontWeight': 'bold',
-								'borderRadius': '8px',
-								'textTransform': 'capitalize',
-								'&:hover': { backgroundColor: '#b91c1c' },
-							}}
-							disabled={loading}
-						>
-							Cancel This and Future Bookings
-						</Button>
-					) : (
-						<Button
-							onClick={() => handleCancelSubmit(false)}
-							sx={{
-								'backgroundColor': 'gray',
-								'color': 'white',
-								'padding': '8px 24px',
-								'fontWeight': 'bold',
-								'borderRadius': '8px',
-								'textTransform': 'capitalize',
-								'&:hover': { backgroundColor: '#757575' },
-							}}
-							disabled={loading}
-						>
-							Cancel This Booking Only
-						</Button>
-					)}
-				</DialogActions>
-			</Dialog>
+  open={openCancelModal}
+  onClose={() => setOpenCancelModal(false)}
+  maxWidth="sm"
+  fullWidth
+  sx={{
+    "& .MuiDialog-paper": {
+      borderRadius: "16px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      backgroundColor: "#ffffff",
+      padding: "8px", // Slight padding for overall container
+      fontFamily: "Arial, sans-serif", // Match font from image
+    },
+  }}
+>
+  <DialogTitle
+    sx={{
+      backgroundColor: "#ffffff", // White background for title (matches image)
+      color: "#4a5568", // Dark gray title color (matches image)
+      textAlign: "center",
+      fontWeight: "bold",
+      padding: "16px 24px",
+      fontSize: "1.25rem", // Slightly larger font like image
+      borderBottom: "1px solid #e2e8f0", // Light border for separation
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    }}
+  >
+    Cancel Booking
+    <IconButton
+      onClick={() => setOpenCancelModal(false)}
+      sx={{
+        color: "#a0aec0", // Light gray for close icon (matches image)
+        p: 0.5, // Smaller padding for icon button
+      }}
+    >
+      <span style={{ fontSize: "24px", lineHeight: "1" }}>×</span>
+    </IconButton>
+  </DialogTitle>
+  <DialogContent
+    sx={{
+      textAlign: "center",
+      padding: "24px",
+      backgroundColor: "#ffffff", // White background for content
+      fontSize: "0.875rem", // Default text size as per image
+      color: "#4a5568", // Dark gray text (matches image)
+    }}
+  >
+    <Box
+      sx={{
+        color: "#e53e3e", // Red warning icon color (matches image)
+        mb: 2,
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <span style={{ fontSize: "20px" }}>⚠</span> {/* Slightly larger warning icon */}
+    </Box>
+    <p>
+      Are you sure you want to submit a cancellation request for: <br />
+      <strong style={{ color: "#4a5568", fontWeight: "bold" }}>
+        {row.passengerName || "Unknown Passenger"}
+      </strong>
+    </p>
+  </DialogContent>
+  <DialogActions
+    sx={{
+      justifyContent: "center",
+      padding: "16px 24px",
+      backgroundColor: "#ffffff", // White background for actions
+      gap: "12px", // Space between buttons
+    }}
+  >
+    <Button
+      onClick={() => setOpenCancelModal(false)}
+      sx={{
+        backgroundColor: "#ffffff",
+        color: "#4a5568",
+        padding: "8px 24px",
+        fontWeight: "bold",
+        borderRadius: "8px",
+        border: "1px solid #e2e8f0", // Light border like image
+        textTransform: "none", // No uppercase (matches image)
+        fontSize: "0.875rem", // Match button text size
+        "&:hover": { backgroundColor: "#edf2f7", borderColor: "#cbd5e0" }, // Light gray hover
+      }}
+    >
+      Cancel
+    </Button>
+    {isParent ? (
+      <Button
+        onClick={() => handleCancelSubmit(true)}
+        sx={{
+          backgroundColor: "#e53e3e", // Red button color (matches image)
+          color: "white",
+          padding: "8px 24px",
+          fontWeight: "bold",
+          borderRadius: "8px",
+          textTransform: "none", // No uppercase (matches image)
+          fontSize: "0.875rem", // Match button text size
+          "&:hover": { backgroundColor: "#c53030" }, // Darker red on hover
+        }}
+        disabled={loading}
+      >
+        Cancel This and Future Bookings
+      </Button>
+    ) : (
+      <Button
+        onClick={() => handleCancelSubmit(false)}
+        sx={{
+          backgroundColor: "#e53e3e", // Red button color (matches image)
+          color: "white",
+          padding: "8px 24px",
+          fontWeight: "bold",
+          borderRadius: "8px",
+          textTransform: "none", // No uppercase (matches image)
+          fontSize: "0.875rem", // Match button text size
+          "&:hover": { backgroundColor: "#c53030" }, // Darker red on hover
+        }}
+        disabled={loading}
+      >
+        Cancel This Booking Only
+      </Button>
+    )}
+  </DialogActions>
+</Dialog>
 		</>
 	);
 }
