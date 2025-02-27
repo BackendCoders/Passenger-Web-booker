@@ -294,15 +294,7 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 					</Button>
 					{isParent ? (
 						<Button
-							onClick={() => {
-								if (
-									window.confirm(
-										'Are you sure you want to submit all future bookings?'
-									)
-								) {
-									handleAmendSubmit(true);
-								}
-							}}
+							onClick={() => handleAmendSubmit(true)}
 							sx={{
 								'backgroundColor': '#0ea5e9',
 								'color': 'white',
@@ -401,15 +393,7 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 				>
 					{isParent ? (
 						<Button
-							onClick={() => {
-								if (
-									window.confirm(
-										'Are you sure you want to cancel this and future bookings?'
-									)
-								) {
-									handleCancelSubmit(true);
-								}
-							}}
+							onClick={() => handleCancelSubmit(true)}
 							sx={{
 								'backgroundColor': '#dc2626',
 								'color': 'white',
@@ -425,15 +409,7 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 						</Button>
 					) : (
 						<Button
-							onClick={() => {
-								if (
-									window.confirm(
-										'Are you sure you want to cancel this booking only?'
-									)
-								) {
-									handleCancelSubmit(false);
-								}
-							}}
+							onClick={() => handleCancelSubmit(false)}
 							sx={{
 								'backgroundColor': 'gray',
 								'color': 'white',
