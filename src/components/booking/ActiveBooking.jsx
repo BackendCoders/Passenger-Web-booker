@@ -47,340 +47,416 @@ function Row({ row, isParent, isOpen, toggleGroup }) {
 	const recurrenceId = row?.recurranceId ?? 0;
 	const changesPending = row?.changesPending || false; // Default to false if not present
 	const applyToBlock = row?.applyToBlock || false; // Default to false if not present
-  
+
 	const handleAmendSubmit = async (isAmendAll = false) => {
-	  if (!message.trim()) {
-		toast.error('Amendment message cannot be empty!');
-		return;
-	  }
-  
-	  setLoading(true);
-	  try {
-		await dispatch(
-		  amendBooking({
-			bookingId: row.bookingId,
-			message: message,
-			block: isAmendAll ? true : false,
-			recurrenceId: recurrenceId,
-		  })
-		).unwrap();
-		toast.success(isAmendAll ? 'All Amendments Submitted' : 'Amendment Request Submitted');
-		setOpenAmendModal(false);
-		setMessage('');
-	  } catch (error) {
-		toast.error('Failed to amend booking.');
-	  }
-	  setLoading(false);
+		if (!message.trim()) {
+			toast.error('Amendment message cannot be empty!');
+			return;
+		}
+
+		setLoading(true);
+		try {
+			await dispatch(
+				amendBooking({
+					bookingId: row.bookingId,
+					message: message,
+					block: isAmendAll ? true : false,
+					recurrenceId: recurrenceId,
+				})
+			).unwrap();
+			toast.success(
+				isAmendAll ? 'All Amendments Submitted' : 'Amendment Request Submitted'
+			);
+			setOpenAmendModal(false);
+			setMessage('');
+		} catch (error) {
+			toast.error('Failed to amend booking.');
+		}
+		setLoading(false);
 	};
-  
+
 	const handleCancelSubmit = async (isCancelAll = false) => {
-	  setLoading(true);
-	  try {
-		await dispatch(
-		  cancelBooking({
-			bookingId: row.bookingId,
-			block: isCancelAll ? true : false,
-			recurrenceId: recurrenceId,
-		  })
-		).unwrap();
-		toast.success(isCancelAll ? 'All Bookings Cancelled' : 'Booking cancelled successfully!');
-		setOpenCancelModal(false);
-	  } catch (error) {
-		toast.error('Failed to cancel booking.');
-	  }
-	  setLoading(false);
+		setLoading(true);
+		try {
+			await dispatch(
+				cancelBooking({
+					bookingId: row.bookingId,
+					block: isCancelAll ? true : false,
+					recurrenceId: recurrenceId,
+				})
+			).unwrap();
+			toast.success(
+				isCancelAll
+					? 'All Bookings Cancelled'
+					: 'Booking cancelled successfully!'
+			);
+			setOpenCancelModal(false);
+		} catch (error) {
+			toast.error('Failed to cancel booking.');
+		}
+		setLoading(false);
 	};
-  
+
 	return (
-	  <>
-		<TableRow>
-		  <TableCell>
-			{isParent && (
-			  <IconButton
-				size='small'
-				onClick={() => toggleGroup(row.recurranceId || 0)}
-			  >
-				{isOpen ? <FaMinus /> : <FaPlus />}
-			  </IconButton>
-			)}
-		  </TableCell>
-  
-		  {isParent ? (
-			<TableCell colSpan={6}>
-			  <Box display='flex' justifyContent='space-between' alignItems='center'>
-				<span>{row.passengerName}</span>
-				{recurrenceId !== null && recurrenceId !== 0 && !applyToBlock && ( // Hide buttons if applyToBlock is true
-				  <Box display='flex' gap={1}>
-					<Button
-					  variant='contained'
-					  size='small'
-					  sx={{
-						backgroundColor: '#0ea5e9',
-						color: 'white',
-						padding: '6px 16px',
-						fontWeight: 'bold',
-						borderRadius: '6px',
-						textTransform: 'capitalize',
-						'&:hover': { backgroundColor: '#0284c7' },
-					  }}
-					  onClick={() => setOpenAmendModal(true)}
-					>
-					  Amend All
-					</Button>
-					<Button
-					  variant='contained'
-					  size='small'
-					  sx={{
-						backgroundColor: '#dc2626',
-						color: 'white',
-						padding: '6px 16px',
-						fontWeight: 'bold',
-						borderRadius: '6px',
-						textTransform: 'capitalize',
-						'&:hover': { backgroundColor: '#b91c1c' },
-					  }}
-					  onClick={() => setOpenCancelModal(true)}
-					>
-					  Cancel All
-					</Button>
-				  </Box>
+		<>
+			<TableRow>
+				<TableCell>
+					{isParent && (
+						<IconButton
+							size='small'
+							onClick={() => toggleGroup(row.recurranceId || 0)}
+						>
+							{isOpen ? <FaMinus /> : <FaPlus />}
+						</IconButton>
+					)}
+				</TableCell>
+
+				{isParent ? (
+					<TableCell colSpan={6}>
+						<Box
+							display='flex'
+							justifyContent='space-between'
+							alignItems='center'
+						>
+							<span
+								style={{
+									fontWeight: '600', // Medium bold (lighter than 700, but noticeable)
+									fontSize: '1rem', // Slightly larger size
+									color: '#1f2937', // Darker text for contrast
+								}}
+							>
+								{row.passengerName}
+							</span>
+							{recurrenceId !== null &&
+								recurrenceId !== 0 &&
+								!applyToBlock && ( // Hide buttons if applyToBlock is true
+									<Box
+										display='flex'
+										gap={1}
+									>
+										<Button
+											variant='contained'
+											size='small'
+											sx={{
+												'backgroundColor': '#0ea5e9',
+												'color': 'white',
+												'padding': '6px 16px',
+												'fontWeight': 'bold',
+												'borderRadius': '6px',
+												'textTransform': 'capitalize',
+												'&:hover': { backgroundColor: '#0284c7' },
+											}}
+											onClick={() => setOpenAmendModal(true)}
+										>
+											Amend All
+										</Button>
+										<Button
+											variant='contained'
+											size='small'
+											sx={{
+												'backgroundColor': '#dc2626',
+												'color': 'white',
+												'padding': '6px 16px',
+												'fontWeight': 'bold',
+												'borderRadius': '6px',
+												'textTransform': 'capitalize',
+												'&:hover': { backgroundColor: '#b91c1c' },
+											}}
+											onClick={() => setOpenCancelModal(true)}
+										>
+											Cancel All
+										</Button>
+									</Box>
+								)}
+						</Box>
+					</TableCell>
+				) : (
+					<>
+						<TableCell>{row.bookingId}</TableCell>
+						<TableCell>
+							{moment(row.dateTime).format('DD-MM-YYYY HH:mm')}
+						</TableCell>
+						<TableCell>{row.passengerName}</TableCell>
+						<TableCell>{row.pickupAddress}</TableCell>
+						<TableCell>{row.destinationAddress}</TableCell>
+						<TableCell sx={{ padding: '8px', textAlign: 'center' }}>
+							<Box
+								display='flex'
+								justifyContent='center'
+								gap={1}
+							>
+								{!changesPending && ( // Hide buttons if changesPending is true
+									<Button
+										variant='contained'
+										size='small'
+										sx={{
+											'backgroundColor': '#0ea5e9',
+											'color': 'white',
+											'padding': '6px 16px',
+											'fontWeight': 'bold',
+											'borderRadius': '6px',
+											'textTransform': 'capitalize',
+											'&:hover': { backgroundColor: '#0284c7' },
+										}}
+										onClick={() => setOpenAmendModal(true)}
+									>
+										Amend
+									</Button>
+								)}
+								{!changesPending && ( // Hide buttons if changesPending is true
+									<Button
+										variant='contained'
+										size='small'
+										sx={{
+											'backgroundColor': '#dc2626',
+											'color': 'white',
+											'padding': '6px 16px',
+											'fontWeight': 'bold',
+											'borderRadius': '6px',
+											'textTransform': 'capitalize',
+											'&:hover': { backgroundColor: '#b91c1c' },
+										}}
+										onClick={() => setOpenCancelModal(true)}
+									>
+										Cancel
+									</Button>
+								)}
+							</Box>
+						</TableCell>
+					</>
 				)}
-			  </Box>
-			</TableCell>
-		  ) : (
-			<>
-			  <TableCell>{row.bookingId}</TableCell>
-			  <TableCell>{moment(row.dateTime).format('DD-MM-YYYY HH:mm')}</TableCell>
-			  <TableCell>{row.passengerName}</TableCell>
-			  <TableCell>{row.pickupAddress}</TableCell>
-			  <TableCell>{row.destinationAddress}</TableCell>
-			  <TableCell sx={{ padding: '8px', textAlign: 'center' }}>
-				<Box display='flex' justifyContent='center' gap={1}>
-				  {!changesPending && ( // Hide buttons if changesPending is true
-					<Button
-					  variant='contained'
-					  size='small'
-					  sx={{
-						backgroundColor: '#0ea5e9',
-						color: 'white',
-						padding: '6px 16px',
-						fontWeight: 'bold',
-						borderRadius: '6px',
-						textTransform: 'capitalize',
-						'&:hover': { backgroundColor: '#0284c7' },
-					  }}
-					  onClick={() => setOpenAmendModal(true)}
-					>
-					  Amend
-					</Button>
-				  )}
-				  {!changesPending && ( // Hide buttons if changesPending is true
-					<Button
-					  variant='contained'
-					  size='small'
-					  sx={{
+			</TableRow>
+
+			{/* Amend Booking Modal */}
+			<Dialog
+				open={openAmendModal}
+				onClose={() => setOpenAmendModal(false)}
+				maxWidth='sm'
+				fullWidth
+				sx={{
+					'& .MuiDialog-paper': {
+						borderRadius: '8px',
+						boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+					},
+				}}
+			>
+				<DialogTitle
+					sx={{
 						backgroundColor: '#dc2626',
 						color: 'white',
-						padding: '6px 16px',
+						textAlign: 'center',
 						fontWeight: 'bold',
-						borderRadius: '6px',
-						textTransform: 'capitalize',
-						'&:hover': { backgroundColor: '#b91c1c' },
-					  }}
-					  onClick={() => setOpenCancelModal(true)}
+						padding: '12px',
+					}}
+				>
+					Amend Booking
+				</DialogTitle>
+				<DialogContent
+					sx={{
+						textAlign: 'center',
+						padding: '20px',
+						backgroundColor: '#ffffff',
+					}}
+				>
+					<TextField
+						label='Enter amendment message'
+						variant='outlined'
+						fullWidth
+						value={message}
+						onChange={(e) => setMessage(e.target.value)}
+						sx={{
+							'marginTop': 2,
+							'& .MuiOutlinedInput-root': { borderRadius: '8px' },
+						}}
+					/>
+				</DialogContent>
+				<DialogActions
+					sx={{
+						justifyContent: 'center',
+						padding: '16px',
+						backgroundColor: '#ffffff',
+					}}
+				>
+					<Button
+						onClick={() => setOpenAmendModal(false)}
+						sx={{
+							'backgroundColor': '#dc2626',
+							'color': 'white',
+							'padding': '8px 24px',
+							'fontWeight': 'bold',
+							'borderRadius': '8px',
+							'textTransform': 'uppercase',
+							'&:hover': { backgroundColor: '#b91c1c' },
+						}}
+						disabled={loading}
 					>
-					  Cancel
+						CANCEL
 					</Button>
-				  )}
-				</Box>
-			  </TableCell>
-			</>
-		  )}
-		</TableRow>
-  
-		{/* Amend Booking Modal */}
-		<Dialog
-		  open={openAmendModal}
-		  onClose={() => setOpenAmendModal(false)}
-		  maxWidth='sm'
-		  fullWidth
-		  sx={{
-			'& .MuiDialog-paper': {
-			  borderRadius: '8px',
-			  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-			},
-		  }}
-		>
-		  <DialogTitle
-			sx={{
-			  backgroundColor: '#dc2626',
-			  color: 'white',
-			  textAlign: 'center',
-			  fontWeight: 'bold',
-			  padding: '12px',
-			}}
-		  >
-			Amend Booking
-		  </DialogTitle>
-		  <DialogContent sx={{ textAlign: 'center', padding: '20px', backgroundColor: '#ffffff' }}>
-			<TextField
-			  label='Enter amendment message'
-			  variant='outlined'
-			  fullWidth
-			  value={message}
-			  onChange={(e) => setMessage(e.target.value)}
-			  sx={{
-				marginTop: 2,
-				'& .MuiOutlinedInput-root': { borderRadius: '8px' },
-			  }}
-			/>
-		  </DialogContent>
-		  <DialogActions sx={{ justifyContent: 'center', padding: '16px', backgroundColor: '#ffffff' }}>
-			<Button
-			  onClick={() => setOpenAmendModal(false)}
-			  sx={{
-				backgroundColor: '#dc2626',
-				color: 'white',
-				padding: '8px 24px',
-				fontWeight: 'bold',
-				borderRadius: '8px',
-				textTransform: 'uppercase',
-				'&:hover': { backgroundColor: '#b91c1c' },
-			  }}
-			  disabled={loading}
+					{isParent ? (
+						<Button
+							onClick={() => {
+								if (
+									window.confirm(
+										'Are you sure you want to submit all future bookings?'
+									)
+								) {
+									handleAmendSubmit(true);
+								}
+							}}
+							sx={{
+								'backgroundColor': '#0ea5e9',
+								'color': 'white',
+								'padding': '8px 24px',
+								'fontWeight': 'bold',
+								'borderRadius': '8px',
+								'textTransform': 'uppercase',
+								'&:hover': { backgroundColor: '#0284c7' },
+							}}
+							disabled={loading}
+						>
+							SUBMIT ALL FUTURE BOOKINGS
+						</Button>
+					) : (
+						<Button
+							onClick={() => handleAmendSubmit(false)}
+							sx={{
+								'backgroundColor': 'gray',
+								'color': 'white',
+								'padding': '8px 24px',
+								'fontWeight': 'bold',
+								'borderRadius': '8px',
+								'textTransform': 'uppercase',
+								'&:hover': { backgroundColor: '#757575' },
+							}}
+							disabled={loading}
+						>
+							SUBMIT
+						</Button>
+					)}
+				</DialogActions>
+			</Dialog>
+
+			{/* Cancel Booking Modal */}
+			<Dialog
+				open={openCancelModal}
+				onClose={() => setOpenCancelModal(false)}
+				maxWidth='sm'
+				fullWidth
+				sx={{
+					'& .MuiDialog-paper': {
+						borderRadius: '16px',
+						boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+						backgroundColor: '#ffffff',
+					},
+				}}
 			>
-			  CANCEL
-			</Button>
-			{isParent ? (
-			  <Button
-				onClick={() => {
-				  if (window.confirm('Are you sure you want to submit all future bookings?')) {
-					handleAmendSubmit(true);
-				  }
-				}}
-				sx={{
-				  backgroundColor: '#0ea5e9',
-				  color: 'white',
-				  padding: '8px 24px',
-				  fontWeight: 'bold',
-				  borderRadius: '8px',
-				  textTransform: 'uppercase',
-				  '&:hover': { backgroundColor: '#0284c7' },
-				}}
-				disabled={loading}
-			  >
-				SUBMIT ALL FUTURE BOOKINGS
-			  </Button>
-			) : (
-			  <Button
-				onClick={() => handleAmendSubmit(false)}
-				sx={{
-				  backgroundColor: 'gray',
-				  color: 'white',
-				  padding: '8px 24px',
-				  fontWeight: 'bold',
-				  borderRadius: '8px',
-				  textTransform: 'uppercase',
-				  '&:hover': { backgroundColor: '#757575' },
-				}}
-				disabled={loading}
-			  >
-				SUBMIT
-			  </Button>
-			)}
-		  </DialogActions>
-		</Dialog>
-  
-		{/* Cancel Booking Modal */}
-		<Dialog
-		  open={openCancelModal}
-		  onClose={() => setOpenCancelModal(false)}
-		  maxWidth='sm'
-		  fullWidth
-		  sx={{
-			'& .MuiDialog-paper': {
-			  borderRadius: '16px',
-			  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-			  backgroundColor: '#ffffff',
-			},
-		  }}
-		>
-		  <DialogTitle
-			sx={{
-			  backgroundColor: '#dc2626',
-			  color: 'white',
-			  textAlign: 'center',
-			  fontWeight: 'bold',
-			  padding: '12px',
-			  display: 'flex',
-			  justifyContent: 'space-between',
-			  alignItems: 'center',
-			}}
-		  >
-			Cancel Booking
-			<IconButton onClick={() => setOpenCancelModal(false)} sx={{ color: 'white' }}>
-			  <span style={{ fontSize: '24px', lineHeight: '1' }}>×</span>
-			</IconButton>
-		  </DialogTitle>
-		  <DialogContent sx={{ textAlign: 'center', padding: '24px', backgroundContent: '#f5f5f5' }}>
-			<Box sx={{ color: '#d32f2f', mb: 2, display: 'flex', justifyContent: 'center' }}>
-			  <span style={{ fontSize: '16px' }}>⚠</span>
-			</Box>
-			<p>
-			  Are you sure you want to submit a cancellation request for: <strong>{row.passengerName || 'Unknown Passenger'}</strong>?
-			</p>
-		  </DialogContent>
-		  <DialogActions sx={{ justifyContent: 'center', padding: '16px', backgroundColor: '#f5f5f5' }}>
-			{isParent ? (
-			  <Button
-				onClick={() => {
-				  if (window.confirm('Are you sure you want to cancel this and future bookings?')) {
-					handleCancelSubmit(true);
-				  }
-				}}
-				sx={{
-				  backgroundColor: '#dc2626',
-				  color: 'white',
-				  padding: '8px 24px',
-				  fontWeight: 'bold',
-				  borderRadius: '8px',
-				  textTransform: 'capitalize',
-				  '&:hover': { backgroundColor: '#b91c1c' },
-				}}
-				disabled={loading}
-			  >
-				Cancel This and Future Bookings
-			  </Button>
-			) : (
-			  <Button
-				onClick={() => {
-				  if (window.confirm('Are you sure you want to cancel this booking only?')) {
-					handleCancelSubmit(false);
-				  }
-				}}
-				sx={{
-				  backgroundColor: 'gray',
-				  color: 'white',
-				  padding: '8px 24px',
-				  fontWeight: 'bold',
-				  borderRadius: '8px',
-				  textTransform: 'capitalize',
-				  '&:hover': { backgroundColor: '#757575' },
-				}}
-				disabled={loading}
-			  >
-				Cancel This Booking Only
-			  </Button>
-			)}
-		  </DialogActions>
-		</Dialog>
-	  </>
+				<DialogTitle
+					sx={{
+						backgroundColor: '#dc2626',
+						color: 'white',
+						textAlign: 'center',
+						fontWeight: 'bold',
+						padding: '12px',
+						display: 'flex',
+						justifyContent: 'space-between',
+						alignItems: 'center',
+					}}
+				>
+					Cancel Booking
+					<IconButton
+						onClick={() => setOpenCancelModal(false)}
+						sx={{ color: 'white' }}
+					>
+						<span style={{ fontSize: '24px', lineHeight: '1' }}>×</span>
+					</IconButton>
+				</DialogTitle>
+				<DialogContent
+					sx={{
+						textAlign: 'center',
+						padding: '24px',
+						backgroundContent: '#f5f5f5',
+					}}
+				>
+					<Box
+						sx={{
+							color: '#d32f2f',
+							mb: 2,
+							display: 'flex',
+							justifyContent: 'center',
+						}}
+					>
+						<span style={{ fontSize: '16px' }}>⚠</span>
+					</Box>
+					<p>
+						Are you sure you want to submit a cancellation request for:{' '}
+						<strong>{row.passengerName || 'Unknown Passenger'}</strong>?
+					</p>
+				</DialogContent>
+				<DialogActions
+					sx={{
+						justifyContent: 'center',
+						padding: '16px',
+						backgroundColor: '#f5f5f5',
+					}}
+				>
+					{isParent ? (
+						<Button
+							onClick={() => {
+								if (
+									window.confirm(
+										'Are you sure you want to cancel this and future bookings?'
+									)
+								) {
+									handleCancelSubmit(true);
+								}
+							}}
+							sx={{
+								'backgroundColor': '#dc2626',
+								'color': 'white',
+								'padding': '8px 24px',
+								'fontWeight': 'bold',
+								'borderRadius': '8px',
+								'textTransform': 'capitalize',
+								'&:hover': { backgroundColor: '#b91c1c' },
+							}}
+							disabled={loading}
+						>
+							Cancel This and Future Bookings
+						</Button>
+					) : (
+						<Button
+							onClick={() => {
+								if (
+									window.confirm(
+										'Are you sure you want to cancel this booking only?'
+									)
+								) {
+									handleCancelSubmit(false);
+								}
+							}}
+							sx={{
+								'backgroundColor': 'gray',
+								'color': 'white',
+								'padding': '8px 24px',
+								'fontWeight': 'bold',
+								'borderRadius': '8px',
+								'textTransform': 'capitalize',
+								'&:hover': { backgroundColor: '#757575' },
+							}}
+							disabled={loading}
+						>
+							Cancel This Booking Only
+						</Button>
+					)}
+				</DialogActions>
+			</Dialog>
+		</>
 	);
-  }
-  
-  Row.propTypes = {
+}
+
+Row.propTypes = {
 	row: PropTypes.object.isRequired,
-  };
+};
 
 const ActiveBooking = () => {
 	const navigate = useNavigate();
