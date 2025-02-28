@@ -569,6 +569,8 @@ const ActiveBooking = () => {
     });
   }, [filteredBookings, sortConfig]);
 
+  console.log('Sorted Bookings:', sortedBookings);
+
   const handleSearchChange = debounce((value) => {
     setSearchTerm(value);
   }, 300);
@@ -625,6 +627,11 @@ const ActiveBooking = () => {
   useEffect(() => {
     setPage(0);
   }, [searchTerm]);
+
+  useEffect(() => {
+    console.log('Sorted Bookings:', sortedBookings);
+    console.log('Paginated Bookings:', paginatedBookings);
+  }, [sortedBookings, paginatedBookings]);
 
   return (
     <div className='bg-white max-h-full overflow-auto'>
@@ -790,7 +797,7 @@ const ActiveBooking = () => {
                           highestBookingId={highestBookingId} // Pass the highest bookingId for the group
                         />
                         {openGroups[groupId] &&
-                          bookings.slice(1).map((booking) => (
+                          bookings.slice(0).map((booking) => (
                             <Row
                               key={booking.bookingId}
                               row={booking}
