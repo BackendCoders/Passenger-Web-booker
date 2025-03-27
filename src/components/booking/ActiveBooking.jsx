@@ -490,11 +490,11 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
               sx={{
                 backgroundColor: "#e53e3e",
                 color: "white",
-                padding: "4px 16px",
+                padding: "8px 16px",
                 fontWeight: "bold",
                 borderRadius: "8px",
                 textTransform: "none",
-                fontSize: "0.75rem",
+                fontSize: "0.85rem",
                 "&:hover": { backgroundColor: "#c53030" },
               }}
               disabled={loading}
@@ -508,11 +508,11 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
               sx={{
                 backgroundColor: "#e53e3e",
                 color: "white",
-                padding: "4px 16px",
+                padding: "8px 16px",
                 fontWeight: "bold",
                 borderRadius: "8px",
                 textTransform: "none",
-                fontSize: "0.775rem",
+                fontSize: "0.85rem",
                 "&:hover": { backgroundColor: "#c53030" },
               }}
               disabled={loading}
