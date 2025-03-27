@@ -38,7 +38,7 @@ import { toast } from 'react-hot-toast';
 import { debounce } from 'lodash';
 
 // Row Component for Each Booking
-function Row({ row, isParent, isOpen, toggleGroup, highestBookingId }) {
+function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
   const dispatch = useDispatch();
   const [openAmendModal, setOpenAmendModal] = useState(false);
   const [openCancelModal, setOpenCancelModal] = useState(false);
@@ -78,8 +78,8 @@ function Row({ row, isParent, isOpen, toggleGroup, highestBookingId }) {
   const handleCancelSubmit = async (isCancelAll = false) => {
     setLoading(true);
     try {
-      // Use the highestBookingId for "Cancel All" operations, or row.bookingId for individual cancels
-      const bookingIdToUse = isCancelAll && recurrenceId !== 0 ? highestBookingId : row.bookingId;
+      // Use the lowestBookingId for "Cancel All" operations, or row.bookingId for individual cancels
+      const bookingIdToUse = isCancelAll && recurrenceId !== 0 ? lowestBookingId : row.bookingId;
 
       await dispatch(
         cancelBooking({
@@ -498,14 +498,14 @@ Row.propTypes = {
   isParent: PropTypes.bool,
   isOpen: PropTypes.bool,
   toggleGroup: PropTypes.func,
-  highestBookingId: PropTypes.number,
+  lowestBookingId: PropTypes.number,
 };
 
 Row.defaultProps = {
   isParent: false,
   isOpen: false,
   toggleGroup: () => {},
-  highestBookingId: null,
+  lowestBookingId: null,
 };
 
 const ActiveBooking = () => {
@@ -588,15 +588,21 @@ const ActiveBooking = () => {
         groups[key] = {
           parent: booking, // Store first booking as parent
           bookings: [booking], // Store all bookings in the group
-          highestBookingId: booking.bookingId, // Initialize with the first bookingId
+          // highestBookingId: booking.bookingId, // Initialize with the first bookingId
+          lowestBookingId: booking.bookingId, // Initialize with the first bookingId
         };
       } else {
         groups[key].bookings.push(booking);
         // Update highestBookingId if the current bookingId is larger
-        groups[key].highestBookingId = Math.max(
-          groups[key].highestBookingId,
-          booking.bookingId
-        );
+        // groups[key].highestBookingId = Math.max(
+        //   groups[key].highestBookingId,
+        //   booking.bookingId
+        // );
+        // Update lowestBookingId if the current bookingId is smaller
+        groups[key].lowestBookingId = Math.min(
+        groups[key].lowestBookingId,
+        booking.bookingId
+      );
       }
     });
     return groups;
@@ -682,10 +688,10 @@ const ActiveBooking = () => {
                       Booking ID
                       {sortConfig.key === 'bookingId' && (
                         <span style={{ marginLeft: '8px' }}>
-                          {sortConfig.direction === 'asc' ? (
-                            <FaArrowUp />
-                          ) : (
+                          {sortConfig.direction === 'desc' ? (
                             <FaArrowDown />
+                          ) : (
+                            <FaArrowUp />
                           )}
                         </span>
                       )}
@@ -785,7 +791,7 @@ const ActiveBooking = () => {
                   Object.keys(paginatedBookings).map((groupId) => {
                     const bookings = paginatedBookings[groupId];
                     const firstBooking = bookings[0];
-                    const { highestBookingId } = groupedBookings[groupId]; // Get the highest bookingId for this group
+                    const { lowestBookingId } = groupedBookings[groupId]; // Get the highest bookingId for this group
 
                     return (
                       <React.Fragment key={groupId}>
@@ -794,14 +800,14 @@ const ActiveBooking = () => {
                           isParent={bookings.length > 1}
                           isOpen={!!openGroups[groupId]}
                           toggleGroup={toggleGroup}
-                          highestBookingId={highestBookingId} // Pass the highest bookingId for the group
+                          lowestBookingId={lowestBookingId} // Pass the highest bookingId for the group
                         />
                         {openGroups[groupId] &&
                           bookings.slice(0).map((booking) => (
                             <Row
                               key={booking.bookingId}
                               row={booking}
-                              highestBookingId={highestBookingId} // Pass the highest bookingId for child rows
+                              lowestBookingId={lowestBookingId} // Pass the highest bookingId for child rows
                             />
                           ))}
                       </React.Fragment>
