@@ -142,7 +142,9 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
               {recurrenceId !== null &&
                 recurrenceId !== 0 &&
                 !applyToBlock && (
+                  
                   <Box display='flex' gap={1}>
+                  
                     <Button
                       variant='contained'
                       size='small'
@@ -158,6 +160,7 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
                     >
                       Amend All
                     </Button>
+                     
                     <Button
                       variant='contained'
                       size='small'
@@ -175,6 +178,7 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
                       Cancel All
                     </Button>
                   </Box>
+                  
                 )}
             </Box>
           </TableCell>
@@ -732,10 +736,10 @@ const ActiveBooking = () => {
                       Booking ID
                       {sortConfig.key === 'bookingId' && (
                         <span style={{ marginLeft: '8px' }}>
-                          {sortConfig.direction === 'desc' ? (
-                            <FaArrowDown />
-                          ) : (
+                          {sortConfig.direction === 'asc' ? (
                             <FaArrowUp />
+                          ) : (
+                            <FaArrowDown />
                           )}
                         </span>
                       )}
