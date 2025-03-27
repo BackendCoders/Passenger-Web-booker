@@ -557,7 +557,7 @@ const ActiveBooking = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({
     key: 'bookingId',
-    direction: 'desc',
+    direction: 'asc',
   });
   const [openGroups, setOpenGroups] = useState({});
 
@@ -736,10 +736,10 @@ const ActiveBooking = () => {
                       Booking ID
                       {sortConfig.key === 'bookingId' && (
                         <span style={{ marginLeft: '8px' }}>
-                          {sortConfig.direction === 'asc' ? (
-                            <FaArrowUp />
-                          ) : (
+                          {sortConfig.direction === 'desc' ? (
                             <FaArrowDown />
+                          ) : (
+                            <FaArrowUp />
                           )}
                         </span>
                       )}
