@@ -1,4 +1,4 @@
-/** @format */
+
 
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -7,13 +7,29 @@ import { getwebbookingEndpoints } from "../api";
 // ✅ Async Thunk to fetch Web Bookings
 export const fetchWebBookings = createAsyncThunk(
   "webbookings/fetchWebBookings",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
       try {
-          const { data } = await axios.post(getwebbookingEndpoints.GETWEBBOOKING, {
-              processed: false,
-              accepted: false,
-              rejected: false,
-          });
+          // Get token from Redux state (adjust path according to your store structure)
+          const state = getState();
+          const token = state.auth?.token; // Assuming token is stored in auth slice
+
+          // Configure axios request with token in headers
+          const config = {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+              },
+          };
+
+          const { data } = await axios.post(
+              getwebbookingEndpoints.GETWEBBOOKING,
+              {
+                  processed: false,
+                  accepted: false,
+                  rejected: false,
+              },
+              config // Pass the config with token
+          );
 
           // 🔹 Validate response format in a single check
           if (!Array.isArray(data)) {
