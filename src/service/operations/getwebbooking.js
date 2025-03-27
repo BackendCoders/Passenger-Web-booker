@@ -23,7 +23,8 @@ export const fetchWebBookings = createAsyncThunk(
 
           const { data } = await axios.post(
               getwebbookingEndpoints.GETWEBBOOKING,
-              {
+              {  
+                
                   processed: false,
                   accepted: false,
                   rejected: false,
