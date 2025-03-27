@@ -141,44 +141,41 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
               </span>
               {recurrenceId !== null &&
                 recurrenceId !== 0 &&
-                !applyToBlock && (
-                  
-                  <Box display='flex' gap={1}>
-                  
-                    <Button
-                      variant='contained'
-                      size='small'
-                      sx={{
-                        backgroundColor: 'gray',
-                        color: 'white',
-                        padding: '6px 16px',
-                        fontWeight: 'bold',
-                        borderRadius: '6px',
-                        textTransform: 'capitalize',
-                      }}
-                      onClick={() => setOpenAmendModal(true)}
-                    >
-                      Amend All
-                    </Button>
-                     
-                    <Button
-                      variant='contained'
-                      size='small'
-                      sx={{
-                        backgroundColor: '#dc2626',
-                        color: 'white',
-                        padding: '6px 16px',
-                        fontWeight: 'bold',
-                        borderRadius: '6px',
-                        textTransform: 'capitalize',
-                        '&:hover': { backgroundColor: '#b91c1c' },
-                      }}
-                      onClick={() => openCancelModalWithType('cancelAll')}
-                    >
-                      Cancel All
-                    </Button>
-                  </Box>
-                  
+                !applyToBlock && 
+                  !changesPending && ( // Added !changesPending condition here
+                    <Box display='flex' gap={1}>
+                      <Button
+                        variant='contained'
+                        size='small'
+                        sx={{
+                          backgroundColor: 'gray',
+                          color: 'white',
+                          padding: '6px 16px',
+                          fontWeight: 'bold',
+                          borderRadius: '6px',
+                          textTransform: 'capitalize',
+                        }}
+                        onClick={() => setOpenAmendModal(true)}
+                      >
+                        Amend All
+                      </Button>
+                      <Button
+                        variant='contained'
+                        size='small'
+                        sx={{
+                          backgroundColor: '#dc2626',
+                          color: 'white',
+                          padding: '6px 16px',
+                          fontWeight: 'bold',
+                          borderRadius: '6px',
+                          textTransform: 'capitalize',
+                          '&:hover': { backgroundColor: '#b91c1c' },
+                        }}
+                        onClick={() => openCancelModalWithType('cancelAll')}
+                      >
+                        Cancel All
+                      </Button>
+                    </Box>
                 )}
             </Box>
           </TableCell>
