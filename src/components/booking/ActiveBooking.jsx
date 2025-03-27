@@ -42,6 +42,7 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
   const dispatch = useDispatch();
   const [openAmendModal, setOpenAmendModal] = useState(false);
   const [openCancelModal, setOpenCancelModal] = useState(false);
+  const [cancelType, setCancelType] = useState(''); // Track which cancel button was clicked
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const recurrenceId = row?.recurranceId ?? 0;
@@ -80,7 +81,7 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
     try {
       // Use the lowestBookingId for "Cancel All" operations, or row.bookingId for individual cancels or "Cancel This & Future"
       const bookingIdToUse = isCancelAll && recurrenceId !== 0 ? lowestBookingId : row.bookingId;
-  
+
       await dispatch(
         cancelBooking({
           bookingId: bookingIdToUse,
@@ -100,6 +101,12 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
       toast.error('Failed to cancel booking.');
     }
     setLoading(false);
+  };
+
+  // Function to open the cancel modal and set the cancel type
+  const openCancelModalWithType = (type) => {
+    setCancelType(type);
+    setOpenCancelModal(true);
   };
 
   return (
@@ -135,10 +142,7 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
               {recurrenceId !== null &&
                 recurrenceId !== 0 &&
                 !applyToBlock && (
-                  <Box
-                    display='flex'
-                    gap={1}
-                  >
+                  <Box display='flex' gap={1}>
                     <Button
                       variant='contained'
                       size='small'
@@ -150,6 +154,7 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
                         borderRadius: '6px',
                         textTransform: 'capitalize',
                       }}
+                      onClick={() => setOpenAmendModal(true)}
                     >
                       Amend All
                     </Button>
@@ -165,7 +170,7 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
                         textTransform: 'capitalize',
                         '&:hover': { backgroundColor: '#b91c1c' },
                       }}
-                      onClick={() => setOpenCancelModal(true)}
+                      onClick={() => openCancelModalWithType('cancelAll')}
                     >
                       Cancel All
                     </Button>
@@ -183,11 +188,7 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
             <TableCell>{row.pickupAddress}</TableCell>
             <TableCell>{row.destinationAddress}</TableCell>
             <TableCell sx={{ padding: '8px', textAlign: 'center' }}>
-              <Box
-                display='flex'
-                justifyContent='center'
-                gap={1}
-              >
+              <Box display='flex' justifyContent='center' gap={1}>
                 {!changesPending && (
                   <Button
                     variant='contained'
@@ -200,6 +201,7 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
                       borderRadius: '6px',
                       textTransform: 'capitalize',
                     }}
+                    onClick={() => setOpenAmendModal(true)}
                   >
                     Amend
                   </Button>
@@ -217,12 +219,13 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
                       textTransform: 'capitalize',
                       '&:hover': { backgroundColor: '#b91c1c' },
                     }}
-                    onClick={() => setOpenCancelModal(true)}
+                    onClick={() => openCancelModalWithType('cancelThisOnly')}
                   >
                     Cancel This Only
                   </Button>
                 )}
-                {!changesPending && (
+                {/* Show "Cancel This & Future" only if recurrenceId is not 0 */}
+                {!changesPending && recurrenceId !== 0 && (
                   <Button
                     variant='contained'
                     size='small'
@@ -235,7 +238,7 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
                       textTransform: 'capitalize',
                       '&:hover': { backgroundColor: '#b91c1c' },
                     }}
-                    onClick={() => setOpenCancelModal(true)}
+                    onClick={() => openCancelModalWithType('cancelThisAndFuture')}
                   >
                     Cancel This & Future
                   </Button>
@@ -386,137 +389,138 @@ function Row({ row, isParent, isOpen, toggleGroup, lowestBookingId }) {
 
       {/* Cancel Booking Modal */}
       <Dialog
-  open={openCancelModal}
-  onClose={() => setOpenCancelModal(false)}
-  maxWidth="sm"
-  fullWidth
-  sx={{
-    "& .MuiDialog-paper": {
-      borderRadius: "16px",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      backgroundColor: "#ffffff",
-      padding: "8px",
-      fontFamily: "Arial, sans-serif",
-    },
-  }}
->
-  <DialogTitle
-    sx={{
-      backgroundColor: "#ffffff",
-      color: "#4a5568",
-      fontWeight: "bold",
-      padding: "16px 24px",
-      fontSize: "1.25rem",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-    }}
-  >
-    <Box sx={{ display: "flex", alignItems: "center", color: "#e53e3e" }}>
-      <span style={{ fontSize: "20px", marginRight: "8px" }}>⚠</span>
-      Cancel Booking
-    </Box>
-    <IconButton
-      onClick={() => setOpenCancelModal(false)}
-      sx={{ color: "#a0aec0", p: 0.5 }}
-    >
-      <span style={{ fontSize: "24px", lineHeight: "1" }}>×</span>
-    </IconButton>
-  </DialogTitle>
-  <DialogContent
-    sx={{
-      textAlign: "center",
-      padding: "24px",
-      backgroundColor: "#ffffff",
-      fontSize: "1rem",
-      color: "#4a5568",
-    }}
-  >
-    <p>
-      Are you sure you want to submit a cancellation request for: <br />
-      <strong style={{ color: "#4a5568", fontWeight: "bold" }}>
-        {row.passengerName || "Unknown Passenger"}
-      </strong>
-    </p>
-  </DialogContent>
-  <DialogActions
-    sx={{
-      justifyContent: "center",
-      padding: "16px 24px",
-      backgroundColor: "#ffffff",
-      gap: "12px",
-    }}
-  >
-    <Button
-      onClick={() => setOpenCancelModal(false)}
-      sx={{
-        backgroundColor: "#ffffff",
-        color: "#4a5568",
-        padding: "8px 24px",
-        fontWeight: "bold",
-        borderRadius: "8px",
-        border: "1px solid #e2e8f0",
-        textTransform: "none",
-        fontSize: "0.875rem",
-        "&:hover": { backgroundColor: "#edf2f7", borderColor: "#cbd5e0" },
-      }}
-    >
-      Cancel
-    </Button>
-    {isParent ? (
-      <Button
-        onClick={() => handleCancelSubmit(true)}
+        open={openCancelModal}
+        onClose={() => setOpenCancelModal(false)}
+        maxWidth="sm"
+        fullWidth
         sx={{
-          backgroundColor: "#e53e3e",
-          color: "white",
-          padding: "8px 24px",
-          fontWeight: "bold",
-          borderRadius: "8px",
-          textTransform: "none",
-          fontSize: "0.875rem",
-          "&:hover": { backgroundColor: "#c53030" },
+          "& .MuiDialog-paper": {
+            borderRadius: "16px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "#ffffff",
+            padding: "8px",
+            fontFamily: "Arial, sans-serif",
+          },
         }}
-        disabled={loading}
       >
-        Cancel This and Future Bookings
-      </Button>
-    ) : (
-      <>
-        <Button
-          onClick={() => handleCancelSubmit(false)}
+        <DialogTitle
           sx={{
-            backgroundColor: "#e53e3e",
-            color: "white",
-            padding: "4px 16px",
+            backgroundColor: "#ffffff",
+            color: "#4a5568",
             fontWeight: "bold",
-            borderRadius: "8px",
-            textTransform: "none",
-            fontSize: "0.75rem",
-            "&:hover": { backgroundColor: "#c53030" },
+            padding: "16px 24px",
+            fontSize: "1.25rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
-          disabled={loading}
         >
-          Cancel This Booking Only
-        </Button>
-        <Button
-          onClick={() => handleCancelSubmit(false, true)} // Added second param for "Cancel This & Future"
+          <Box sx={{ display: "flex", alignItems: "center", color: "#e53e3e" }}>
+            <span style={{ fontSize: "20px", marginRight: "8px" }}>⚠</span>
+            Cancel Booking
+          </Box>
+          <IconButton
+            onClick={() => setOpenCancelModal(false)}
+            sx={{ color: "#a0aec0", p: 0.5 }}
+          >
+            <span style={{ fontSize: "24px", lineHeight: "1" }}>×</span>
+          </IconButton>
+        </DialogTitle>
+        <DialogContent
           sx={{
-            backgroundColor: "#e53e3e",
-            color: "white",
-            padding: "4px 16px",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            textTransform: "none",
-            fontSize: "0.775rem",
-            "&:hover": { backgroundColor: "#c53030" },
+            textAlign: "center",
+            padding: "24px",
+            backgroundColor: "#ffffff",
+            fontSize: "1rem",
+            color: "#4a5568",
           }}
-          disabled={loading}
         >
-          Cancel This & Future Bookings
-        </Button>
-      </>
-    )}
-  </DialogActions>
+          <p>
+            Are you sure you want to submit a cancellation request for: <br />
+            <strong style={{ color: "#4a5568", fontWeight: "bold" }}>
+              {row.passengerName || "Unknown Passenger"}
+            </strong>
+          </p>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            justifyContent: "center",
+            padding: "16px 24px",
+            backgroundColor: "#ffffff",
+            gap: "12px",
+          }}
+        >
+          <Button
+            onClick={() => setOpenCancelModal(false)}
+            sx={{
+              backgroundColor: "#ffffff",
+              color: "#4a5568",
+              padding: "8px 24px",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              border: "1px solid #e2e8f0",
+              textTransform: "none",
+              fontSize: "0.875rem",
+              "&:hover": { backgroundColor: "#edf2f7", borderColor: "#cbd5e0" },
+            }}
+          >
+            Cancel
+          </Button>
+          {cancelType === 'cancelAll' && (
+            <Button
+              onClick={() => handleCancelSubmit(true)}
+              sx={{
+                backgroundColor: "#e53e3e",
+                color: "white",
+                padding: "8px 24px",
+                fontWeight: "bold",
+                borderRadius: "8px",
+                textTransform: "none",
+                fontSize: "0.875rem",
+                "&:hover": { backgroundColor: "#c53030" },
+              }}
+              disabled={loading}
+            >
+              Cancel All Bookings
+            </Button>
+          )}
+          {cancelType === 'cancelThisOnly' && (
+            <Button
+              onClick={() => handleCancelSubmit(false)}
+              sx={{
+                backgroundColor: "#e53e3e",
+                color: "white",
+                padding: "4px 16px",
+                fontWeight: "bold",
+                borderRadius: "8px",
+                textTransform: "none",
+                fontSize: "0.75rem",
+                "&:hover": { backgroundColor: "#c53030" },
+              }}
+              disabled={loading}
+            >
+              Cancel This Booking Only
+            </Button>
+          )}
+          {cancelType === 'cancelThisAndFuture' && (
+            <Button
+              onClick={() => handleCancelSubmit(false, true)}
+              sx={{
+                backgroundColor: "#e53e3e",
+                color: "white",
+                padding: "4px 16px",
+                fontWeight: "bold",
+                borderRadius: "8px",
+                textTransform: "none",
+                fontSize: "0.775rem",
+                "&:hover": { backgroundColor: "#c53030" },
+              }}
+              disabled={loading}
+            >
+              Cancel This & Future Bookings
+            </Button>
+          )}
+        </DialogActions>
       </Dialog>
     </>
   );
