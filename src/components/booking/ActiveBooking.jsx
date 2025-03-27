@@ -612,26 +612,30 @@ const ActiveBooking = () => {
   const groupedBookings = useMemo(() => {
     const groups = {};
     sortedBookings.forEach((booking) => {
-      const key = booking.recurranceId || 0; // Use 0 for non-recurring bookings
-      if (!groups[key]) {
-        groups[key] = {
-          parent: booking, // Store first booking as parent
-          bookings: [booking], // Store all bookings in the group
-          // highestBookingId: booking.bookingId, // Initialize with the first bookingId
-          lowestBookingId: booking.bookingId, // Initialize with the first bookingId
+      const key = booking.recurranceId || 0; // Agar recurrenceId null hai to 0
+      // Agar key 0 hai (yaani recurrenceId null ya 0 hai), to is booking ko alag row ke roop mein treat karo
+      if (key === 0) {
+        // Har booking ko apna unique group do, taaki wo independent row ban jaye
+        groups[`booking_${booking.bookingId}`] = {
+          parent: booking,
+          bookings: [booking], // Sirf ek booking hogi is group mein
+          lowestBookingId: booking.bookingId,
         };
       } else {
-        groups[key].bookings.push(booking);
-        // Update highestBookingId if the current bookingId is larger
-        // groups[key].highestBookingId = Math.max(
-        //   groups[key].highestBookingId,
-        //   booking.bookingId
-        // );
-        // Update lowestBookingId if the current bookingId is smaller
-        groups[key].lowestBookingId = Math.min(
-        groups[key].lowestBookingId,
-        booking.bookingId
-      );
+        // Agar recurrenceId non-zero hai, to grouping karo
+        if (!groups[key]) {
+          groups[key] = {
+            parent: booking,
+            bookings: [booking],
+            lowestBookingId: booking.bookingId,
+          };
+        } else {
+          groups[key].bookings.push(booking);
+          groups[key].lowestBookingId = Math.min(
+            groups[key].lowestBookingId,
+            booking.bookingId
+          );
+        }
       }
     });
     return groups;
@@ -644,16 +648,23 @@ const ActiveBooking = () => {
     .map((group) => group.parent)
     .slice(startIndex, endIndex);
 
-  const paginatedBookings = useMemo(() => {
-    if (totalFilteredBookings === 0) return {};
-    const finalGroups = {};
-    paginatedParentBookings.forEach((parentBooking) => {
-      const key = parentBooking.recurranceId || 0;
-      const group = groupedBookings[key];
-      finalGroups[key] = group.bookings; // Use all bookings in the group
-    });
-    return finalGroups;
-  }, [paginatedParentBookings, groupedBookings, totalFilteredBookings]);
+    const paginatedBookings = useMemo(() => {
+      if (totalFilteredBookings === 0) return {};
+      const finalGroups = {};
+      console.log('paginatedParentBookings:', paginatedParentBookings);
+      console.log('groupedBookings:', groupedBookings);
+      paginatedParentBookings.forEach((parentBooking) => {
+        const recurrenceId = parentBooking.recurranceId || 0;
+        const key = recurrenceId === 0 ? `booking_${parentBooking.bookingId}` : recurrenceId;
+        const group = groupedBookings[key];
+        console.log(`Key: ${key}, Group:`, group);
+        if (group) {
+          finalGroups[key] = group.bookings;
+        }
+      });
+      console.log('Final paginatedBookings:', finalGroups);
+      return finalGroups;
+    }, [paginatedParentBookings, groupedBookings, totalFilteredBookings]);
 
   const toggleGroup = (groupId) => {
     setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
@@ -816,42 +827,40 @@ const ActiveBooking = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {Object.keys(paginatedBookings).length > 0 ? (
-                  Object.keys(paginatedBookings).map((groupId) => {
-                    const bookings = paginatedBookings[groupId];
-                    const firstBooking = bookings[0];
-                    const { lowestBookingId } = groupedBookings[groupId]; // Get the highest bookingId for this group
+              {Object.keys(paginatedBookings).length > 0 ? (
+  Object.keys(paginatedBookings).map((groupId) => {
+    const bookings = paginatedBookings[groupId];
+    if (!bookings) return null; // Agar bookings undefined hai, to skip karo
+    const firstBooking = bookings[0];
+    const { lowestBookingId } = groupedBookings[groupId] || {};
 
-                    return (
-                      <React.Fragment key={groupId}>
-                        <Row
-                          row={firstBooking}
-                          isParent={bookings.length > 1}
-                          isOpen={!!openGroups[groupId]}
-                          toggleGroup={toggleGroup}
-                          lowestBookingId={lowestBookingId} // Pass the highest bookingId for the group
-                        />
-                        {openGroups[groupId] &&
-                          bookings.slice(0).map((booking) => (
-                            <Row
-                              key={booking.bookingId}
-                              row={booking}
-                              lowestBookingId={lowestBookingId} // Pass the highest bookingId for child rows
-                            />
-                          ))}
-                      </React.Fragment>
-                    );
-                  })
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={7}
-                      sx={{ textAlign: 'center' }}
-                    >
-                      No bookings found
-                    </TableCell>
-                  </TableRow>
-                )}
+    return (
+      <React.Fragment key={groupId}>
+        <Row
+          row={firstBooking}
+          isParent={bookings.length > 1 && firstBooking.recurranceId !== 0 && firstBooking.recurranceId !== null}
+          isOpen={!!openGroups[groupId]}
+          toggleGroup={toggleGroup}
+          lowestBookingId={lowestBookingId}
+        />
+        {openGroups[groupId] &&
+          bookings.slice(0).map((booking) => (
+            <Row
+              key={booking.bookingId}
+              row={booking}
+              lowestBookingId={lowestBookingId}
+            />
+          ))}
+      </React.Fragment>
+    );
+  })
+) : (
+  <TableRow>
+    <TableCell colSpan={7} sx={{ textAlign: 'center' }}>
+      No bookings found
+    </TableCell>
+  </TableRow>
+)}
               </TableBody>
             </Table>
           </TableContainer>
