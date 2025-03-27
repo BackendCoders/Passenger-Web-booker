@@ -12,6 +12,9 @@ export const fetchWebBookings = createAsyncThunk(
           // Get token from Redux state (adjust path according to your store structure)
           const state = getState();
           const token = state.auth?.token; // Assuming token is stored in auth slice
+          const accNo = state.auth?.username; // Assuming account number is stored in auth slice
+
+          console.log("accNo:", accNo);
 
           // Configure axios request with token in headers
           const config = {
@@ -24,7 +27,7 @@ export const fetchWebBookings = createAsyncThunk(
           const { data } = await axios.post(
               getwebbookingEndpoints.GETWEBBOOKING,
               {  
-                
+                  accNo: accNo,
                   processed: false,
                   accepted: false,
                   rejected: false,
