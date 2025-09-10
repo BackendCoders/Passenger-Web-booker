@@ -13,7 +13,6 @@ const { CREATEWEBBOOKING_CREATE_FORM } = webbookingfromEndpoints;
  */
 export const createActionPlan = async (token, webBookingData) => {
   try {
-    // Ensure token is provided
     if (!token) {
       throw new Error("Authentication token is required");
     }
