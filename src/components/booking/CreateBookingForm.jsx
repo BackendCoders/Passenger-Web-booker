@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
 	getAddressSuggestions,
-	getCombinedSuggestions,
-	getAddressDetails,
+	// getCombinedSuggestions,
+	// getAddressDetails,
 } from '../../utils/addressAPI'; // Utility functions for address handling
 import { LuArrowDownUp } from 'react-icons/lu'; // Importing switch icon
 import Header from '../Common/header'; // Header component
@@ -22,7 +22,7 @@ function CreateBookingForm() {
 	const navigate = useNavigate(); // React Router function for navigation
 	// Use the passengers array from Redux store dynamically
 	const { passengers = [] } = useSelector((state) => state.forms);
-	const { token = '', username, userId } = useSelector((state) => state.auth);
+	const { username } = useSelector((state) => state.auth);
 	const formData = useState();
 
 	const location = useLocation(); // ✅ Fetch passed data from state
@@ -201,6 +201,29 @@ function CreateBookingForm() {
 		}
 	};
 
+	// const handleKeyDownPickup = (e) => {
+	// 	if (pickupSuggestions.length === 0) return;
+
+	// 	if (e.key === 'ArrowDown') {
+	// 		setHighlightIndexPickup((prev) => {
+	// 			const nextIndex = prev < pickupSuggestions.length - 1 ? prev + 1 : prev;
+	// 			scrollToHighlightedItem(nextIndex, 'pickup-dropdown');
+	// 			return nextIndex;
+	// 		});
+	// 	} else if (e.key === 'ArrowUp') {
+	// 		setHighlightIndexPickup((prev) => {
+	// 			const prevIndex = prev > 0 ? prev - 1 : 0;
+	// 			scrollToHighlightedItem(prevIndex, 'pickup-dropdown');
+	// 			return prevIndex;
+	// 		});
+	// 	} else if (e.key === 'Enter' && highlightIndexPickup !== -1) {
+	// 		handleSelectAddress(pickupSuggestions[highlightIndexPickup].id, true);
+	// 	} else if (e.key === 'Escape') {
+	// 		setHighlightIndexPickup(-1);
+	// 		setPickupSuggestions([]);
+	// 	}
+	// };
+
 	const handleKeyDownPickup = (e) => {
 		if (pickupSuggestions.length === 0) return;
 
@@ -217,18 +240,46 @@ function CreateBookingForm() {
 				return prevIndex;
 			});
 		} else if (e.key === 'Enter' && highlightIndexPickup !== -1) {
-			handleSelectAddress(pickupSuggestions[highlightIndexPickup].id, true);
+			// ✅ Pass the whole suggestion object
+			handleSelectAddress(pickupSuggestions[highlightIndexPickup], true);
 		} else if (e.key === 'Escape') {
 			setHighlightIndexPickup(-1);
 			setPickupSuggestions([]);
 		}
 	};
 
+	// const handleKeyDownDest = (e) => {
+	// 	if (destinationSuggestions.length === 0) return;
+
+	// 	if (e.key === 'ArrowDown') {
+	// 		// ✅ Move Down
+	// 		setHighlightIndexDest((prev) => {
+	// 			const nextIndex =
+	// 				prev < destinationSuggestions.length - 1 ? prev + 1 : prev;
+	// 			scrollToHighlightedItem(nextIndex, 'destination-dropdown');
+	// 			return nextIndex;
+	// 		});
+	// 	} else if (e.key === 'ArrowUp') {
+	// 		// ✅ Move Up
+	// 		setHighlightIndexDest((prev) => {
+	// 			const prevIndex = prev > 0 ? prev - 1 : 0;
+	// 			scrollToHighlightedItem(prevIndex, 'destination-dropdown');
+	// 			return prevIndex;
+	// 		});
+	// 	} else if (e.key === 'Enter' && highlightIndexDest !== -1) {
+	// 		// ✅ Select Highlighted Item
+	// 		handleSelectAddress(destinationSuggestions[highlightIndexDest].id, false);
+	// 	} else if (e.key === 'Escape') {
+	// 		// ✅ Close Dropdown
+	// 		setHighlightIndexDest(-1);
+	// 		setDestinationSuggestions([]);
+	// 	}
+	// };
+
 	const handleKeyDownDest = (e) => {
 		if (destinationSuggestions.length === 0) return;
 
 		if (e.key === 'ArrowDown') {
-			// ✅ Move Down
 			setHighlightIndexDest((prev) => {
 				const nextIndex =
 					prev < destinationSuggestions.length - 1 ? prev + 1 : prev;
@@ -236,17 +287,15 @@ function CreateBookingForm() {
 				return nextIndex;
 			});
 		} else if (e.key === 'ArrowUp') {
-			// ✅ Move Up
 			setHighlightIndexDest((prev) => {
 				const prevIndex = prev > 0 ? prev - 1 : 0;
 				scrollToHighlightedItem(prevIndex, 'destination-dropdown');
 				return prevIndex;
 			});
 		} else if (e.key === 'Enter' && highlightIndexDest !== -1) {
-			// ✅ Select Highlighted Item
-			handleSelectAddress(destinationSuggestions[highlightIndexDest].id, false);
+			// ✅ Pass the whole suggestion object
+			handleSelectAddress(destinationSuggestions[highlightIndexDest], false);
 		} else if (e.key === 'Escape') {
-			// ✅ Close Dropdown
 			setHighlightIndexDest(-1);
 			setDestinationSuggestions([]);
 		}
@@ -262,10 +311,45 @@ function CreateBookingForm() {
 	};
 
 	// Handle address selection from suggestions
-	const handleSelectAddress = async (id, isPickup = true) => {
-		if (id.startsWith('passenger-')) {
-			// ✅ If selected from existing passengers, fill the form directly
-			const passengerId = id.split('-')[1];
+	// const handleSelectAddress = async (id, isPickup = true) => {
+	// 	if (id.startsWith('passenger-')) {
+	// 		// ✅ If selected from existing passengers, fill the form directly
+	// 		const passengerId = id.split('-')[1];
+	// 		const selectedPassenger = existingPassengers.find(
+	// 			(p) => p.id === Number(passengerId)
+	// 		);
+
+	// 		if (selectedPassenger) {
+	// 			if (isPickup) {
+	// 				setPickupAddress(selectedPassenger.address);
+	// 				setPickupPostCode(selectedPassenger.postcode);
+	// 				setName(selectedPassenger.name); // ✅ Auto-fill name
+	// 				setPickupSuggestions([]);
+	// 			} else {
+	// 				setDestinationAddress(selectedPassenger.address);
+	// 				setDestinationPostCode(selectedPassenger.postcode);
+	// 				setDestinationSuggestions([]);
+	// 			}
+	// 		}
+	// 	} else {
+	// 		// ✅ Otherwise, fetch address details from the API
+	// 		const details = await getAddressDetails(id);
+	// 		if (isPickup) {
+	// 			setPickupAddress(details.address);
+	// 			setPickupPostCode(details.postcode);
+	// 			setPickupSuggestions([]);
+	// 		} else {
+	// 			setDestinationAddress(details.address);
+	// 			setDestinationPostCode(details.postcode);
+	// 			setDestinationSuggestions([]);
+	// 		}
+	// 	}
+	// };
+
+	const handleSelectAddress = async (suggestion, isPickup = true) => {
+		if (suggestion?.id.startsWith('passenger-')) {
+			// ✅ Existing passenger case (unchanged)
+			const passengerId = suggestion?.id.split('-')[1];
 			const selectedPassenger = existingPassengers.find(
 				(p) => p.id === Number(passengerId)
 			);
@@ -274,7 +358,7 @@ function CreateBookingForm() {
 				if (isPickup) {
 					setPickupAddress(selectedPassenger.address);
 					setPickupPostCode(selectedPassenger.postcode);
-					setName(selectedPassenger.name); // ✅ Auto-fill name
+					setName(selectedPassenger.name);
 					setPickupSuggestions([]);
 				} else {
 					setDestinationAddress(selectedPassenger.address);
@@ -283,15 +367,14 @@ function CreateBookingForm() {
 				}
 			}
 		} else {
-			// ✅ Otherwise, fetch address details from the API
-			const details = await getAddressDetails(id);
+			// ✅ Address suggestion case
 			if (isPickup) {
-				setPickupAddress(details.address);
-				setPickupPostCode(details.postcode);
+				setPickupAddress(suggestion.address);
+				setPickupPostCode(suggestion.postcode); // ✅ autofill postcode
 				setPickupSuggestions([]);
 			} else {
-				setDestinationAddress(details.address);
-				setDestinationPostCode(details.postcode);
+				setDestinationAddress(suggestion.address);
+				setDestinationPostCode(suggestion.postcode); // ✅ autofill postcode
 				setDestinationSuggestions([]);
 			}
 		}
@@ -592,9 +675,7 @@ function CreateBookingForm() {
 												<li
 													id={`pickup-dropdown-${index}`}
 													key={suggestion.id}
-													onClick={() =>
-														handleSelectAddress(suggestion.id, true)
-													}
+													onClick={() => handleSelectAddress(suggestion, true)}
 													className={`px-3 py-2 cursor-pointer text-[0.85rem] ${
 														suggestion.type === 'passenger'
 															? 'font-bold'
@@ -719,9 +800,7 @@ function CreateBookingForm() {
 												<li
 													id={`destination-dropdown-${index}`}
 													key={suggestion.id}
-													onClick={() =>
-														handleSelectAddress(suggestion.id, false)
-													}
+													onClick={() => handleSelectAddress(suggestion, false)}
 													className={`px-3 py-2 cursor-pointer text-[0.85rem] ${
 														suggestion.type === 'passenger'
 															? 'font-bold'

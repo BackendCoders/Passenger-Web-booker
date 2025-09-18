@@ -7,7 +7,7 @@ const initialState = {
         : null,
     isAuth: localStorage.getItem("token") ? true : false,
     username: localStorage.getItem("username") 
-        ? JSON.parse(localStorage.getItem("username")) 
+        ? JSON.parse(localStorage?.getItem("username")) 
         : null, // Store username in localStorage
     userId: localStorage.getItem("userId") 
         ? JSON.parse(localStorage.getItem("userId")) 
