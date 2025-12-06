@@ -144,6 +144,7 @@ export async function getCombinedSuggestions(searchTerm) {
     // ✅ Pehle Local POI results daalo (GetAddress.io format me convert karke)
     if (poiResults) {
       poiResults.forEach((place) => {
+		// clean address before setting them
         const cleanedAddress = cleanAddress(place.address);
 
         combinedResults.push({
