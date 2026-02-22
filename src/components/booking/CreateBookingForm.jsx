@@ -15,6 +15,12 @@ import { TiArrowBack } from 'react-icons/ti';
 import { fetchPassengers } from '../../slices/formSlice';
 import { createActionPlanThunk } from '../../slices/webbookingSlice'; // Redux action
 import RepeatBooking from './RepeatBooking'; // Import the modal component
+import { useAddressSessionToken } from '../../hooks/useAddressSessionToken';
+import { getAddress, resolveAddress } from '../../service/api';
+import Autocomplete from '../AutoComplete';
+
+const objectToArray = (obj) =>
+	Object.values(obj).filter((v) => typeof v === 'object');
 
 // Main functional component for creating a booking form
 function CreateBookingForm() {
@@ -82,11 +88,11 @@ function CreateBookingForm() {
 
 	// States for pickup and destination details
 	const [pickupAddress, setPickupAddress] = useState(
-		formData?.pickupAddress || '' // Use optional chaining and a default value
+		formData?.pickupAddress || '', // Use optional chaining and a default value
 	);
 	const [pickupPostCode, setPickupPostCode] = useState(''); // Pickup postcode state
 	const [destinationAddress, setDestinationAddress] = useState(
-		formData?.destinationAddress || '' // Prefill from Redux or set as empty
+		formData?.destinationAddress || '', // Prefill from Redux or set as empty
 	);
 	const [destinationPostCode, setDestinationPostCode] = useState(''); // Destination postcode state
 	// States for other form details
@@ -110,6 +116,7 @@ function CreateBookingForm() {
 	const [highlightIndexDest, setHighlightIndexDest] = useState(-1); // Destination dropdown highlight
 
 	const [arriveBy, setArriveBy] = useState(false); // ✅ Default false
+	const { getToken, resetToken } = useAddressSessionToken();
 
 	// ✅ Prefill form fields when page loads
 	useEffect(() => {
@@ -134,7 +141,7 @@ function CreateBookingForm() {
 	// Function to handle selecting an existing passenger
 	const handleExistingPassengerSelect = (passengerId, mode) => {
 		const selectedPassenger = existingPassengers.find(
-			(passenger) => passenger.id === passengerId
+			(passenger) => passenger.id === passengerId,
 		);
 		console.log(existingPassengers + 'existingPassengers');
 
@@ -170,7 +177,7 @@ function CreateBookingForm() {
 				.filter(
 					(passenger) =>
 						passenger.address.toLowerCase().includes(value.toLowerCase()) ||
-						passenger.name.toLowerCase().includes(value.toLowerCase())
+						passenger.name.toLowerCase().includes(value.toLowerCase()),
 				)
 				.map((passenger) => ({
 					id: `passenger-${passenger.id}`, // Unique ID for UI
@@ -181,7 +188,28 @@ function CreateBookingForm() {
 				}));
 
 			// ✅ Step 2: Fetch external address suggestions from API
-			const apiSuggestions = await getAddressSuggestions(value);
+			const sessionToken = getToken();
+			const addressSuggestions = objectToArray(
+				await getAddress(value, sessionToken),
+			);
+
+			const apiSuggestions = addressSuggestions.map((suggestion) => {
+				const cleanedAddress = suggestion.label;
+
+				return {
+					label: cleanedAddress, // Use the address directly
+					id: suggestion.id,
+					address: cleanedAddress || 'Unknown Address',
+					name: suggestion.name || null,
+					postcode:
+						(suggestion?.label?.match(
+							/[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/i,
+						) || [''])[0] || suggestion.secondaryText,
+					source: suggestion.type,
+				};
+			});
+
+			// const apiSuggestions = await getAddressSuggestions(value);
 
 			// ✅ Step 3: Combine results with existing passengers **first**
 			const combinedSuggestions = [...passengerMatches, ...apiSuggestions];
@@ -201,32 +229,8 @@ function CreateBookingForm() {
 		}
 	};
 
-	// const handleKeyDownPickup = (e) => {
-	// 	if (pickupSuggestions.length === 0) return;
-
-	// 	if (e.key === 'ArrowDown') {
-	// 		setHighlightIndexPickup((prev) => {
-	// 			const nextIndex = prev < pickupSuggestions.length - 1 ? prev + 1 : prev;
-	// 			scrollToHighlightedItem(nextIndex, 'pickup-dropdown');
-	// 			return nextIndex;
-	// 		});
-	// 	} else if (e.key === 'ArrowUp') {
-	// 		setHighlightIndexPickup((prev) => {
-	// 			const prevIndex = prev > 0 ? prev - 1 : 0;
-	// 			scrollToHighlightedItem(prevIndex, 'pickup-dropdown');
-	// 			return prevIndex;
-	// 		});
-	// 	} else if (e.key === 'Enter' && highlightIndexPickup !== -1) {
-	// 		handleSelectAddress(pickupSuggestions[highlightIndexPickup].id, true);
-	// 	} else if (e.key === 'Escape') {
-	// 		setHighlightIndexPickup(-1);
-	// 		setPickupSuggestions([]);
-	// 	}
-	// };
-
-	const handleKeyDownPickup = (e) => {
+	const handleKeyDownPickup = async (e) => {
 		if (pickupSuggestions.length === 0) return;
-
 		if (e.key === 'ArrowDown') {
 			setHighlightIndexPickup((prev) => {
 				const nextIndex = prev < pickupSuggestions.length - 1 ? prev + 1 : prev;
@@ -240,11 +244,38 @@ function CreateBookingForm() {
 				return prevIndex;
 			});
 		} else if (e.key === 'Enter' && highlightIndexPickup !== -1) {
-			// ✅ Pass the whole suggestion object
-			handleSelectAddress(pickupSuggestions[highlightIndexPickup], true);
+			const suggestion = pickupSuggestions[highlightIndexPickup];
+			let selectedAddress = suggestion.address || 'Unknown Address';
+			let selectedPostcode = suggestion.postcode || 'No Postcode';
+
+			// If the suggestion is from getAddress.io, fetch full details before updating the form
+			if (suggestion.source === 'google') {
+				try {
+					const sessionToken = getToken();
+					const fullDetails = await resolveAddress(suggestion.id, sessionToken);
+					if (fullDetails) {
+						selectedPostcode = fullDetails.postcode || 'No Postcode';
+					}
+				} catch (error) {
+					console.error('Error fetching full address details:', error);
+				}
+			}
+
+			// handleSelectAddress(suggestion, true);
+			handleSelectAddress(
+				{
+					...suggestion,
+					label: suggestion.label,
+					address: selectedAddress,
+					postcode: selectedPostcode,
+				},
+				true,
+			);
+			resetToken();
 		} else if (e.key === 'Escape') {
 			setHighlightIndexPickup(-1);
 			setPickupSuggestions([]);
+			resetToken();
 		}
 	};
 
@@ -276,7 +307,7 @@ function CreateBookingForm() {
 	// 	}
 	// };
 
-	const handleKeyDownDest = (e) => {
+	const handleKeyDownDest = async (e) => {
 		if (destinationSuggestions.length === 0) return;
 
 		if (e.key === 'ArrowDown') {
@@ -293,11 +324,38 @@ function CreateBookingForm() {
 				return prevIndex;
 			});
 		} else if (e.key === 'Enter' && highlightIndexDest !== -1) {
-			// ✅ Pass the whole suggestion object
-			handleSelectAddress(destinationSuggestions[highlightIndexDest], false);
+			const suggestion = destinationSuggestions[highlightIndexDest];
+			let selectedAddress = suggestion.address || 'Unknown Address';
+			let selectedPostcode = suggestion.postcode || 'No Postcode';
+
+			// If the suggestion is from getAddress.io, fetch full details before updating the form
+			if (suggestion.source === 'google') {
+				try {
+					const sessionToken = getToken();
+					const fullDetails = await resolveAddress(suggestion.id, sessionToken);
+					if (fullDetails) {
+						selectedPostcode = fullDetails.postcode || 'No Postcode';
+					}
+				} catch (error) {
+					console.error('Error fetching full address details:', error);
+				}
+			}
+
+			// handleSelectAddress(suggestion, true);
+			handleSelectAddress(
+				{
+					...suggestion,
+					label: suggestion.label,
+					address: selectedAddress,
+					postcode: selectedPostcode,
+				},
+				false,
+			);
+			resetToken();
 		} else if (e.key === 'Escape') {
 			setHighlightIndexDest(-1);
 			setDestinationSuggestions([]);
+			resetToken();
 		}
 	};
 
@@ -351,7 +409,7 @@ function CreateBookingForm() {
 			// ✅ Existing passenger case (unchanged)
 			const passengerId = suggestion?.id.split('-')[1];
 			const selectedPassenger = existingPassengers.find(
-				(p) => p.id === Number(passengerId)
+				(p) => p.id === Number(passengerId),
 			);
 
 			if (selectedPassenger) {
@@ -450,7 +508,7 @@ function CreateBookingForm() {
 
 				// Second API call for the return trip
 				await dispatch(
-					createActionPlanThunk({ formData: returnFormData })
+					createActionPlanThunk({ formData: returnFormData }),
 				).unwrap();
 			}
 
@@ -465,6 +523,16 @@ function CreateBookingForm() {
 	// Navigate back to the dashboard
 	const backhistory = () => {
 		navigate('/');
+	};
+
+	const handlePostCodeSelect = (suggestion, isPickup = true) => {
+		if (isPickup) {
+			setPickupPostCode(suggestion.postcode);
+			setPickupAddress(suggestion.address);
+		} else {
+			setDestinationPostCode(suggestion.postcode);
+			setDestinationAddress(suggestion.address);
+		}
 	};
 
 	return (
@@ -697,12 +765,18 @@ function CreateBookingForm() {
 								<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
 									Post Code <span className='text-red-500'>*</span>
 								</label>
-								<input
+								{/* <input
 									type='text'
 									placeholder='Post Code'
 									value={pickupPostCode}
 									onChange={(e) => setPickupPostCode(e.target.value)}
 									className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
+								/> */}
+								<Autocomplete
+									placeholder={'post code'}
+									onPushChange={(sugg) => handlePostCodeSelect(sugg, true)}
+									onChange={(e) => setPickupPostCode(e.target.value)}
+									value={pickupPostCode}
 								/>
 							</div>
 						</div>
@@ -718,7 +792,7 @@ function CreateBookingForm() {
 								onChange={(e) =>
 									handleExistingPassengerSelect(
 										Number(e.target.value),
-										'pickup'
+										'pickup',
 									)
 								}
 								className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
@@ -822,12 +896,11 @@ function CreateBookingForm() {
 								<label className='block text-xs sm:text-sm font-medium text-gray-700 mb-1'>
 									Post Code <span className='text-red-500'>*</span>
 								</label>
-								<input
-									type='text'
-									placeholder='Post Code'
-									value={destinationPostCode}
+								<Autocomplete
+									placeholder={'post code'}
+									onPushChange={(sugg) => handlePostCodeSelect(sugg, false)}
 									onChange={(e) => setDestinationPostCode(e.target.value)}
-									className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
+									value={destinationPostCode}
 								/>
 							</div>
 						</div>
@@ -843,7 +916,7 @@ function CreateBookingForm() {
 								onChange={(e) =>
 									handleExistingPassengerSelect(
 										Number(e.target.value),
-										'destination'
+										'destination',
 									)
 								}
 								className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
