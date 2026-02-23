@@ -4,11 +4,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-	getAddressSuggestions,
-	// getCombinedSuggestions,
-	// getAddressDetails,
-} from '../../utils/addressAPI'; // Utility functions for address handling
 import { LuArrowDownUp } from 'react-icons/lu'; // Importing switch icon
 import Header from '../Common/header'; // Header component
 import { TiArrowBack } from 'react-icons/ti';
@@ -73,7 +68,6 @@ function CreateBookingForm() {
 
 	// State for the recurrence rule string
 	const [recurrenceRule, setRecurrenceRule] = useState('');
-	console.log(recurrenceRule + 'craete booking');
 	const [isRepeatModalOpen, setIsRepeatModalOpen] = useState(false); // Modal state
 	// Handle modal open/close
 	const openRepeatModal = () => setIsRepeatModalOpen(true);
@@ -427,13 +421,56 @@ function CreateBookingForm() {
 		} else {
 			// ✅ Address suggestion case
 			if (isPickup) {
-				setPickupAddress(suggestion.address);
-				setPickupPostCode(suggestion.postcode); // ✅ autofill postcode
-				setPickupSuggestions([]);
+				{
+					// const suggestion = pickupSuggestions[highlightIndexPickup];
+					let selectedAddress = suggestion.address || 'Unknown Address';
+					let selectedPostcode = suggestion.postcode || 'No Postcode';
+
+					// If the suggestion is from getAddress.io, fetch full details before updating the form
+					if (suggestion.source === 'google') {
+						try {
+							const sessionToken = getToken();
+							const fullDetails = await resolveAddress(
+								suggestion.id,
+								sessionToken,
+							);
+							if (fullDetails) {
+								selectedPostcode = fullDetails.postcode || 'No Postcode';
+							}
+						} catch (error) {
+							console.error('Error fetching full address details:', error);
+						}
+					}
+
+					setPickupAddress(selectedAddress);
+					setPickupPostCode(selectedPostcode); // ✅ autofill postcode
+					setPickupSuggestions([]);
+					resetToken();
+				}
 			} else {
-				setDestinationAddress(suggestion.address);
-				setDestinationPostCode(suggestion.postcode); // ✅ autofill postcode
+				let selectedAddress = suggestion.address || 'Unknown Address';
+				let selectedPostcode = suggestion.postcode || 'No Postcode';
+
+				// If the suggestion is from getAddress.io, fetch full details before updating the form
+				if (suggestion.source === 'google') {
+					try {
+						const sessionToken = getToken();
+						const fullDetails = await resolveAddress(
+							suggestion.id,
+							sessionToken,
+						);
+						if (fullDetails) {
+							selectedPostcode = fullDetails.postcode || 'No Postcode';
+						}
+					} catch (error) {
+						console.error('Error fetching full address details:', error);
+					}
+				}
+
+				setDestinationAddress(selectedAddress);
+				setDestinationPostCode(selectedPostcode); // ✅ autofill postcode
 				setDestinationSuggestions([]);
+				resetToken();
 			}
 		}
 	};

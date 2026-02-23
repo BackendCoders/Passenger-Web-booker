@@ -27,7 +27,7 @@ const Autocomplete = ({
 	}, [value]);
 
 	useEffect(() => {
-		if (inputValue.length <= 3) {
+		if (inputValue?.length <= 3) {
 			setOptions([]);
 			return;
 		}
@@ -120,12 +120,12 @@ const Autocomplete = ({
 				required={required}
 				onBlur={handleBlur}
 				onFocus={handleFocus}
-				value={inputValue.toUpperCase()}
+				value={inputValue?.toUpperCase()}
 				onChange={handleInputChange}
 				onKeyDown={handleKeyDown}
 				className='w-full px-3 sm:px-4 py-2 sm:py-3 rounded-md sm:rounded-lg bg-white border border-gray-300 text-xs sm:text-sm'
 			/>
-			{showOptions && focus && inputValue.length > 0 && (
+			{showOptions && focus && inputValue?.length > 0 && (
 				<ul
 					className='absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-[40vh] overflow-auto'
 					ref={optionsListRef}
