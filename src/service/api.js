@@ -75,17 +75,17 @@ async function handleGetReq(URL) {
 }
 
 async function getAddress(query, token) {
-	const URL = `${BASE_URL}/api/address/dispatchsearch?q=${query}&sessionToken=${token}`;
+	const URL = `${BASE_URL}/address/dispatchsearch?q=${query}&sessionToken=${token}`;
 	return await handleGetReq(URL);
 }
 
 async function resolveAddress(id, token) {
-	const URL = `${BASE_URL}/api/address/resolve?id=${id}&sessionToken=${token}`;
+	const URL = `${BASE_URL}/address/resolve?id=${id}&sessionToken=${token}`;
 	return await handleGetReq(URL);
 }
 
 async function getAddressByPostCode(postcode) {
-	const URL = `${BASE_URL}/api/Address/PostcodeLookup?postcode=${postcode}`;
+	const URL = `${BASE_URL}/Address/PostcodeLookup?postcode=${postcode}`;
 	return await handleGetReq(URL);
 }
 
