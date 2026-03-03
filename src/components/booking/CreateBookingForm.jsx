@@ -1,7 +1,5 @@
-/** @format */
-
 // Importing necessary hooks and libraries
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LuArrowDownUp } from 'react-icons/lu'; // Importing switch icon
@@ -243,16 +241,15 @@ function CreateBookingForm() {
 			let selectedPostcode = suggestion.postcode || 'No Postcode';
 
 			// If the suggestion is from getAddress.io, fetch full details before updating the form
-			if (suggestion.source === 'google') {
-				try {
-					const sessionToken = getToken();
-					const fullDetails = await resolveAddress(suggestion.id, sessionToken);
-					if (fullDetails) {
-						selectedPostcode = fullDetails.postcode || 'No Postcode';
-					}
-				} catch (error) {
-					console.error('Error fetching full address details:', error);
+			try {
+				const sessionToken = getToken();
+				const fullDetails = await resolveAddress(suggestion.id, sessionToken);
+				if (fullDetails) {
+					selectedAddress = fullDetails.formattedAddress;
+					selectedPostcode = fullDetails.postcode || 'No Postcode';
 				}
+			} catch (error) {
+				console.error('Error fetching full address details:', error);
 			}
 
 			// handleSelectAddress(suggestion, true);
@@ -273,34 +270,6 @@ function CreateBookingForm() {
 		}
 	};
 
-	// const handleKeyDownDest = (e) => {
-	// 	if (destinationSuggestions.length === 0) return;
-
-	// 	if (e.key === 'ArrowDown') {
-	// 		// ✅ Move Down
-	// 		setHighlightIndexDest((prev) => {
-	// 			const nextIndex =
-	// 				prev < destinationSuggestions.length - 1 ? prev + 1 : prev;
-	// 			scrollToHighlightedItem(nextIndex, 'destination-dropdown');
-	// 			return nextIndex;
-	// 		});
-	// 	} else if (e.key === 'ArrowUp') {
-	// 		// ✅ Move Up
-	// 		setHighlightIndexDest((prev) => {
-	// 			const prevIndex = prev > 0 ? prev - 1 : 0;
-	// 			scrollToHighlightedItem(prevIndex, 'destination-dropdown');
-	// 			return prevIndex;
-	// 		});
-	// 	} else if (e.key === 'Enter' && highlightIndexDest !== -1) {
-	// 		// ✅ Select Highlighted Item
-	// 		handleSelectAddress(destinationSuggestions[highlightIndexDest].id, false);
-	// 	} else if (e.key === 'Escape') {
-	// 		// ✅ Close Dropdown
-	// 		setHighlightIndexDest(-1);
-	// 		setDestinationSuggestions([]);
-	// 	}
-	// };
-
 	const handleKeyDownDest = async (e) => {
 		if (destinationSuggestions.length === 0) return;
 
@@ -319,20 +288,19 @@ function CreateBookingForm() {
 			});
 		} else if (e.key === 'Enter' && highlightIndexDest !== -1) {
 			const suggestion = destinationSuggestions[highlightIndexDest];
-			let selectedAddress = suggestion.address || 'Unknown Address';
-			let selectedPostcode = suggestion.postcode || 'No Postcode';
+			let selectedAddress = '';
+			let selectedPostcode = '';
 
 			// If the suggestion is from getAddress.io, fetch full details before updating the form
-			if (suggestion.source === 'google') {
-				try {
-					const sessionToken = getToken();
-					const fullDetails = await resolveAddress(suggestion.id, sessionToken);
-					if (fullDetails) {
-						selectedPostcode = fullDetails.postcode || 'No Postcode';
-					}
-				} catch (error) {
-					console.error('Error fetching full address details:', error);
+			try {
+				const sessionToken = getToken();
+				const fullDetails = await resolveAddress(suggestion.id, sessionToken);
+				if (fullDetails) {
+					selectedAddress = fullDetails.formattedAddress;
+					selectedPostcode = fullDetails.postcode || 'No Postcode';
 				}
+			} catch (error) {
+				console.error('Error fetching full address details:', error);
 			}
 
 			// handleSelectAddress(suggestion, true);
@@ -361,42 +329,6 @@ function CreateBookingForm() {
 			dropdown.scrollTop = highlightedItem.offsetTop - dropdown.offsetTop;
 		}
 	};
-
-	// Handle address selection from suggestions
-	// const handleSelectAddress = async (id, isPickup = true) => {
-	// 	if (id.startsWith('passenger-')) {
-	// 		// ✅ If selected from existing passengers, fill the form directly
-	// 		const passengerId = id.split('-')[1];
-	// 		const selectedPassenger = existingPassengers.find(
-	// 			(p) => p.id === Number(passengerId)
-	// 		);
-
-	// 		if (selectedPassenger) {
-	// 			if (isPickup) {
-	// 				setPickupAddress(selectedPassenger.address);
-	// 				setPickupPostCode(selectedPassenger.postcode);
-	// 				setName(selectedPassenger.name); // ✅ Auto-fill name
-	// 				setPickupSuggestions([]);
-	// 			} else {
-	// 				setDestinationAddress(selectedPassenger.address);
-	// 				setDestinationPostCode(selectedPassenger.postcode);
-	// 				setDestinationSuggestions([]);
-	// 			}
-	// 		}
-	// 	} else {
-	// 		// ✅ Otherwise, fetch address details from the API
-	// 		const details = await getAddressDetails(id);
-	// 		if (isPickup) {
-	// 			setPickupAddress(details.address);
-	// 			setPickupPostCode(details.postcode);
-	// 			setPickupSuggestions([]);
-	// 		} else {
-	// 			setDestinationAddress(details.address);
-	// 			setDestinationPostCode(details.postcode);
-	// 			setDestinationSuggestions([]);
-	// 		}
-	// 	}
-	// };
 
 	const handleSelectAddress = async (suggestion, isPickup = true) => {
 		if (suggestion?.id.startsWith('passenger-')) {
@@ -448,23 +380,19 @@ function CreateBookingForm() {
 					resetToken();
 				}
 			} else {
-				let selectedAddress = suggestion.address || 'Unknown Address';
-				let selectedPostcode = suggestion.postcode || 'No Postcode';
+				let selectedAddress = '';
+				let selectedPostcode = '';
 
 				// If the suggestion is from getAddress.io, fetch full details before updating the form
-				if (suggestion.source === 'google') {
-					try {
-						const sessionToken = getToken();
-						const fullDetails = await resolveAddress(
-							suggestion.id,
-							sessionToken,
-						);
-						if (fullDetails) {
-							selectedPostcode = fullDetails.postcode || 'No Postcode';
-						}
-					} catch (error) {
-						console.error('Error fetching full address details:', error);
+				try {
+					const sessionToken = getToken();
+					const fullDetails = await resolveAddress(suggestion.id, sessionToken);
+					if (fullDetails) {
+						selectedAddress = fullDetails.formattedAddress;
+						selectedPostcode = fullDetails.postcode || 'No Postcode';
 					}
+				} catch (error) {
+					console.error('Error fetching full address details:', error);
 				}
 
 				setDestinationAddress(selectedAddress);

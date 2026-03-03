@@ -21,12 +21,22 @@ const Autocomplete = ({
 	// const inputRef = useRef(null);
 	const optionsListRef = useRef(null);
 	const activeOptionRef = useRef(null);
+	const inputRef = useRef(null);
 
 	useEffect(() => {
 		setInputValue(value);
 	}, [value]);
 
 	useEffect(() => {
+		// this function check weather an post code element is active
+		const checkActive = () => {
+			if (document.activeElement === inputRef.current) {
+				return true;
+			} else {
+				return false;
+			}
+		};
+
 		if (inputValue?.length <= 3) {
 			setOptions([]);
 			return;
@@ -46,7 +56,7 @@ const Autocomplete = ({
 				setShowOptions(true);
 			}
 		}
-		getPostalID();
+		if (checkActive()) getPostalID();
 	}, [inputValue]);
 
 	useEffect(() => {
@@ -115,11 +125,11 @@ const Autocomplete = ({
 				type='text'
 				autoComplete='new-password'
 				id={Math.random().toString(36).substring(7)}
-				// ref={inputRef}
 				label={placeholder}
 				required={required}
 				onBlur={handleBlur}
 				onFocus={handleFocus}
+				ref={inputRef}
 				value={inputValue?.toUpperCase()}
 				onChange={handleInputChange}
 				onKeyDown={handleKeyDown}
