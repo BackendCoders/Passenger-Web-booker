@@ -28,35 +28,27 @@ const Autocomplete = ({
 	}, [value]);
 
 	useEffect(() => {
-		// this function check weather an post code element is active
-		const checkActive = () => {
-			if (document.activeElement === inputRef.current) {
-				return true;
-			} else {
-				return false;
-			}
-		};
-
-		if (inputValue?.length <= 3) {
+		if (inputValue.length <= 3) {
 			setOptions([]);
 			return;
 		}
 		async function getPostalID() {
 			const response = await getAddressByPostCode(inputValue);
 			if (response.status === 'success') {
-				const address = response.expandedAddress;
-				setOptions([
-					{
-						label: address.formattedAddress,
-						postcode: inputValue,
-						address: address.formattedAddress,
-						raw: address.formattedAddressPC, // Retain the original address for reference if needed
-					},
-				]);
+				const address = Object.values(response).filter(
+					(item) => typeof item === 'object',
+				);
+
+				const suggestedAddress = address.map((add) => ({
+					label: add.label,
+					postcode: add.postcode,
+					address: add.label,
+				}));
+				setOptions(suggestedAddress);
 				setShowOptions(true);
 			}
 		}
-		if (checkActive()) getPostalID();
+		getPostalID();
 	}, [inputValue]);
 
 	useEffect(() => {
